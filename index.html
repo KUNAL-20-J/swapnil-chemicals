@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Automobile new code 27-08-26 -->
+<!-- Automobile new code 26-08-26 -->
 <html lang="en">
 
 <head>
@@ -36,7 +36,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -391,213 +391,6 @@
       backdrop-filter: blur(20px);
       background: rgba(255, 255, 255, 0.95);
       border-bottom: 1px solid rgba(148, 163, 184, 0.25);
-    }
-
-    .nav-link {
-      position: relative;
-      padding: 8px 14px;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #475569;
-      text-decoration: none;
-      transition: color 0.2s ease, background 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .nav-link:hover {
-      color: var(--brand-accent-dark);
-      background: rgba(59, 130, 246, 0.08);
-    }
-
-    .nav-link.active {
-      color: #fff;
-      background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
-    }
-
-    .header-whatsapp-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #25d366, #128c7e);
-      color: #fff;
-      font-size: 1.15rem;
-      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.35);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      flex-shrink: 0;
-    }
-
-    .header-whatsapp-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 22px rgba(37, 211, 102, 0.45);
-      color: #fff;
-    }
-
-    .mobile-nav-toggle {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      border: 1.5px solid #e2e8f0;
-      background: #fff;
-      color: #1e293b;
-      font-size: 1.05rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: 0.2s;
-      flex-shrink: 0;
-    }
-
-    .mobile-nav-toggle:hover {
-      border-color: var(--brand-accent);
-      color: var(--brand-accent);
-    }
-
-    .mobile-nav {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      flex-direction: column;
-      gap: 4px;
-      padding: 12px 16px 18px;
-      border-top: 1px solid rgba(148, 163, 184, 0.25);
-      background: #ffffff;
-      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
-    }
-
-    .mobile-nav.open {
-      display: flex;
-    }
-
-    .mobile-nav-link {
-      padding: 12px 14px;
-      border-radius: 12px;
-      font-weight: 600;
-      color: #334155;
-      text-decoration: none;
-      transition: 0.2s;
-    }
-
-    .mobile-nav-link:hover,
-    .mobile-nav-link.active {
-      background: rgba(59, 130, 246, 0.1);
-      color: var(--brand-accent-dark);
-    }
-
-    .mobile-nav-link.whatsapp {
-      background: linear-gradient(135deg, #25d366, #128c7e);
-      color: #fff;
-      text-align: center;
-      margin-top: 6px;
-    }
-
-    .trust-strip {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px 32px;
-      padding: 20px 16px;
-      max-width: 64rem;
-      margin: 0 auto;
-    }
-
-    .trust-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #334155;
-      white-space: nowrap;
-    }
-
-    .trust-item i {
-      color: #16a34a;
-    }
-
-    .btn-whatsapp {
-      background: linear-gradient(135deg, #25d366, #128c7e);
-      transition: all 0.3s ease;
-    }
-
-    .btn-whatsapp:hover {
-      background: linear-gradient(135deg, #1ebe5d, #0f6e63);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(37, 211, 102, 0.35);
-    }
-
-    .filter-chip {
-      border: 1.5px solid #cbd5e1;
-      background: #fff;
-      color: #475569;
-      border-radius: 9999px;
-      padding: 8px 18px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-      font-family: inherit;
-    }
-
-    .filter-chip:hover {
-      border-color: var(--brand-accent);
-      color: var(--brand-accent);
-    }
-
-    .filter-chip.active {
-      background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
-      border-color: transparent;
-      color: #fff;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-    }
-
-    .sort-select {
-      padding: 10px 16px;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #334155;
-      background: #fff;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .sort-select:hover {
-      border-color: var(--brand-accent);
-    }
-
-    .sort-select:focus-visible {
-      border-color: var(--brand-accent);
-    }
-
-    .product-category-badge {
-      display: inline-block;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--brand-accent-dark);
-      background: rgba(59, 130, 246, 0.1);
-      padding: 3px 10px;
-      border-radius: 999px;
-      margin-bottom: 8px;
-    }
-
-    @media (max-width: 480px) {
-      .trust-strip {
-        gap: 10px 18px;
-        justify-content: flex-start;
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        padding: 16px;
-      }
     }
 
     .skip-link {
@@ -1497,7 +1290,7 @@
       }
     }
 
-    :is(.btn-primary, .btn-secondary, .btn-whatsapp, .add-to-cart-btn, .enquiry-trigger-btn, .enquiry-submit-btn, .gpay-btn, .cart-icon-btn, .ai-assistant-btn, .assistant-send-btn, .header-whatsapp-btn, .mobile-nav-toggle, .filter-chip):active {
+    :is(.btn-primary, .btn-secondary, .add-to-cart-btn, .enquiry-trigger-btn, .enquiry-submit-btn, .gpay-btn, .cart-icon-btn, .ai-assistant-btn, .assistant-send-btn):active {
       transform: scale(0.96);
     }
   </style>
@@ -1672,50 +1465,33 @@
   </noscript>
 
   <header class="sticky top-0 z-50 nav-blur">
-    <div class="container mx-auto px-4 py-3">
-      <div class="flex items-center justify-between gap-3">
-        <a href="#main-content" class="flex items-center space-x-3 no-underline shrink-0" aria-label="Swapnil Chemicals — back to top">
+    <div class="container mx-auto px-4 py-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center space-x-4 mb-4 md:mb-0">
           <div class="relative">
-            <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center overflow-hidden ring-2 ring-blue-500/20"><img src="SC Logo.jpg" alt="SC Logo" class="w-full h-full object-cover" width="56" height="56" decoding="async" /></div>
+            <div class="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden ring-2 ring-blue-500/20"><img src="SC Logo.jpg" alt="SC Logo" class="w-full h-full object-cover" width="56" height="56" decoding="async" /></div>
             <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full pulse-ring"></div>
           </div>
           <div>
-            <h1 class="text-lg sm:text-2xl font-bold gradient-text leading-tight">Swapnil Chemicals</h1>
-            <p class="hidden sm:block text-sm text-gray-600">Manufacturers & marketers of automobile cleaning products</p>
+            <h1 class="text-2xl font-bold gradient-text">Swapnil Chemicals</h1>
+            <p class="text-sm text-gray-600">Manufacturers & marketers of automobile cleaning products</p>
           </div>
-        </a>
+        </div>
 
-        <nav class="hidden lg:flex items-center gap-1" id="mainNav" aria-label="Primary">
-          <a href="#products" class="nav-link" data-nav-link>Products</a>
-          <a href="#business-details" class="nav-link" data-nav-link>Business Details</a>
-          <a href="#faq" class="nav-link" data-nav-link>FAQ</a>
-          <a href="#contact" class="nav-link" data-nav-link>Contact</a>
-        </nav>
-
-        <div class="flex items-center gap-2 md:gap-3">
-          <div class="hidden xl:block glass-card px-4 py-2 rounded-lg">
-            <p class="text-gray-700 font-medium text-sm whitespace-nowrap">
+        <div class="flex items-center gap-3">
+          <div class="glass-card px-4 py-2 rounded-lg">
+            <p class="text-gray-700 font-medium">
               <i class="fas fa-map-marker-alt text-blue-600 mr-2"></i>Jaipur • Bulk & Retail
             </p>
           </div>
-          <a href="https://wa.me/919352470085" target="_blank" rel="noopener noreferrer" class="header-whatsapp-btn" aria-label="Chat with Swapnil Chemicals on WhatsApp"><i class="fab fa-whatsapp"></i></a>
           <button class="cart-icon-btn" onclick="toggleCart()" aria-label="Open cart" aria-expanded="false">
             <i class="fas fa-shopping-cart text-base"></i>
             <span class="cart-badge" id="cartBadge" style="display:none" aria-live="polite">0</span>
           </button>
-          <button class="mobile-nav-toggle lg:hidden" onclick="toggleMobileNav()" id="mobileNavToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
-            <i class="fas fa-bars"></i>
-          </button>
         </div>
+
       </div>
     </div>
-    <nav id="mobileNav" class="mobile-nav lg:hidden" aria-label="Mobile">
-      <a href="#products" class="mobile-nav-link" data-nav-link><i class="fas fa-boxes mr-2"></i>Products</a>
-      <a href="#business-details" class="mobile-nav-link" data-nav-link><i class="fas fa-building mr-2"></i>Business Details</a>
-      <a href="#faq" class="mobile-nav-link" data-nav-link><i class="fas fa-circle-question mr-2"></i>FAQ</a>
-      <a href="#contact" class="mobile-nav-link" data-nav-link><i class="fas fa-address-card mr-2"></i>Contact</a>
-      <a href="https://wa.me/919352470085" target="_blank" rel="noopener noreferrer" class="mobile-nav-link whatsapp"><i class="fab fa-whatsapp mr-2"></i>Chat on WhatsApp</a>
-    </nav>
   </header>
 
   <main id="main-content" tabindex="-1">
@@ -1727,21 +1503,13 @@
           <h2 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Premium Automobile <br><span class="text-blue-400">Cleaning Solutions</span></h2>
         </div>
         <p class="text-xl md:text-2xl mb-10 opacity-90 max-w-3xl mx-auto leading-relaxed">Manufacturing excellence since 2020.</p>
-        <div class="flex flex-wrap justify-center gap-6"><a href="#products" class="btn-primary text-white px-10 py-4 rounded-xl font-semibold text-lg"><i class="fas fa-boxes mr-3"></i>View Products</a><a href="https://wa.me/919352470085" target="_blank" rel="noopener noreferrer" class="btn-whatsapp text-white px-10 py-4 rounded-xl font-semibold text-lg"><i class="fab fa-whatsapp mr-3"></i>WhatsApp Us</a><a href="#contact" class="btn-secondary text-white px-10 py-4 rounded-xl font-semibold text-lg"><i class="fas fa-phone-alt fa-flip-horizontal mr-3"></i>Contact Now</a></div>
+        <div class="flex flex-wrap justify-center gap-6"><a href="#products" class="btn-primary text-white px-10 py-4 rounded-xl font-semibold text-lg"><i class="fas fa-boxes mr-3"></i>View Products</a><a href="#contact" class="btn-secondary text-white px-10 py-4 rounded-xl font-semibold text-lg"><i class="fas fa-phone-alt fa-flip-horizontal mr-3"></i>Contact Now</a></div>
       </div>
     </div>
     <div class="absolute top-20 left-10 w-20 h-20 bg-blue-500/10 rounded-full blur-xl ambient-blob"></div>
     <div class="absolute bottom-20 right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-xl ambient-blob" style="animation-delay: -4s;"></div>
     <div class="absolute top-1/2 right-1/4 w-24 h-24 bg-cyan-400/10 rounded-full blur-xl ambient-blob" style="animation-delay: -2s;"></div>
   </section>
-
-  <div class="trust-strip" role="note" aria-label="Business certifications">
-    <span class="trust-item"><i class="fas fa-circle-check"></i>GST Registered</span>
-    <span class="trust-item"><i class="fas fa-circle-check"></i>MSME Certified</span>
-    <span class="trust-item"><i class="fas fa-circle-check"></i>Udyam Registered</span>
-    <span class="trust-item"><i class="fas fa-circle-check"></i>Bulk &amp; Retail Supply</span>
-    <span class="trust-item"><i class="fas fa-circle-check"></i>Manufacturing Since 2020</span>
-  </div>
 
   <section id="business-details" class="pt-6 pb-0 relative">
     <div class="container mx-auto px-4">
@@ -1822,22 +1590,12 @@
         <p class="text-xl text-gray-600 max-w-2xl mx-auto">Discover our range of high-quality automobile cleaning solutions designed for professional results.</p>
         <div class="section-divider max-w-xs mx-auto"></div>
       </div>
-      <div class="max-w-xl mx-auto mb-6">
+      <div class="max-w-xl mx-auto mb-8">
         <div class="relative">
           <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true"></i>
           <input type="search" id="productSearch" class="w-full pl-11 pr-12 py-3 rounded-xl border border-gray-200 bg-white focus:border-blue-500 focus:outline-none focus:shadow-[0_0_0_4px_rgba(139,92,246,0.15)] transition-shadow text-sm" placeholder="Search products (e.g. tyre polish, micro towel)..." aria-label="Search products" />
           <button type="button" id="voiceSearchBtn" class="voice-btn" aria-label="Search by voice"><i class="fas fa-microphone"></i></button>
         </div>
-      </div>
-      <div class="flex flex-wrap items-center justify-center gap-2 mb-6" id="categoryFilters" role="group" aria-label="Filter products by category"></div>
-      <div class="flex justify-end max-w-6xl mx-auto mb-4">
-        <label for="productSort" class="sr-only">Sort products</label>
-        <select id="productSort" class="sort-select">
-          <option value="default">Sort: Featured</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="name-asc">Name: A–Z</option>
-        </select>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="productsGrid"></div>
     </div>
@@ -1957,26 +1715,13 @@
 
   <footer class="text-white py-12" style="background: linear-gradient(135deg, #1e293b 0%, #1e40af 50%, #334155 100%)">
     <div class="container mx-auto px-4">
-      <div class="flex flex-col md:flex-row md:items-start justify-between gap-10">
-        <div class="text-center md:text-left">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-8 md:mb-0 text-center md:text-left">
           <h3 class="text-3xl font-bold mb-3">Swapnil Chemicals</h3>
           <p class="text-slate-300 text-lg">Manufacturers & marketers of automobile cleaning products</p>
           <p class="text-slate-300 mt-2">Jaipur • Bulk & Retail</p>
         </div>
-        <div class="text-center md:text-left">
-          <h4 class="text-sm font-bold uppercase tracking-wide text-slate-400 mb-3">Quick Links</h4>
-          <ul class="space-y-2">
-            <li><a href="#products" class="text-slate-300 hover:text-white transition">Products</a></li>
-            <li><a href="#business-details" class="text-slate-300 hover:text-white transition">Business Details</a></li>
-            <li><a href="#faq" class="text-slate-300 hover:text-white transition">FAQ</a></li>
-            <li><a href="#contact" class="text-slate-300 hover:text-white transition">Contact</a></li>
-          </ul>
-        </div>
-        <div class="flex space-x-4">
-          <a href="tel:9352470085" class="w-12 h-12 bg-slate-700 rounded-xl flex items-center justify-center hover:bg-blue-600 transition" aria-label="Call Swapnil Chemicals"><i class="fas fa-phone-alt text-lg" style="transform: rotate(-270deg);"></i></a>
-          <a href="mailto:swapnilchemicals10@gmail.com" class="w-12 h-12 bg-slate-700 rounded-xl flex items-center justify-center hover:bg-red-600 transition" aria-label="Email Swapnil Chemicals"><i class="fas fa-envelope text-lg"></i></a>
-          <a href="https://wa.me/919352470085" target="_blank" rel="noopener noreferrer" class="w-12 h-12 bg-slate-700 rounded-xl flex items-center justify-center hover:bg-green-600 transition" aria-label="Chat with Swapnil Chemicals on WhatsApp"><i class="fab fa-whatsapp text-lg"></i></a>
-        </div>
+        <div class="flex space-x-6"><a href="tel:9352470085" class="w-12 h-12 bg-slate-700 rounded-xl flex items-center justify-center hover:bg-blue-600 transition" aria-label="Call Swapnil Chemicals"><i class="fas fa-phone-alt text-lg" style="transform: rotate(-270deg);"></i></a><a href="mailto:swapnilchemicals10@gmail.com" class="w-12 h-12 bg-slate-700 rounded-xl flex items-center justify-center hover:bg-red-600 transition" aria-label="Email Swapnil Chemicals"><i class="fas fa-envelope text-lg"></i></a></div>
       </div>
       <div class="border-t border-slate-700 mt-8 pt-8 text-center">
         <p class="text-slate-300">© <span id="copyrightYear">2026</span> Swapnil Chemicals. All rights reserved.</p>
@@ -2183,7 +1928,6 @@
         price: 200,
         unit: "Lt",
         hasLtOptions: true,
-        category: "Polish",
         description: "Premium dashboard polish for long-lasting shine"
       },
       {
@@ -2193,7 +1937,6 @@
         price: 150,
         unit: "Lt",
         hasLtOptions: true,
-        category: "Polish",
         description: "High-gloss tyre polish for enhanced appearance"
       },
       {
@@ -2203,7 +1946,6 @@
         price: 70,
         unit: "Lt",
         hasLtOptions: true,
-        category: "Cleaning",
         description: "Advanced foaming wash for thorough cleaning"
       },
       {
@@ -2213,7 +1955,6 @@
         price: 70,
         unit: "Lt",
         hasLtOptions: true,
-        category: "Cleaning",
         description: "Streak-free glass cleaner for crystal clear visibility"
       },
       {
@@ -2223,7 +1964,6 @@
         price: 130,
         unit: "Lt",
         hasLtOptions: true,
-        category: "Cleaning",
         description: "Effective interior cleaner for all surfaces"
       },
       {
@@ -2233,7 +1973,6 @@
         price: 2000,
         unit: "per piece",
         hasLtOptions: false,
-        category: "Accessories",
         description: "Professional foaming gun for car wash"
       },
       {
@@ -2245,7 +1984,6 @@
         hasLtOptions: true,
         qtyOptions: [5, 10, 20],
         qtyLabel: " pcs",
-        category: "Accessories",
         description: "Ultra soft Micro Towel"
       },
       {
@@ -2257,7 +1995,6 @@
         hasLtOptions: true,
         qtyOptions: [5, 10, 20],
         qtyLabel: " pcs",
-        category: "Accessories",
         description: "Ultra soft Micro Towel"
       },
       {
@@ -2269,14 +2006,9 @@
         hasLtOptions: true,
         qtyOptions: [5, 10, 20],
         qtyLabel: " pcs",
-        category: "Accessories",
         description: "Ultra soft Micro Towel"
       }
     ];
-
-    let currentSearchQuery = "";
-    let activeCategory = "All";
-    let activeSort = "default";
 
     const LT_OPTIONS = [10, 35, 50];
     let cart = {};
@@ -2618,8 +2350,7 @@
       } else {
         qtyBtnsHtml = '';
       }
-      const categoryBadge = product.category ? `<span class="product-category-badge">${escapeHtml(product.category)}</span>` : '';
-      return `<div class="product-card rounded-2xl overflow-hidden group" data-product-id="${product.id}"><div class="product-image-container"><img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.style.display='none'; this.nextElementSibling.style.opacity='1';"><div class="product-image-fallback"><i class="fas fa-image text-4xl mb-2"></i><p>Image not available</p></div></div><div class="p-6">${categoryBadge}<h3 class="text-xl font-bold text-gray-800 mb-1 group-hover:text-blue-600">${product.name}</h3><p class="text-gray-600 mb-4">${product.description}</p><div class="flex justify-between items-center"><div class="text-2xl font-bold gradient-text">${formatCurrency(product.price)}<span class="text-lg text-gray-500 ml-1">/${product.unit}</span></div><div class="flex space-x-2"><a href="tel:9352470085" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm" aria-label="Call for ${product.name}"><i class="fas fa-phone"></i></a><button class="enquiry-trigger-btn" onclick="openEnquiryModal(${product.id})"><i class="fas fa-clipboard-list"></i> Enquiry</button></div></div>${qtyBtnsHtml}<button class="add-to-cart-btn" data-add-cart="${product.id}" onclick="addToCart(${product.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>`;
+      return `<div class="product-card rounded-2xl overflow-hidden group" data-product-id="${product.id}"><div class="product-image-container"><img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.style.display='none'; this.nextElementSibling.style.opacity='1';"><div class="product-image-fallback"><i class="fas fa-image text-4xl mb-2"></i><p>Image not available</p></div></div><div class="p-6"><h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600">${product.name}</h3><p class="text-gray-600 mb-4">${product.description}</p><div class="flex justify-between items-center"><div class="text-2xl font-bold gradient-text">${formatCurrency(product.price)}<span class="text-lg text-gray-500 ml-1">/${product.unit}</span></div><div class="flex space-x-2"><a href="tel:9352470085" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm" aria-label="Call for ${product.name}"><i class="fas fa-phone"></i></a><button class="enquiry-trigger-btn" onclick="openEnquiryModal(${product.id})"><i class="fas fa-clipboard-list"></i> Enquiry</button></div></div>${qtyBtnsHtml}<button class="add-to-cart-btn" data-add-cart="${product.id}" onclick="addToCart(${product.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>`;
     }
 
     function selectQty(btn) {
@@ -2631,6 +2362,11 @@
       });
       btn.classList.add('active');
       btn.setAttribute('aria-pressed', 'true');
+    }
+
+    function renderProducts() {
+      const container = document.getElementById('productsGrid');
+      if (container) container.innerHTML = products.map(p => createProductCard(p)).join('');
     }
 
     const SEARCH_SYNONYMS = {
@@ -2687,81 +2423,30 @@
       return score;
     }
 
-    function getProductCategories() {
-      return ["All", ...new Set(products.map(p => p.category).filter(Boolean))];
-    }
-
-    function applySort(list, sortKey) {
-      const sorted = [...list];
-      if (sortKey === "price-asc") sorted.sort((a, b) => a.price - b.price);
-      else if (sortKey === "price-desc") sorted.sort((a, b) => b.price - a.price);
-      else if (sortKey === "name-asc") sorted.sort((a, b) => a.name.localeCompare(b.name));
-      return sorted;
-    }
-
-    function getVisibleProducts() {
-      let list = products;
-      if (activeCategory !== "All") {
-        list = list.filter(p => p.category === activeCategory);
-      }
-      const q = currentSearchQuery.trim().toLowerCase();
-      if (q) {
-        const queryWords = q.split(/\s+/).filter(Boolean);
-        list = list
-          .map(product => ({ product, score: scoreProductAgainstQuery(product, queryWords) }))
-          .filter(entry => entry.score > 0)
-          .sort((a, b) => b.score - a.score)
-          .map(entry => entry.product);
-      }
-      return applySort(list, activeSort);
-    }
-
-    function renderProductsGrid() {
+    function filterProducts(rawQuery) {
+      const query = String(rawQuery || "");
+      const q = query.trim().toLowerCase();
       const container = document.getElementById('productsGrid');
       if (!container) return;
-      const list = getVisibleProducts();
-      const trimmedQuery = currentSearchQuery.trim();
-      container.innerHTML = list.length ?
-        list.map(p => createProductCard(p)).join('') :
-        `<p class="col-span-full text-center text-gray-500 py-12">No products match${trimmedQuery ? ` "${escapeHtml(trimmedQuery)}"` : ' this filter'}${activeCategory !== 'All' ? ` in "${escapeHtml(activeCategory)}"` : ''}. Try a different search or <a href="#contact" class="text-blue-600 underline">contact us</a> for custom requirements.</p>`;
-    }
+      if (!q) {
+        renderProducts();
+        return;
+      }
+      const queryWords = q.split(/\s+/).filter(Boolean);
+      const ranked = products
+        .map(product => ({ product, score: scoreProductAgainstQuery(product, queryWords) }))
+        .filter(entry => entry.score > 0)
+        .sort((a, b) => b.score - a.score);
 
-    function initCategoryFilters() {
-      const wrap = document.getElementById('categoryFilters');
-      if (!wrap) return;
-      const categories = getProductCategories();
-      wrap.innerHTML = categories.map(cat =>
-        `<button type="button" class="filter-chip ${cat === activeCategory ? 'active' : ''}" data-category="${escapeHtml(cat)}" aria-pressed="${cat === activeCategory}">${escapeHtml(cat)}</button>`
-      ).join('');
-      wrap.querySelectorAll('.filter-chip').forEach(btn => {
-        btn.addEventListener('click', () => {
-          activeCategory = btn.dataset.category;
-          wrap.querySelectorAll('.filter-chip').forEach(b => {
-            const isActive = b === btn;
-            b.classList.toggle('active', isActive);
-            b.setAttribute('aria-pressed', String(isActive));
-          });
-          renderProductsGrid();
-        });
-      });
-    }
-
-    function initProductSort() {
-      const select = document.getElementById('productSort');
-      if (!select) return;
-      select.addEventListener('change', () => {
-        activeSort = select.value;
-        renderProductsGrid();
-      });
+      container.innerHTML = ranked.length ?
+        ranked.map(entry => createProductCard(entry.product)).join('') :
+        `<p class="col-span-full text-center text-gray-500 py-12">No products match "${escapeHtml(query.trim())}". Try a different search or <a href="#contact" class="text-blue-600 underline">contact us</a> for custom requirements.</p>`;
     }
 
     function initProductSearch() {
       const input = document.getElementById('productSearch');
       if (!input) return;
-      input.addEventListener('input', debounce(() => {
-        currentSearchQuery = input.value;
-        renderProductsGrid();
-      }, 150));
+      input.addEventListener('input', debounce(() => filterProducts(input.value), 150));
     }
 
     function isSpeechRecognitionSupported() {
@@ -3007,13 +2692,6 @@
         !assistantPanel.contains(e.target) && !(assistantBtn && assistantBtn.contains(e.target))) {
         toggleAssistant();
       }
-
-      const mobileNav = document.getElementById('mobileNav');
-      const mobileNavToggle = document.getElementById('mobileNavToggle');
-      if (mobileNav && mobileNav.classList.contains('open') &&
-        !mobileNav.contains(e.target) && !(mobileNavToggle && mobileNavToggle.contains(e.target))) {
-        closeMobileNav();
-      }
     });
 
     document.addEventListener('keydown', (e) => {
@@ -3028,9 +2706,6 @@
           toggleCart();
         } else if (assistantPanel && !assistantPanel.classList.contains('hidden')) {
           toggleAssistant();
-        } else {
-          const mobileNav = document.getElementById('mobileNav');
-          if (mobileNav && mobileNav.classList.contains('open')) closeMobileNav();
         }
         return;
       }
@@ -3200,48 +2875,6 @@
       });
     }
 
-    function toggleMobileNav() {
-      const nav = document.getElementById('mobileNav');
-      const btn = document.getElementById('mobileNavToggle');
-      if (!nav) return;
-      const willOpen = !nav.classList.contains('open');
-      nav.classList.toggle('open', willOpen);
-      if (btn) {
-        btn.setAttribute('aria-expanded', String(willOpen));
-        const icon = btn.querySelector('i');
-        if (icon) icon.className = willOpen ? 'fas fa-xmark' : 'fas fa-bars';
-      }
-    }
-
-    function closeMobileNav() {
-      const nav = document.getElementById('mobileNav');
-      const btn = document.getElementById('mobileNavToggle');
-      if (nav) nav.classList.remove('open');
-      if (btn) {
-        btn.setAttribute('aria-expanded', 'false');
-        const icon = btn.querySelector('i');
-        if (icon) icon.className = 'fas fa-bars';
-      }
-    }
-
-    function initScrollSpy() {
-      const sectionIds = ['products', 'business-details', 'faq', 'contact'];
-      const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
-      const navLinks = document.querySelectorAll('[data-nav-link]');
-      if (!sections.length || !navLinks.length) return;
-      const setActive = (id) => {
-        navLinks.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
-        });
-      };
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
-      sections.forEach(s => obs.observe(s));
-    }
-
     function initScrollToTop() {
       const btn = document.getElementById('scrollToTop');
       if (!btn) return;
@@ -3269,7 +2902,6 @@
       document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', function(e) {
         e.preventDefault();
         const t = document.querySelector(this.getAttribute('href'));
-        closeMobileNav();
         if (t) t.scrollIntoView({
           behavior: 'smooth'
         });
@@ -3304,16 +2936,13 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      renderProductsGrid();
-      initCategoryFilters();
-      initProductSort();
+      renderProducts();
       initProductSearch();
       initVoiceSearch();
       initVoiceAssistant();
       initScrollToTop();
       initScrollProgress();
       initSmoothScrolling();
-      initScrollSpy();
       initCardReveal();
       const yearEl = document.getElementById('copyrightYear');
       if (yearEl) yearEl.textContent = String(new Date().getFullYear());
