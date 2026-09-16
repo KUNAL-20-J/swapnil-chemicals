@@ -82,8 +82,6 @@
                 --radius-lg: 16px;
                 --brand-accent: #3b82f6;
                 --brand-accent-dark: #1d4ed8;
-                --accent-orange: #ea580c;
-                --accent-orange-dark: #c2410c;
                 --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.08);
                 --shadow-md: 0 12px 32px rgba(15, 23, 42, 0.12);
                 --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
@@ -212,7 +210,7 @@
                 backdrop-filter: blur(10px);
                 border: 1px solid rgba(255, 255, 255, 0.2);
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-                transition: transform 0.4s var(--ease-standard);
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
             .glass-card:hover {
@@ -225,7 +223,7 @@
                 border: 1px solid rgba(255, 255, 255, 0.25);
                 border-radius: 24px;
                 overflow: hidden;
-                transition: all 0.35s var(--ease-standard);
+                transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
                 box-shadow:
                     0 10px 30px rgba(0, 0, 0, 0.08),
                     inset 0 1px 0 rgba(255, 255, 255, 0.4);
@@ -313,7 +311,7 @@
             }
 
             .contact-icon {
-                transition: all 0.3s var(--ease-standard);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
             .contact-icon:hover {
@@ -324,7 +322,7 @@
                 background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9));
                 border: 1px solid rgba(255, 255, 255, 0.3);
                 backdrop-filter: blur(10px);
-                transition: transform 0.4s var(--ease-standard);
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
             .feature-card:hover {
@@ -392,20 +390,22 @@
             }
 
             .btn-secondary {
-                background: var(--accent-orange);
+                /* background: linear-gradient(135deg, #f59e0b, #d97706); */
+                background: linear-gradient(135deg, #ea580c, #ea580c);
                 transition: all 0.3s ease;
             }
 
             .btn-secondary:hover {
-                background: var(--accent-orange);
+                /* background: linear-gradient(135deg, #d97706, #b45309); */
+                background: linear-gradient(135deg, #ea580c, #ea580c);
                 transform: translateY(-2px);
                 box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
             }
 
             #scrollToTop {
                 transition:
-                    transform 0.3s var(--ease-standard),
-                    box-shadow 0.3s var(--ease-standard);
+                    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 position: fixed;
                 bottom: 1.5rem;
                 right: 1.5rem;
@@ -493,18 +493,18 @@
                 background: transparent;
                 color: #475569;
                 user-select: none;
+            }
 
-                &:hover {
-                    border-color: #3b82f6;
-                    color: #3b82f6;
-                }
+            .qty-btn:hover {
+                border-color: #3b82f6;
+                color: #3b82f6;
+            }
 
-                &.active {
-                    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
-                    border-color: transparent;
-                    color: #fff;
-                    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
-                }
+            .qty-btn.active {
+                background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+                border-color: transparent;
+                color: #fff;
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
             }
 
             .add-to-cart-btn {
@@ -513,7 +513,8 @@
                 padding: 9px 14px;
                 border-radius: 0.75rem;
                 border: none;
-                background: var(--accent-orange);
+                /* background: linear-gradient(135deg, #f59e0b, #d97706); */
+                background: linear-gradient(135deg, #ea580c, #ea580c);
                 color: white;
                 font-size: 0.8rem;
                 font-weight: 700;
@@ -526,13 +527,15 @@
             }
 
             .add-to-cart-btn:hover {
-                background: var(--accent-orange);
+                /* background: linear-gradient(135deg, #d97706, #b45309); */
+                background: linear-gradient(135deg, #ea580c, #ea580c);
                 transform: translateY(-1px);
                 box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
             }
 
             .enquiry-trigger-btn {
-                background: var(--accent-orange);
+                /* background: linear-gradient(135deg, #f97316, #ea580c); */
+                background: linear-gradient(135deg, #ea580c, #ea580c);
                 color: #fff;
                 border: none;
                 padding: 8px 14px;
@@ -548,7 +551,7 @@
             }
 
             .enquiry-trigger-btn:hover {
-                background: linear-gradient(135deg, var(--accent-orange), var(--accent-orange-dark));
+                background: linear-gradient(135deg, #ea580c, #c2410c);
                 transform: translateY(-2px);
                 box-shadow: 0 6px 18px rgba(249, 115, 22, 0.4);
             }
@@ -559,7 +562,7 @@
                 width: 46px;
                 height: 46px;
                 border-radius: 50%;
-                background: var(--accent-orange);
+                background: linear-gradient(135deg, #ea580c, #ea580c);
                 color: white;
                 border: none;
                 cursor: pointer;
@@ -590,7 +593,7 @@
                 align-items: center;
                 justify-content: center;
                 padding: 0 4px;
-                transition: transform 0.3s var(--ease-spring);
+                transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
             .cart-badge.bump {
@@ -624,7 +627,7 @@
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
-                transition: all 0.3s var(--ease-standard);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 transform-origin: bottom right;
             }
 
@@ -675,11 +678,11 @@
                 background: transparent;
                 cursor: pointer;
                 font-weight: 700;
+            }
 
-                &:hover {
-                    border-color: #3b82f6;
-                    color: #3b82f6;
-                }
+            .cart-qty-btn:hover {
+                border-color: #3b82f6;
+                color: #3b82f6;
             }
 
             .cart-panel-footer {
@@ -739,7 +742,7 @@
                 max-height: 92vh;
                 overflow-y: auto;
                 box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-                animation: enquiryModalIn 0.35s var(--ease-spring);
+                animation: enquiryModalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
             @keyframes enquiryModalIn {
@@ -823,12 +826,12 @@
                 background: transparent;
                 cursor: pointer;
                 transition: 0.2s;
+            }
 
-                &.active {
-                    background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
-                    border-color: transparent;
-                    color: #fff;
-                }
+            .enquiry-qty-btn.active {
+                background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
+                border-color: transparent;
+                color: #fff;
             }
 
             .enquiry-textarea,
@@ -897,7 +900,7 @@
                 padding: 28px 26px 26px;
                 text-align: center;
                 box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-                animation: enquiryModalIn 0.35s var(--ease-spring);
+                animation: enquiryModalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
             .added-cart-close-btn {
@@ -974,34 +977,34 @@
                 display: flex;
                 align-items: center;
                 gap: 8px;
+            }
 
-                & button {
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 8px;
-                    border: 1.5px solid #cbd5e1;
-                    background: transparent;
-                    color: #475569;
-                    font-weight: 700;
-                    cursor: pointer;
-                    transition: 0.2s;
+            .added-cart-qty-ctrl button {
+                width: 30px;
+                height: 30px;
+                border-radius: 8px;
+                border: 1.5px solid #cbd5e1;
+                background: transparent;
+                color: #475569;
+                font-weight: 700;
+                cursor: pointer;
+                transition: 0.2s;
+            }
 
-                    &:hover {
-                        border-color: #3b82f6;
-                        color: #3b82f6;
-                    }
-                }
+            .added-cart-qty-ctrl button:hover {
+                border-color: #3b82f6;
+                color: #3b82f6;
+            }
 
-                & input {
-                    width: 42px;
-                    height: 30px;
-                    text-align: center;
-                    border: 1.5px solid #e2e8f0;
-                    border-radius: 8px;
-                    font-weight: 700;
-                    font-size: 0.85rem;
-                    color: #1e293b;
-                }
+            .added-cart-qty-ctrl input {
+                width: 42px;
+                height: 30px;
+                text-align: center;
+                border: 1.5px solid #e2e8f0;
+                border-radius: 8px;
+                font-weight: 700;
+                font-size: 0.85rem;
+                color: #1e293b;
             }
 
             .added-cart-line {
@@ -1049,12 +1052,14 @@
             }
 
             .added-cart-viewcart-btn {
-                background: var(--accent-orange);
+                /* background: linear-gradient(135deg, #f59e0b, #d97706); */
+                background: linear-gradient(135deg, #ea580c, #ea580c);
                 color: #fff;
             }
 
             .added-cart-viewcart-btn:hover {
-                background: var(--accent-orange);
+                /* background: linear-gradient(135deg, #d97706, #b45309); */
+                background: linear-gradient(135deg, #ea580c, #ea580c);
                 transform: translateY(-1px);
             }
 
@@ -1083,7 +1088,7 @@
                 padding: 28px 26px 26px;
                 text-align: center;
                 box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-                animation: enquiryModalIn 0.35s var(--ease-spring);
+                animation: enquiryModalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
             .remove-confirm-icon {
@@ -1153,8 +1158,8 @@
                 background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
                 box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
                 transition:
-                    transform 0.3s var(--ease-standard),
-                    box-shadow 0.3s var(--ease-standard);
+                    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
             .ai-assistant-btn:hover {
@@ -1183,7 +1188,7 @@
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
-                transition: all 0.3s var(--ease-standard);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 transform-origin: bottom left;
             }
 
@@ -1344,16 +1349,16 @@
                 transition:
                     color 0.2s ease,
                     background 0.2s ease;
+            }
 
-                &:hover {
-                    color: var(--brand-accent);
-                    background: rgba(59, 130, 246, 0.1);
-                }
+            .voice-btn:hover {
+                color: var(--brand-accent);
+                background: rgba(59, 130, 246, 0.1);
+            }
 
-                &.listening {
-                    color: #ef4444;
-                    animation: voice-listening-pulse 1s ease-in-out infinite;
-                }
+            .voice-btn.listening {
+                color: #ef4444;
+                animation: voice-listening-pulse 1s ease-in-out infinite;
             }
 
             .voice-btn-inline {
@@ -1369,17 +1374,17 @@
                 justify-content: center;
                 flex-shrink: 0;
                 transition: 0.2s;
+            }
 
-                &:hover {
-                    border-color: var(--brand-accent);
-                    color: var(--brand-accent);
-                }
+            .voice-btn-inline:hover {
+                border-color: var(--brand-accent);
+                color: var(--brand-accent);
+            }
 
-                &.listening {
-                    border-color: #ef4444;
-                    color: #ef4444;
-                    animation: voice-listening-pulse 1s ease-in-out infinite;
-                }
+            .voice-btn-inline.listening {
+                border-color: #ef4444;
+                color: #ef4444;
+                animation: voice-listening-pulse 1s ease-in-out infinite;
             }
 
             @media (max-width: 480px) {
@@ -2342,62 +2347,6 @@
                 COUNTRY_CODE: "+91",
             });
 
-            // Centralized mutable application state
-            let cart = {};
-            let lastCartBadgeCount = 0;
-            let currentEnquiryProduct = null;
-            let addedCartModalKey = null;
-            let pendingRemoveKey = null;
-            let assistantStarted = false;
-
-            // Shared open/close/focus-restore behavior for the enquiry, added-to-cart
-            // and remove-confirmation dialogs so each modal doesn't reimplement it.
-            function createModalController(modalId, { boxSelector, lockScroll = false } = {}) {
-                let lastFocused = null;
-                return {
-                    open() {
-                        const modal = document.getElementById(modalId);
-                        if (!modal) return;
-                        lastFocused = document.activeElement;
-                        modal.classList.add("show");
-                        const box = boxSelector ? modal.querySelector(boxSelector) : modal;
-                        if (box) box.focus({ preventScroll: true });
-                        if (lockScroll) document.body.style.overflow = "hidden";
-                    },
-                    close({ viewTransition = false } = {}) {
-                        const modal = document.getElementById(modalId);
-                        const doClose = () => {
-                            if (modal) modal.classList.remove("show");
-                            if (lockScroll) document.body.style.overflow = "";
-                            if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
-                            lastFocused = null;
-                        };
-                        if (viewTransition && document.startViewTransition) {
-                            document.startViewTransition(doClose);
-                        } else {
-                            doClose();
-                        }
-                    },
-                    hide() {
-                        const modal = document.getElementById(modalId);
-                        if (modal) modal.classList.remove("show");
-                        lastFocused = null;
-                    },
-                };
-            }
-
-            const enquiryModalCtrl = createModalController("enquiryModal", {
-                boxSelector: ".enquiry-modal-box",
-                lockScroll: true,
-            });
-            const addedCartModalCtrl = createModalController("addedCartModal", {
-                boxSelector: ".added-cart-box",
-                lockScroll: true,
-            });
-            const removeConfirmModalCtrl = createModalController("removeConfirmModal", {
-                boxSelector: ".remove-confirm-box",
-            });
-
             function isValidIndianMobile(value) {
                 return /^[6-9]\d{9}$/.test(String(value || "").trim());
             }
@@ -2433,11 +2382,6 @@
 
             function formatCurrency(amount) {
                 return currencyFormatter.format(amount);
-            }
-
-            function getUnitLabel(product) {
-                if (product.hasLtOptions && !product.qtyOptions) return "Lt";
-                return product.qtyOptions ? (product.qtyLabel || " pcs").trim() : "pcs";
             }
 
             function debounce(fn, delay) {
@@ -2529,6 +2473,7 @@
                     unit: "Lt",
                     hasLtOptions: true,
                     description: "Streak-free glass cleaner for crystal clear visibility",
+                    
                 },
                 {
                     id: 6,
@@ -2575,6 +2520,8 @@
             ];
 
             const LT_OPTIONS = [10, 35, 50];
+            let cart = {};
+            let lastCartBadgeCount = 0;
 
             function addToCart(productId) {
                 const product = products.find((p) => p.id === productId);
@@ -2682,7 +2629,12 @@
                     const totalQty = selectedQty * qty;
                     const lineTotal = product.price * totalQty;
                     grandTotal += lineTotal;
-                    const qLabel = ` ${getUnitLabel(product)}`;
+                    const qLabel =
+                        product.hasLtOptions && !product.qtyOptions
+                            ? " Lt"
+                            : product.qtyOptions
+                              ? product.qtyLabel || " pcs"
+                              : " pcs";
 
                     itemsHTML += `<div class="cart-item-row"><div style="flex:1"><p style="font-weight:500;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${product.name}</p>
          <p style="font-size:11px;color:#64748b;">${totalQty}${qLabel} × ${formatCurrency(product.price)}/${qLabel.trim()} </p>
@@ -2715,18 +2667,32 @@
                 updateCartUI();
             }
 
+            let pendingRemoveKey = null;
+            let lastFocusedBeforeRemoveConfirm = null;
+
             function removeFromCart(key, e) {
                 if (e) e.stopPropagation();
                 if (!cart[key]) return;
                 pendingRemoveKey = key;
                 const nameEl = document.getElementById("removeConfirmProductName");
                 if (nameEl) nameEl.textContent = cart[key].product.name;
-                removeConfirmModalCtrl.open();
+                const modal = document.getElementById("removeConfirmModal");
+                if (modal) {
+                    lastFocusedBeforeRemoveConfirm = document.activeElement;
+                    modal.classList.add("show");
+                    const box = modal.querySelector(".remove-confirm-box");
+                    if (box) box.focus({ preventScroll: true });
+                }
             }
 
             function closeRemoveConfirmModal() {
-                removeConfirmModalCtrl.close();
+                const modal = document.getElementById("removeConfirmModal");
+                if (modal) modal.classList.remove("show");
                 pendingRemoveKey = null;
+                if (lastFocusedBeforeRemoveConfirm && typeof lastFocusedBeforeRemoveConfirm.focus === "function") {
+                    lastFocusedBeforeRemoveConfirm.focus();
+                }
+                lastFocusedBeforeRemoveConfirm = null;
             }
 
             function confirmRemoveFromCart(e) {
@@ -2747,10 +2713,15 @@
                 // Save updated cart
                 localStorage.setItem(APP.CART_STORAGE_KEY, JSON.stringify(cart));
 
-                // Close the remove confirmation popup without restoring focus to the
-                // (now removed) trigger button — keep focus in the still-open cart panel
-                removeConfirmModalCtrl.hide();
+                // Close only the remove confirmation popup
+                const modal = document.getElementById("removeConfirmModal");
+                if (modal) {
+                    modal.classList.remove("show");
+                }
+
+                // Reset variables
                 pendingRemoveKey = null;
+                lastFocusedBeforeRemoveConfirm = null;
 
                 // Update cart items
                 updateCartUI();
@@ -2790,6 +2761,9 @@
                 }
             }
 
+            let addedCartModalKey = null;
+            let lastFocusedBeforeAddedCart = null;
+
             function refreshAddedCartModalTotals() {
                 const item = cart[addedCartModalKey];
                 const qtyEl = document.getElementById("addedCartQtyValue");
@@ -2816,13 +2790,23 @@
                     imgEl.alt = item.product.name;
                 }
                 refreshAddedCartModalTotals();
-                addedCartModalCtrl.open();
+                lastFocusedBeforeAddedCart = document.activeElement;
+                modal.classList.add("show");
+                const box = modal.querySelector(".added-cart-box");
+                if (box) box.focus({ preventScroll: true });
+                document.body.style.overflow = "hidden";
             }
 
             function closeAddedCartModal(e) {
                 if (e) e.stopPropagation();
-                addedCartModalCtrl.close();
+                const modal = document.getElementById("addedCartModal");
+                if (modal) modal.classList.remove("show");
+                document.body.style.overflow = "";
                 addedCartModalKey = null;
+                if (lastFocusedBeforeAddedCart && typeof lastFocusedBeforeAddedCart.focus === "function") {
+                    lastFocusedBeforeAddedCart.focus();
+                }
+                lastFocusedBeforeAddedCart = null;
             }
 
             function changeAddedCartQty(delta) {
@@ -2851,7 +2835,7 @@
                     const item = cart[key];
                     const product = item.product;
                     const qty = item.selectedQty * item.qty;
-                    const label = getUnitLabel(product);
+                    const label = product.hasLtOptions && !product.qtyOptions ? "Lt" : product.qtyLabel || "pcs";
 
                     productsHtml += `
           <div class="enquiry-product-preview">
@@ -2859,7 +2843,7 @@
               <div>
                   <p class="text-xs font-bold text-sky-700">Selected Product</p>
                   <p class="font-bold text-gray-800">${product.name}</p>
-                  <p class="text-sm font-semibold text-blue-600 mt-1">${qty} ${label} × ${formatCurrency(product.price)}/${label}</p>
+                  <p class="text-sm font-semibold text-blue-600 mt-1">${qty} ${label} × ${formatCurrency(product.price)}/${label.trim()}</p>
               </div>
           </div>
           `;
@@ -2884,7 +2868,14 @@
           </button>
           <p class="text-center text-xs text-gray-400 mt-3">Your enquiry will be sent directly to <b>Swapnil Chemicals</b> on WhatsApp</p>
       `;
-                enquiryModalCtrl.open();
+                const modal = document.getElementById("enquiryModal");
+                if (modal) {
+                    lastFocusedBeforeEnquiry = document.activeElement;
+                    modal.classList.add("show");
+                    const box = modal.querySelector(".enquiry-modal-box");
+                    if (box) box.focus({ preventScroll: true });
+                }
+                document.body.style.overflow = "hidden";
             }
 
             function submitCartEnquiry() {
@@ -2905,7 +2896,7 @@
                     const item = cart[key];
                     const product = item.product;
                     const qty = item.selectedQty * item.qty;
-                    const label = getUnitLabel(product);
+                    const label = product.hasLtOptions && !product.qtyOptions ? "Lt" : product.qtyLabel || "pcs";
                     const lineTotal = product.price * qty;
                     grandTotal += lineTotal;
                     lines.push(
@@ -3123,6 +3114,9 @@
                 });
             }
 
+            let currentEnquiryProduct = null;
+            let lastFocusedBeforeEnquiry = null;
+
             function getFocusableElements(container) {
                 return Array.from(
                     container.querySelectorAll(
@@ -3195,13 +3189,33 @@
                 const phoneError = document.getElementById("phone-error");
                 if (details) details.value = "";
                 if (phone) phone.value = "";
-                if (phoneError) phoneError.classList.add("hidden");
+                if (phoneError) phoneError.style.display = "none";
 
-                enquiryModalCtrl.open();
+                const modal = document.getElementById("enquiryModal");
+                if (modal) {
+                    lastFocusedBeforeEnquiry = document.activeElement;
+                    modal.classList.add("show");
+                    const box = modal.querySelector(".enquiry-modal-box");
+                    if (box) box.focus({ preventScroll: true });
+                }
+                document.body.style.overflow = "hidden";
             }
 
             function closeEnquiryModal() {
-                enquiryModalCtrl.close({ viewTransition: true });
+                const doClose = () => {
+                    const modal = document.getElementById("enquiryModal");
+                    if (modal) modal.classList.remove("show");
+                    document.body.style.overflow = "";
+                    if (lastFocusedBeforeEnquiry && typeof lastFocusedBeforeEnquiry.focus === "function") {
+                        lastFocusedBeforeEnquiry.focus();
+                    }
+                    lastFocusedBeforeEnquiry = null;
+                };
+                if (document.startViewTransition) {
+                    document.startViewTransition(doClose);
+                } else {
+                    doClose();
+                }
             }
 
             function submitEnquiry() {
@@ -3211,10 +3225,10 @@
 
                 const phone = phoneEl.value.trim();
                 if (!isValidIndianMobile(phone)) {
-                    phoneError.classList.remove("hidden");
+                    phoneError.style.display = "block";
                     return;
                 }
-                phoneError.classList.add("hidden");
+                phoneError.style.display = "none";
 
                 const qtyEl = document.getElementById("enquiry-qty-value");
                 const detailsEl = document.getElementById("enquiry-details");
@@ -3317,6 +3331,8 @@
                 { label: "Contact Us", query: "How can I contact you?" },
                 { label: "Payment", query: "How can I pay?" },
             ];
+
+            let assistantStarted = false;
 
             function toggleAssistant() {
                 const panel = document.getElementById("assistantPanel");
