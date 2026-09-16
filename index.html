@@ -9,7 +9,7 @@
         <link rel="apple-touch-icon" href="SC Logo.jpg" />
         <link
             rel="manifest"
-            href='data:application/manifest+json,{"name":"Swapnil Chemicals - Automobile Cleaning Products","short_name":"Swapnil Chemicals","description":"Manufacturers and marketers of automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner and more.","start_url":".","scope":".","display":"standalone","background_color":"%23f8fafc","theme_color":"%231e293b","lang":"en-IN","icons":[{"src":"SC Logo.jpg","sizes":"any","type":"image/jpeg"}]}'
+            href='data:application/manifest+json,{"name":"Swapnil Chemicals - Automobile Cleaning Products","short_name":"Swapnil Chemicals","description":"Manufacturers and marketers of automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner and more.","start_url":".","scope":".","display":"standalone","background_color":"%23f8fafc",<"theme_color":"%231e293b","lang":"en-IN","icons":[{"src":"SC Logo.jpg","sizes":"any","type":"image/jpeg"}]}'
         />
         <meta
             name="description"
@@ -715,57 +715,43 @@
                 transform: translateY(-1px);
             }
 
-            /* Shared reset + open/close animation for the native <dialog> modals
-               (enquiry, added-to-cart, remove-confirm). Uses @starting-style +
-               allow-discrete so both the show AND the close transition are
-               driven by CSS instead of a bespoke JS animation controller. */
-            .modal-dialog {
-                border: none;
-                padding: 0;
-                max-height: 92vh;
-                overflow-y: auto;
-                box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-                transition:
-                    opacity 0.3s var(--ease-standard),
-                    transform 0.3s var(--ease-spring),
-                    overlay 0.3s allow-discrete,
-                    display 0.3s allow-discrete;
-            }
-
-            .modal-dialog[open] {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-
-            @starting-style {
-                .modal-dialog[open] {
-                    opacity: 0;
-                    transform: translateY(40px) scale(0.95);
-                }
-            }
-
-            .modal-dialog::backdrop {
+            #enquiryModal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
                 background: rgba(0, 0, 0, 0.6);
                 backdrop-filter: blur(6px);
-                transition:
-                    background-color 0.3s ease,
-                    overlay 0.3s allow-discrete,
-                    display 0.3s allow-discrete;
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
             }
 
-            @starting-style {
-                .modal-dialog[open]::backdrop {
-                    background: rgba(0, 0, 0, 0);
-                }
+            #enquiryModal.show {
+                display: flex !important;
             }
 
             .enquiry-modal-box {
                 background: #fff;
                 border-radius: 22px;
-                width: calc(100% - 2rem);
+                width: 100%;
                 max-width: 500px;
+                max-height: 92vh;
+                overflow-y: auto;
+                box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+                animation: enquiryModalIn 0.35s var(--ease-spring);
+            }
+
+            @keyframes enquiryModalIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(40px) scale(0.95);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
             }
 
             .enquiry-modal-header {
@@ -886,14 +872,32 @@
                 margin-top: 8px;
             }
 
+            #addedCartModal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
+                background: rgba(0, 0, 0, 0.55);
+                backdrop-filter: blur(6px);
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+            }
+
+            #addedCartModal.show {
+                display: flex !important;
+            }
+
             .added-cart-box {
                 position: relative;
                 background: #fff;
                 border-radius: 20px;
-                width: calc(100% - 2rem);
+                width: 100%;
                 max-width: 420px;
                 padding: 28px 26px 26px;
                 text-align: center;
+                box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+                animation: enquiryModalIn 0.35s var(--ease-spring);
             }
 
             .added-cart-close-btn {
@@ -1054,14 +1058,32 @@
                 transform: translateY(-1px);
             }
 
+            #removeConfirmModal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
+                background: rgba(0, 0, 0, 0.55);
+                backdrop-filter: blur(6px);
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+            }
+
+            #removeConfirmModal.show {
+                display: flex !important;
+            }
+
             .remove-confirm-box {
                 position: relative;
                 background: #fff;
                 border-radius: 20px;
-                width: calc(100% - 2rem);
+                width: 100%;
                 max-width: 380px;
                 padding: 28px 26px 26px;
                 text-align: center;
+                box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+                animation: enquiryModalIn 0.35s var(--ease-spring);
             }
 
             .remove-confirm-icon {
@@ -2184,121 +2206,131 @@
             </form>
         </div>
 
-        <dialog id="enquiryModal" class="modal-dialog enquiry-modal-box" aria-labelledby="enquiry-modal-title">
-            <div class="enquiry-modal-header">
-                <div>
-                    <h2 id="enquiry-modal-title" style="color: #fff; font-size: 1.15rem; font-weight: 700">
-                        📋 Enquiry Form
-                    </h2>
-                    <p style="color: rgba(255, 255, 255, 0.65); font-size: 0.75rem">
-                        Tell us about your requirements
-                    </p>
+        <div id="enquiryModal">
+            <div class="enquiry-modal-box" role="dialog" aria-modal="true" aria-label="Enquiry form" tabindex="-1">
+                <div class="enquiry-modal-header">
+                    <div>
+                        <h2 style="color: #fff; font-size: 1.15rem; font-weight: 700">📋 Enquiry Form</h2>
+                        <p style="color: rgba(255, 255, 255, 0.65); font-size: 0.75rem">
+                            Tell us about your requirements
+                        </p>
+                    </div>
+                    <button class="enquiry-close-btn" onclick="closeEnquiryModal()" aria-label="Close enquiry form">
+                        <i class="fas fa-trash-can"></i>
+                    </button>
                 </div>
-                <button class="enquiry-close-btn" onclick="closeEnquiryModal()" aria-label="Close enquiry form">
+                <div class="enquiry-body">
+                    <div class="enquiry-product-preview">
+                        <img id="enquiry-product-img" src="" alt="Selected Product" loading="lazy" decoding="async" />
+                        <div>
+                            <p class="text-xs font-bold text-sky-700">Selected Product</p>
+                            <p id="enquiry-product-name" class="font-bold text-gray-800"></p>
+                            <p id="enquiry-product-rate" class="text-sm font-semibold text-blue-600 mt-1"></p>
+                        </div>
+                    </div>
+                    <div class="enquiry-field-wrap">
+                        <label class="text-xs font-bold text-gray-600 uppercase" id="enquiry-qty-label"
+                            >Quantity <i class="fas fa-layer-group"></i
+                        ></label>
+                        <div
+                            id="enquiry-qty-buttons"
+                            class="enquiry-qty-buttons"
+                            role="group"
+                            aria-labelledby="enquiry-qty-label"
+                        ></div>
+                        <input type="hidden" id="enquiry-qty-value" />
+                    </div>
+                    <div class="enquiry-field-wrap">
+                        <label class="text-xs font-bold text-gray-600 uppercase" for="enquiry-details"
+                            >Workshop Name & Address</label
+                        ><textarea
+                            id="enquiry-details"
+                            class="enquiry-textarea"
+                            rows="2"
+                            placeholder="Any specific requirements..."
+                        ></textarea>
+                    </div>
+                    <div class="enquiry-field-wrap">
+                        <label class="text-xs font-bold text-gray-600 uppercase" for="enquiry-phone"
+                            >Your Phone Number *</label
+                        ><input
+                            type="tel"
+                            id="enquiry-phone"
+                            class="enquiry-input"
+                            maxlength="10"
+                            inputmode="numeric"
+                            placeholder="9876543210"
+                        />
+                        <p id="phone-error" class="text-red-500 text-xs hidden mt-1" role="alert">
+                            Enter valid 10-digit number
+                        </p>
+                    </div>
+                    <button class="enquiry-submit-btn" onclick="submitEnquiry()">
+                        <i class="fab fa-whatsapp"></i> Send Enquiry via WhatsApp
+                    </button>
+                    <p class="text-center text-xs text-gray-400 mt-3">Directly sent to Swapnil Chemicals</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="addedCartModal">
+            <div class="added-cart-box" role="dialog" aria-modal="true" aria-label="Added to cart" tabindex="-1">
+                <button class="added-cart-close-btn" onclick="closeAddedCartModal(event)" aria-label="Close">
                     <i class="fas fa-trash-can"></i>
                 </button>
-            </div>
-            <div class="enquiry-body">
-                <div class="enquiry-product-preview">
-                    <img id="enquiry-product-img" src="" alt="Selected Product" loading="lazy" decoding="async" />
-                    <div>
-                        <p class="text-xs font-bold text-sky-700">Selected Product</p>
-                        <p id="enquiry-product-name" class="font-bold text-gray-800"></p>
-                        <p id="enquiry-product-rate" class="text-sm font-semibold text-blue-600 mt-1"></p>
+                <p class="added-cart-product-name" id="addedCartProductName"></p>
+                <p class="added-cart-msg">has been added to your cart</p>
+                <div class="added-cart-body">
+                    <div class="added-cart-img-wrap">
+                        <img id="addedCartProductImg" src="" alt="" loading="lazy" decoding="async" />
+                    </div>
+                    <div class="added-cart-qty">
+                        <p>Qty</p>
+                        <div class="added-cart-qty-ctrl">
+                            <button type="button" onclick="changeAddedCartQty(-1)" aria-label="Decrease quantity">
+                                −
+                            </button>
+                            <input type="text" id="addedCartQtyValue" value="1" readonly aria-live="polite" />
+                            <button type="button" onclick="changeAddedCartQty(1)" aria-label="Increase quantity">
+                                +
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="enquiry-field-wrap">
-                    <label class="text-xs font-bold text-gray-600 uppercase" id="enquiry-qty-label"
-                        >Quantity <i class="fas fa-layer-group"></i
-                    ></label>
-                    <div
-                        id="enquiry-qty-buttons"
-                        class="enquiry-qty-buttons"
-                        role="group"
-                        aria-labelledby="enquiry-qty-label"
-                    ></div>
-                    <input type="hidden" id="enquiry-qty-value" />
+                <p class="added-cart-line">
+                    There are
+                    <a href="#" onclick="viewCartFromAddedModal(event)" id="addedCartItemsCount">0 items</a> in your
+                    cart.
+                </p>
+                <p class="added-cart-subtotal">Cart Subtotal: <b id="addedCartSubtotal">₹0</b></p>
+                <div class="added-cart-actions">
+                    <button class="added-cart-continue-btn" onclick="closeAddedCartModal(event)">Continue</button>
+                    <button class="added-cart-viewcart-btn" onclick="viewCartFromAddedModal(event)">View Cart</button>
                 </div>
-                <div class="enquiry-field-wrap">
-                    <label class="text-xs font-bold text-gray-600 uppercase" for="enquiry-details"
-                        >Workshop Name & Address</label
-                    ><textarea
-                        id="enquiry-details"
-                        class="enquiry-textarea"
-                        rows="2"
-                        placeholder="Any specific requirements..."
-                    ></textarea>
-                </div>
-                <div class="enquiry-field-wrap">
-                    <label class="text-xs font-bold text-gray-600 uppercase" for="enquiry-phone"
-                        >Your Phone Number *</label
-                    ><input
-                        type="tel"
-                        id="enquiry-phone"
-                        class="enquiry-input"
-                        maxlength="10"
-                        inputmode="numeric"
-                        placeholder="9876543210"
-                    />
-                    <p id="phone-error" class="text-red-500 text-xs hidden mt-1" role="alert">
-                        Enter valid 10-digit number
-                    </p>
-                </div>
-                <button class="enquiry-submit-btn" onclick="submitEnquiry()">
-                    <i class="fab fa-whatsapp"></i> Send Enquiry via WhatsApp
-                </button>
-                <p class="text-center text-xs text-gray-400 mt-3">Directly sent to Swapnil Chemicals</p>
             </div>
-        </dialog>
+        </div>
 
-        <dialog id="addedCartModal" class="modal-dialog added-cart-box" aria-label="Added to cart">
-            <button class="added-cart-close-btn" onclick="closeAddedCartModal(event)" aria-label="Close">
-                <i class="fas fa-trash-can"></i>
-            </button>
-            <p class="added-cart-product-name" id="addedCartProductName"></p>
-            <p class="added-cart-msg">has been added to your cart</p>
-            <div class="added-cart-body">
-                <div class="added-cart-img-wrap">
-                    <img id="addedCartProductImg" src="" alt="" loading="lazy" decoding="async" />
-                </div>
-                <div class="added-cart-qty">
-                    <p>Qty</p>
-                    <div class="added-cart-qty-ctrl">
-                        <button type="button" onclick="changeAddedCartQty(-1)" aria-label="Decrease quantity">
-                            −
-                        </button>
-                        <input type="text" id="addedCartQtyValue" value="1" readonly aria-live="polite" />
-                        <button type="button" onclick="changeAddedCartQty(1)" aria-label="Increase quantity">
-                            +
-                        </button>
-                    </div>
+        <div id="removeConfirmModal">
+            <div
+                class="remove-confirm-box"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Remove item from cart"
+                tabindex="-1"
+            >
+                <div class="remove-confirm-icon"><i class="fas fa-trash-can"></i></div>
+                <p class="remove-confirm-title">Remove item?</p>
+                <p class="remove-confirm-msg">
+                    Are you sure you would like to remove <b id="removeConfirmProductName"></b> from the shopping cart?
+                </p>
+                <div class="added-cart-actions">
+                    <button class="added-cart-continue-btn" onclick="closeRemoveConfirmModal()">Cancel</button>
+                    <button class="remove-confirm-ok-btn" onclick="confirmRemoveFromCart(event)">
+                        <i class="fas fa-trash-can"></i> Remove
+                    </button>
                 </div>
             </div>
-            <p class="added-cart-line">
-                There are
-                <a href="#" onclick="viewCartFromAddedModal(event)" id="addedCartItemsCount">0 items</a> in your
-                cart.
-            </p>
-            <p class="added-cart-subtotal">Cart Subtotal: <b id="addedCartSubtotal">₹0</b></p>
-            <div class="added-cart-actions">
-                <button class="added-cart-continue-btn" onclick="closeAddedCartModal(event)">Continue</button>
-                <button class="added-cart-viewcart-btn" onclick="viewCartFromAddedModal(event)">View Cart</button>
-            </div>
-        </dialog>
-
-        <dialog id="removeConfirmModal" class="modal-dialog remove-confirm-box" aria-labelledby="remove-confirm-title">
-            <div class="remove-confirm-icon"><i class="fas fa-trash-can"></i></div>
-            <p class="remove-confirm-title" id="remove-confirm-title">Remove item?</p>
-            <p class="remove-confirm-msg">
-                Are you sure you would like to remove <b id="removeConfirmProductName"></b> from the shopping cart?
-            </p>
-            <div class="added-cart-actions">
-                <button class="added-cart-continue-btn" onclick="closeRemoveConfirmModal()">Cancel</button>
-                <button class="remove-confirm-ok-btn" onclick="confirmRemoveFromCart(event)">
-                    <i class="fas fa-trash-can"></i> Remove
-                </button>
-            </div>
-        </dialog>
+        </div>
 
         <script>
             "use strict";
@@ -2318,16 +2350,53 @@
             let pendingRemoveKey = null;
             let assistantStarted = false;
 
-            // The enquiry, added-to-cart and remove-confirmation overlays are native
-            // <dialog> elements: showModal()/close() give focus-trapping, Escape-to-close
-            // and top-layer stacking for free, so no bespoke modal controller is needed.
-            function openModalDialog(id, { lockScroll = false } = {}) {
-                const dialog = document.getElementById(id);
-                if (!dialog) return null;
-                if (lockScroll) document.body.style.overflow = "hidden";
-                dialog.showModal();
-                return dialog;
+            // Shared open/close/focus-restore behavior for the enquiry, added-to-cart
+            // and remove-confirmation dialogs so each modal doesn't reimplement it.
+            function createModalController(modalId, { boxSelector, lockScroll = false } = {}) {
+                let lastFocused = null;
+                return {
+                    open() {
+                        const modal = document.getElementById(modalId);
+                        if (!modal) return;
+                        lastFocused = document.activeElement;
+                        modal.classList.add("show");
+                        const box = boxSelector ? modal.querySelector(boxSelector) : modal;
+                        if (box) box.focus({ preventScroll: true });
+                        if (lockScroll) document.body.style.overflow = "hidden";
+                    },
+                    close({ viewTransition = false } = {}) {
+                        const modal = document.getElementById(modalId);
+                        const doClose = () => {
+                            if (modal) modal.classList.remove("show");
+                            if (lockScroll) document.body.style.overflow = "";
+                            if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
+                            lastFocused = null;
+                        };
+                        if (viewTransition && document.startViewTransition) {
+                            document.startViewTransition(doClose);
+                        } else {
+                            doClose();
+                        }
+                    },
+                    hide() {
+                        const modal = document.getElementById(modalId);
+                        if (modal) modal.classList.remove("show");
+                        lastFocused = null;
+                    },
+                };
             }
+
+            const enquiryModalCtrl = createModalController("enquiryModal", {
+                boxSelector: ".enquiry-modal-box",
+                lockScroll: true,
+            });
+            const addedCartModalCtrl = createModalController("addedCartModal", {
+                boxSelector: ".added-cart-box",
+                lockScroll: true,
+            });
+            const removeConfirmModalCtrl = createModalController("removeConfirmModal", {
+                boxSelector: ".remove-confirm-box",
+            });
 
             function isValidIndianMobile(value) {
                 return /^[6-9]\d{9}$/.test(String(value || "").trim());
@@ -2652,12 +2721,11 @@
                 pendingRemoveKey = key;
                 const nameEl = document.getElementById("removeConfirmProductName");
                 if (nameEl) nameEl.textContent = cart[key].product.name;
-                openModalDialog("removeConfirmModal");
+                removeConfirmModalCtrl.open();
             }
 
             function closeRemoveConfirmModal() {
-                const dialog = document.getElementById("removeConfirmModal");
-                if (dialog && dialog.open) dialog.close();
+                removeConfirmModalCtrl.close();
                 pendingRemoveKey = null;
             }
 
@@ -2679,8 +2747,9 @@
                 // Save updated cart
                 localStorage.setItem(APP.CART_STORAGE_KEY, JSON.stringify(cart));
 
-                const removeDialog = document.getElementById("removeConfirmModal");
-                if (removeDialog && removeDialog.open) removeDialog.close();
+                // Close the remove confirmation popup without restoring focus to the
+                // (now removed) trigger button — keep focus in the still-open cart panel
+                removeConfirmModalCtrl.hide();
                 pendingRemoveKey = null;
 
                 // Update cart items
@@ -2747,13 +2816,12 @@
                     imgEl.alt = item.product.name;
                 }
                 refreshAddedCartModalTotals();
-                openModalDialog("addedCartModal", { lockScroll: true });
+                addedCartModalCtrl.open();
             }
 
             function closeAddedCartModal(e) {
                 if (e) e.stopPropagation();
-                const dialog = document.getElementById("addedCartModal");
-                if (dialog && dialog.open) dialog.close();
+                addedCartModalCtrl.close();
                 addedCartModalKey = null;
             }
 
@@ -2816,7 +2884,7 @@
           </button>
           <p class="text-center text-xs text-gray-400 mt-3">Your enquiry will be sent directly to <b>Swapnil Chemicals</b> on WhatsApp</p>
       `;
-                openModalDialog("enquiryModal", { lockScroll: true });
+                enquiryModalCtrl.open();
             }
 
             function submitCartEnquiry() {
@@ -3055,6 +3123,31 @@
                 });
             }
 
+            function getFocusableElements(container) {
+                return Array.from(
+                    container.querySelectorAll(
+                        'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                    )
+                ).filter((el) => el.offsetParent !== null);
+            }
+
+            function trapEnquiryFocus(e) {
+                const modal = document.getElementById("enquiryModal");
+                const box = modal && modal.querySelector(".enquiry-modal-box");
+                if (e.key !== "Tab" || !box) return;
+                const focusable = getFocusableElements(box);
+                if (!focusable.length) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+
             function openEnquiryModal(productId) {
                 const product = products.find((p) => p.id === productId);
                 if (!product) return;
@@ -3104,12 +3197,11 @@
                 if (phone) phone.value = "";
                 if (phoneError) phoneError.classList.add("hidden");
 
-                openModalDialog("enquiryModal", { lockScroll: true });
+                enquiryModalCtrl.open();
             }
 
             function closeEnquiryModal() {
-                const dialog = document.getElementById("enquiryModal");
-                if (dialog && dialog.open) dialog.close();
+                enquiryModalCtrl.close({ viewTransition: true });
             }
 
             function submitEnquiry() {
@@ -3162,17 +3254,16 @@
                 });
             }
 
-            // The enquiry and added-to-cart dialogs lock body scroll while open;
-            // release it as soon as either one closes, however it was closed
-            // (submit, close button, backdrop click or native Escape handling).
-            [enquiryModal, addedCartModal].forEach((dialog) => {
-                if (dialog) dialog.addEventListener("close", () => (document.body.style.overflow = ""));
-            });
-
             document.addEventListener("click", (e) => {
-                if (enquiryModal && enquiryModal.open && enquiryModal.contains(e.target)) return;
-                if (addedCartModal && addedCartModal.open && addedCartModal.contains(e.target)) return;
-                if (removeConfirmModal && removeConfirmModal.open && removeConfirmModal.contains(e.target)) return;
+                if (enquiryModal && enquiryModal.classList.contains("show") && enquiryModal.contains(e.target)) return;
+                if (addedCartModal && addedCartModal.classList.contains("show") && addedCartModal.contains(e.target))
+                    return;
+                if (
+                    removeConfirmModal &&
+                    removeConfirmModal.classList.contains("show") &&
+                    removeConfirmModal.contains(e.target)
+                )
+                    return;
 
                 const cartPanel = document.getElementById("cartPanel");
                 const cartBtn = document.querySelector(".cart-icon-btn");
@@ -3198,17 +3289,24 @@
             });
 
             document.addEventListener("keydown", (e) => {
-                if (e.key !== "Escape") return;
-                // An open <dialog> already closes itself on Escape (native focus
-                // trap + cancel/close events) — defer to it instead of also
-                // collapsing the cart/assistant panel underneath.
-                if (document.querySelector("dialog[open]")) return;
-                const cartPanel = document.getElementById("cartPanel");
-                const assistantPanel = document.getElementById("assistantPanel");
-                if (cartPanel && !cartPanel.classList.contains("hidden")) {
-                    toggleCart();
-                } else if (assistantPanel && !assistantPanel.classList.contains("hidden")) {
-                    toggleAssistant();
+                if (e.key === "Escape") {
+                    const cartPanel = document.getElementById("cartPanel");
+                    const assistantPanel = document.getElementById("assistantPanel");
+                    if (enquiryModal && enquiryModal.classList.contains("show")) {
+                        closeEnquiryModal();
+                    } else if (removeConfirmModal && removeConfirmModal.classList.contains("show")) {
+                        closeRemoveConfirmModal();
+                    } else if (addedCartModal && addedCartModal.classList.contains("show")) {
+                        closeAddedCartModal();
+                    } else if (cartPanel && !cartPanel.classList.contains("hidden")) {
+                        toggleCart();
+                    } else if (assistantPanel && !assistantPanel.classList.contains("hidden")) {
+                        toggleAssistant();
+                    }
+                    return;
+                }
+                if (enquiryModal && enquiryModal.classList.contains("show")) {
+                    trapEnquiryFocus(e);
                 }
             });
 
@@ -3431,6 +3529,19 @@
                 update();
             }
 
+            function initSmoothScrolling() {
+                document.querySelectorAll('a[href^="#"]').forEach((a) =>
+                    a.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        const t = document.querySelector(this.getAttribute("href"));
+                        if (t)
+                            t.scrollIntoView({
+                                behavior: "smooth",
+                            });
+                    })
+                );
+            }
+
             function initScrollAnimations() {
                 const cards = document.querySelectorAll(".product-card, .feature-card");
                 const obs = new IntersectionObserver(
@@ -3469,6 +3580,7 @@
                 initVoiceAssistant();
                 initScrollToTop();
                 initScrollProgress();
+                initSmoothScrolling();
                 initCardReveal();
                 const yearEl = document.getElementById("copyrightYear");
                 if (yearEl) yearEl.textContent = String(new Date().getFullYear());
