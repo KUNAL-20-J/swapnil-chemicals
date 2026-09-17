@@ -5,9 +5,12 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Swapnil Chemicals | Automobile Cleaning Products Manufacturer, Jaipur</title>
-        <link rel="icon" type="image/jpeg" href="logo.jpg" />
-        <link rel="apple-touch-icon" href="logo.jpg" />
-        <link rel="manifest" href="manifest.webmanifest" />
+        <link rel="icon" type="image/jpeg" href="SC Logo.jpg" />
+        <link rel="apple-touch-icon" href="SC Logo.jpg" />
+        <link
+            rel="manifest"
+            href='data:application/manifest+json,{"name":"Swapnil Chemicals - Automobile Cleaning Products","short_name":"Swapnil Chemicals","description":"Manufacturers and marketers of automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner and more.","start_url":".","scope":".","display":"standalone","background_color":"%23f8fafc",<"theme_color":"%231e293b","lang":"en-IN","icons":[{"src":"SC Logo.jpg","sizes":"any","type":"image/jpeg"}]}'
+        />
         <meta
             name="description"
             content="Swapnil Chemicals - Leading manufacturers of automobile cleaning products in Jaipur. Bulk & retail. Dashboard polish, tyre polish, car wash & more."
@@ -19,6 +22,7 @@
         <meta name="robots" content="index, follow" />
         <meta name="color-scheme" content="light" />
         <meta name="theme-color" content="#1e293b" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -31,7 +35,7 @@
             property="og:description"
             content="Manufacturers of premium automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner & more. Bulk & retail."
         />
-        <meta property="og:image" content="logo.jpg" />
+        <meta property="og:image" content="SC Logo.jpg" />
         <meta property="og:locale" content="en_IN" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="Swapnil Chemicals | Automobile Cleaning Products Manufacturer, Jaipur" />
@@ -39,7 +43,12 @@
             name="twitter:description"
             content="Manufacturers of premium automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner & more."
         />
-        <meta name="twitter:image" content="logo.jpg" />
+        <meta name="twitter:image" content="SC Logo.jpg" />
+
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.gstatic.com https://api.qrserver.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'self';"
+        />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1418,7 +1427,7 @@
                 "@type": "LocalBusiness",
                 "name": "Swapnil Chemicals",
                 "description": "Manufacturers and marketers of automobile cleaning products - dashboard polish, tyre polish, car wash, glass cleaner and more.",
-                "image": "logo.jpg",
+                "image": "SC Logo.jpg",
                 "telephone": ["+919352470085", "+919024598298"],
                 "email": "swapnilchemicals10@gmail.com",
                 "address": {
@@ -1601,7 +1610,7 @@
                                 class="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden ring-2 ring-blue-500/20"
                             >
                                 <img
-                                    src="logo.jpg"
+                                    src="SC Logo.jpg"
                                     alt="SC Logo"
                                     class="w-full h-full object-cover"
                                     width="56"
@@ -2336,7 +2345,7 @@
                 CART_STORAGE_KEY: "sc_cart_auto",
                 CURRENCY: "INR",
                 COUNTRY_CODE: "+91",
-                LOGO_FILE: "logo.jpg",
+                LOGO_FILE: "SC Logo.jpg",
             });
 
             function isValidIndianMobile(value) {
@@ -2642,7 +2651,9 @@
                 });
 
                 list.innerHTML = itemsHTML;
+                const subtotalEl = document.getElementById("cartSubtotal");
                 const totalEl = document.getElementById("cartTotal");
+                if (subtotalEl) subtotalEl.innerHTML = formatCurrency(grandTotal);
                 if (totalEl) totalEl.innerHTML = formatCurrency(grandTotal);
 
                 const safeAmount = Math.round(grandTotal);
@@ -2876,35 +2887,7 @@
                 document.body.style.overflow = "hidden";
             }
 
-            let logoFilePromise = null;
-
-            function getLogoFile() {
-                if (!logoFilePromise) {
-                    logoFilePromise = fetch(APP.LOGO_FILE)
-                        .then((res) => (res.ok ? res.blob() : Promise.reject(new Error("Logo fetch failed"))))
-                        .then((blob) => new File([blob], APP.LOGO_FILE, { type: blob.type || "image/jpeg" }));
-                }
-                return logoFilePromise;
-            }
-
-            // wa.me links can only pre-fill text - there's no click-to-chat parameter for
-            // attaching a file, so the logo image can only be attached via the OS share sheet
-            // (Web Share API's file support). Falls back to a text link when unsupported.
-            async function shareMessageWithLogo(message) {
-                if (!navigator.share || !navigator.canShare || !window.isSecureContext) return false;
-                try {
-                    const file = await getLogoFile();
-                    if (!navigator.canShare({ files: [file] })) return false;
-                    await navigator.share({ files: [file], text: message, title: "Swapnil Chemicals" });
-                    return true;
-                } catch (err) {
-                    if (err && err.name === "AbortError") return true;
-                    logoFilePromise = null;
-                    return false;
-                }
-            }
-
-            async function submitCartEnquiry() {
+            function submitCartEnquiry() {
                 const phoneEl = document.getElementById("cart-enquiry-phone");
                 const detailsEl = document.getElementById("cart-enquiry-details");
                 const phoneErrorEl = document.getElementById("cart-phone-error");
@@ -2933,14 +2916,11 @@
                     ``,
                     `📝 Details: ${details}`,
                     `📱 Phone: ${phone}`,
-                    `💰 Grand Total: ${formatCurrency(grandTotal)}`
+                    `💰 Grand Total: ${formatCurrency(grandTotal)}`,
+                    ``,
+                    `🏢 Swapnil Chemicals Logo: ${getLogoUrl()}`
                 );
-                const message = lines.join("\n");
-
-                const sharedWithLogo = await shareMessageWithLogo(message);
-                if (!sharedWithLogo) {
-                    safeOpenNewTab(buildWhatsAppUrl(`${message}\n\n🏢 Swapnil Chemicals Logo: ${getLogoUrl()}`));
-                }
+                safeOpenNewTab(buildWhatsAppUrl(lines.join("\n")));
                 closeEnquiryModal();
             }
 
@@ -3156,9 +3136,11 @@
                 ).filter((el) => el.offsetParent !== null);
             }
 
-            function trapFocusWithin(containerEl, e) {
-                if (e.key !== "Tab" || !containerEl) return;
-                const focusable = getFocusableElements(containerEl);
+            function trapEnquiryFocus(e) {
+                const modal = document.getElementById("enquiryModal");
+                const box = modal && modal.querySelector(".enquiry-modal-box");
+                if (e.key !== "Tab" || !box) return;
+                const focusable = getFocusableElements(box);
                 if (!focusable.length) return;
                 const first = focusable[0];
                 const last = focusable[focusable.length - 1];
@@ -3350,11 +3332,7 @@
                     return;
                 }
                 if (enquiryModal && enquiryModal.classList.contains("show")) {
-                    trapFocusWithin(enquiryModal.querySelector(".enquiry-modal-box"), e);
-                } else if (addedCartModal && addedCartModal.classList.contains("show")) {
-                    trapFocusWithin(addedCartModal.querySelector(".added-cart-box"), e);
-                } else if (removeConfirmModal && removeConfirmModal.classList.contains("show")) {
-                    trapFocusWithin(removeConfirmModal.querySelector(".remove-confirm-box"), e);
+                    trapEnquiryFocus(e);
                 }
             });
 
@@ -3623,42 +3601,8 @@
                 initScrollAnimations();
             }
 
-            function injectProductStructuredData() {
-                const pageUrl = `${window.location.href.split("#")[0]}#products`;
-                const graph = products.map((p) => ({
-                    "@type": "Product",
-                    name: p.name,
-                    image: new URL(p.image, window.location.href).href,
-                    description: p.description,
-                    brand: { "@type": "Brand", name: "Swapnil Chemicals" },
-                    offers: {
-                        "@type": "Offer",
-                        url: pageUrl,
-                        priceCurrency: APP.CURRENCY,
-                        price: String(p.price),
-                        availability: "https://schema.org/InStock",
-                        areaServed: "IN",
-                        seller: { "@type": "Organization", name: "Swapnil Chemicals" },
-                        priceSpecification: {
-                            "@type": "UnitPriceSpecification",
-                            price: String(p.price),
-                            priceCurrency: APP.CURRENCY,
-                            unitText: (p.qtyLabel || p.unit || "").trim(),
-                        },
-                    },
-                }));
-                const script = document.createElement("script");
-                script.type = "application/ld+json";
-                script.textContent = JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@graph": graph,
-                });
-                document.head.appendChild(script);
-            }
-
             document.addEventListener("DOMContentLoaded", () => {
                 renderProducts();
-                injectProductStructuredData();
                 initProductSearch();
                 initVoiceSearch();
                 initVoiceAssistant();
