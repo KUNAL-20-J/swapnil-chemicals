@@ -19,7 +19,6 @@
         <meta name="robots" content="index, follow" />
         <meta name="color-scheme" content="light" />
         <meta name="theme-color" content="#1e293b" />
-        <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -41,11 +40,6 @@
             content="Manufacturers of premium automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner & more."
         />
         <meta name="twitter:image" content="logo.jpg" />
-
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.gstatic.com https://api.qrserver.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'self';"
-        />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -2648,9 +2642,7 @@
                 });
 
                 list.innerHTML = itemsHTML;
-                const subtotalEl = document.getElementById("cartSubtotal");
                 const totalEl = document.getElementById("cartTotal");
-                if (subtotalEl) subtotalEl.innerHTML = formatCurrency(grandTotal);
                 if (totalEl) totalEl.innerHTML = formatCurrency(grandTotal);
 
                 const safeAmount = Math.round(grandTotal);
@@ -2884,7 +2876,35 @@
                 document.body.style.overflow = "hidden";
             }
 
-            function submitCartEnquiry() {
+            let logoFilePromise = null;
+
+            function getLogoFile() {
+                if (!logoFilePromise) {
+                    logoFilePromise = fetch(APP.LOGO_FILE)
+                        .then((res) => (res.ok ? res.blob() : Promise.reject(new Error("Logo fetch failed"))))
+                        .then((blob) => new File([blob], APP.LOGO_FILE, { type: blob.type || "image/jpeg" }));
+                }
+                return logoFilePromise;
+            }
+
+            // wa.me links can only pre-fill text - there's no click-to-chat parameter for
+            // attaching a file, so the logo image can only be attached via the OS share sheet
+            // (Web Share API's file support). Falls back to a text link when unsupported.
+            async function shareMessageWithLogo(message) {
+                if (!navigator.share || !navigator.canShare || !window.isSecureContext) return false;
+                try {
+                    const file = await getLogoFile();
+                    if (!navigator.canShare({ files: [file] })) return false;
+                    await navigator.share({ files: [file], text: message, title: "Swapnil Chemicals" });
+                    return true;
+                } catch (err) {
+                    if (err && err.name === "AbortError") return true;
+                    logoFilePromise = null;
+                    return false;
+                }
+            }
+
+            async function submitCartEnquiry() {
                 const phoneEl = document.getElementById("cart-enquiry-phone");
                 const detailsEl = document.getElementById("cart-enquiry-details");
                 const phoneErrorEl = document.getElementById("cart-phone-error");
@@ -2913,11 +2933,14 @@
                     ``,
                     `📝 Details: ${details}`,
                     `📱 Phone: ${phone}`,
-                    `💰 Grand Total: ${formatCurrency(grandTotal)}`,
-                    ``,
-                    `🏢 Swapnil Chemicals Logo: ${getLogoUrl()}`
+                    `💰 Grand Total: ${formatCurrency(grandTotal)}`
                 );
-                safeOpenNewTab(buildWhatsAppUrl(lines.join("\n")));
+                const message = lines.join("\n");
+
+                const sharedWithLogo = await shareMessageWithLogo(message);
+                if (!sharedWithLogo) {
+                    safeOpenNewTab(buildWhatsAppUrl(`${message}\n\n🏢 Swapnil Chemicals Logo: ${getLogoUrl()}`));
+                }
                 closeEnquiryModal();
             }
 
@@ -3133,11 +3156,9 @@
                 ).filter((el) => el.offsetParent !== null);
             }
 
-            function trapEnquiryFocus(e) {
-                const modal = document.getElementById("enquiryModal");
-                const box = modal && modal.querySelector(".enquiry-modal-box");
-                if (e.key !== "Tab" || !box) return;
-                const focusable = getFocusableElements(box);
+            function trapFocusWithin(containerEl, e) {
+                if (e.key !== "Tab" || !containerEl) return;
+                const focusable = getFocusableElements(containerEl);
                 if (!focusable.length) return;
                 const first = focusable[0];
                 const last = focusable[focusable.length - 1];
@@ -3329,7 +3350,11 @@
                     return;
                 }
                 if (enquiryModal && enquiryModal.classList.contains("show")) {
-                    trapEnquiryFocus(e);
+                    trapFocusWithin(enquiryModal.querySelector(".enquiry-modal-box"), e);
+                } else if (addedCartModal && addedCartModal.classList.contains("show")) {
+                    trapFocusWithin(addedCartModal.querySelector(".added-cart-box"), e);
+                } else if (removeConfirmModal && removeConfirmModal.classList.contains("show")) {
+                    trapFocusWithin(removeConfirmModal.querySelector(".remove-confirm-box"), e);
                 }
             });
 
