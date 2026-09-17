@@ -2345,7 +2345,6 @@
                 CART_STORAGE_KEY: "sc_cart_auto",
                 CURRENCY: "INR",
                 COUNTRY_CODE: "+91",
-                LOGO_FILE: "SC Logo.jpg",
             });
 
             function isValidIndianMobile(value) {
@@ -2367,14 +2366,6 @@
 
             function buildWhatsAppUrl(message) {
                 return `https://wa.me/${APP.WA_NUMBER}?text=${encodeURIComponent(message)}`;
-            }
-
-            function getLogoUrl() {
-                try {
-                    return new URL(APP.LOGO_FILE, window.location.href).href;
-                } catch {
-                    return APP.LOGO_FILE;
-                }
             }
 
             function escapeHtml(str) {
@@ -2916,9 +2907,7 @@
                     ``,
                     `📝 Details: ${details}`,
                     `📱 Phone: ${phone}`,
-                    `💰 Grand Total: ${formatCurrency(grandTotal)}`,
-                    ``,
-                    `🏢 Swapnil Chemicals Logo: ${getLogoUrl()}`
+                    `💰 Grand Total: ${formatCurrency(grandTotal)}`
                 );
                 safeOpenNewTab(buildWhatsAppUrl(lines.join("\n")));
                 closeEnquiryModal();
@@ -3253,7 +3242,6 @@
                     `📱 *Phone:* ${APP.COUNTRY_CODE} ${phone}`,
                 ];
                 if (details) lines.push(`📝 *Details:* ${details}`);
-                lines.push(`🏢 *Swapnil Chemicals Logo:* ${getLogoUrl()}`);
                 lines.push(`_Sent from website_`);
                 safeOpenNewTab(buildWhatsAppUrl(lines.join("\n")));
                 closeEnquiryModal();
