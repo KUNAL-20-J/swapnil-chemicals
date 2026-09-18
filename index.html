@@ -9,7 +9,7 @@
         <link rel="apple-touch-icon" href="SC Logo.jpg" />
         <link
             rel="manifest"
-            href='data:application/manifest+json,{"name":"Swapnil Chemicals - Automobile Cleaning Products","short_name":"Swapnil Chemicals","description":"Manufacturers and marketers of automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner and more.","start_url":".","scope":".","display":"standalone","background_color":"%23f8fafc",<"theme_color":"%231e293b","lang":"en-IN","icons":[{"src":"SC Logo.jpg","sizes":"any","type":"image/jpeg"}]}'
+            href='data:application/manifest+json,{"name":"Swapnil Chemicals - Automobile Cleaning Products","short_name":"Swapnil Chemicals","description":"Manufacturers and marketers of automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner and more.","start_url":".","scope":".","display":"standalone","background_color":"%23f8fafc","theme_color":"%231e293b","lang":"en-IN","icons":[{"src":"SC Logo.jpg","sizes":"any","type":"image/jpeg"}]}'
         />
         <meta
             name="description"
@@ -47,8 +47,9 @@
 
         <meta
             http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.gstatic.com https://api.qrserver.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'self';"
+            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.gstatic.com https://api.qrserver.com; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
         />
+        <!-- frame-ancestors is ignored by browsers when set via <meta>; real clickjacking protection needs an X-Frame-Options/CSP response header from the server -->
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -82,6 +83,8 @@
                 --radius-lg: 16px;
                 --brand-accent: #3b82f6;
                 --brand-accent-dark: #1d4ed8;
+                --brand-cta: #ea580c;
+                --brand-cta-dark: #c2410c;
                 --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.08);
                 --shadow-md: 0 12px 32px rgba(15, 23, 42, 0.12);
                 --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
@@ -390,16 +393,14 @@
             }
 
             .btn-secondary {
-                /* background: linear-gradient(135deg, #f59e0b, #d97706); */
-                background: linear-gradient(135deg, #ea580c, #ea580c);
+                background: var(--brand-cta);
                 transition: all 0.3s ease;
             }
 
             .btn-secondary:hover {
-                /* background: linear-gradient(135deg, #d97706, #b45309); */
-                background: linear-gradient(135deg, #ea580c, #ea580c);
+                background: linear-gradient(135deg, var(--brand-cta), var(--brand-cta-dark));
                 transform: translateY(-2px);
-                box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+                box-shadow: 0 10px 25px rgba(234, 88, 12, 0.35);
             }
 
             #scrollToTop {
@@ -513,8 +514,7 @@
                 padding: 9px 14px;
                 border-radius: 0.75rem;
                 border: none;
-                /* background: linear-gradient(135deg, #f59e0b, #d97706); */
-                background: linear-gradient(135deg, #ea580c, #ea580c);
+                background: var(--brand-cta);
                 color: white;
                 font-size: 0.8rem;
                 font-weight: 700;
@@ -527,15 +527,13 @@
             }
 
             .add-to-cart-btn:hover {
-                /* background: linear-gradient(135deg, #d97706, #b45309); */
-                background: linear-gradient(135deg, #ea580c, #ea580c);
+                background: linear-gradient(135deg, var(--brand-cta), var(--brand-cta-dark));
                 transform: translateY(-1px);
-                box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+                box-shadow: 0 6px 16px rgba(234, 88, 12, 0.4);
             }
 
             .enquiry-trigger-btn {
-                /* background: linear-gradient(135deg, #f97316, #ea580c); */
-                background: linear-gradient(135deg, #ea580c, #ea580c);
+                background: var(--brand-cta);
                 color: #fff;
                 border: none;
                 padding: 8px 14px;
@@ -551,9 +549,9 @@
             }
 
             .enquiry-trigger-btn:hover {
-                background: linear-gradient(135deg, #ea580c, #c2410c);
+                background: linear-gradient(135deg, var(--brand-cta), var(--brand-cta-dark));
                 transform: translateY(-2px);
-                box-shadow: 0 6px 18px rgba(249, 115, 22, 0.4);
+                box-shadow: 0 6px 18px rgba(234, 88, 12, 0.4);
             }
 
             .cart-icon-btn {
@@ -562,20 +560,21 @@
                 width: 46px;
                 height: 46px;
                 border-radius: 50%;
-                background: linear-gradient(135deg, #ea580c, #ea580c);
+                background: var(--brand-cta);
                 color: white;
                 border: none;
                 cursor: pointer;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+                box-shadow: 0 8px 25px rgba(234, 88, 12, 0.4);
                 transition: all 0.3s ease;
             }
 
             .cart-icon-btn:hover {
+                background: linear-gradient(135deg, var(--brand-cta), var(--brand-cta-dark));
                 transform: translateY(-2px);
-                box-shadow: 0 12px 30px rgba(245, 158, 11, 0.5);
+                box-shadow: 0 12px 30px rgba(234, 88, 12, 0.5);
             }
 
             .cart-badge {
@@ -1052,14 +1051,12 @@
             }
 
             .added-cart-viewcart-btn {
-                /* background: linear-gradient(135deg, #f59e0b, #d97706); */
-                background: linear-gradient(135deg, #ea580c, #ea580c);
+                background: var(--brand-cta);
                 color: #fff;
             }
 
             .added-cart-viewcart-btn:hover {
-                /* background: linear-gradient(135deg, #d97706, #b45309); */
-                background: linear-gradient(135deg, #ea580c, #ea580c);
+                background: linear-gradient(135deg, var(--brand-cta), var(--brand-cta-dark));
                 transform: translateY(-1px);
             }
 
@@ -1436,6 +1433,8 @@
                     "addressRegion": "Rajasthan",
                     "addressCountry": "IN"
                 },
+                "areaServed": "IN",
+                "priceRange": "₹70–₹2000",
                 "founder": {
                     "@type": "Person",
                     "name": "Gajendra Jain"
@@ -1631,16 +1630,16 @@
                     <div class="flex items-center gap-3">
                         <div class="glass-card px-4 py-2 rounded-lg">
                             <p class="text-gray-700 font-medium">
-                                <i class="fas fa-map-marker-alt text-blue-600 mr-2"></i>Jaipur • Bulk & Retail
+                                <i class="fas fa-map-marker-alt text-blue-600 mr-2" aria-hidden="true"></i>Jaipur • Bulk & Retail
                             </p>
                         </div>
                         <button
                             class="cart-icon-btn"
-                            onclick="toggleCart()"
+                            data-action="toggle-cart"
                             aria-label="Open cart"
                             aria-expanded="false"
                         >
-                            <i class="fas fa-shopping-cart text-base"></i>
+                            <i class="fas fa-shopping-cart text-base" aria-hidden="true"></i>
                             <span class="cart-badge" id="cartBadge" style="display: none" aria-live="polite">0</span>
                         </button>
                     </div>
@@ -1663,22 +1662,21 @@
                     <div class="container mx-auto px-4">
                         <div class="max-w-5xl mx-auto text-center">
                             <p class="text-lg md:text-xl mb-10 opacity-90 max-w-3xl mx-auto leading-relaxed">
-    Swapnil Chemicals is a Jaipur-based manufacturer of Premium Automobile Cleaning
-    Products, trusted by bulk and retail customers since 2020. We produce our own
-    Dashboard Polish, Tyre Polish, Car Foaming Wash, Glass Cleaner and more, ensuring
-    consistent quality. As a GST registered, MSME and Udyam certified business, we
-    supply orders across India. Call us at 9352470085 or 9024598298 for bulk orders
-    or pricing.
-</p>
+                                Swapnil Chemicals is a Jaipur-based manufacturer of Premium Automobile Cleaning
+                                Products, trusted by bulk and retail customers since 2020. We produce our own
+                                Dashboard Polish, Tyre Polish, Car Foaming Wash, Glass Cleaner and more, ensuring
+                                consistent quality. As a GST registered, MSME and Udyam certified business, we supply
+                                orders across India. Call us at 9352470085 or 9024598298 for bulk orders or pricing.
+                            </p>
                             <div class="flex flex-wrap justify-center gap-6">
                                 <a
                                     href="#products"
                                     class="btn-primary text-white px-10 py-4 rounded-xl font-semibold text-lg"
-                                    ><i class="fas fa-boxes mr-3"></i>View Products</a
+                                    ><i class="fas fa-boxes mr-3" aria-hidden="true"></i>View Products</a
                                 ><a
                                     href="#contact"
                                     class="btn-secondary text-white px-10 py-4 rounded-xl font-semibold text-lg"
-                                    ><i class="fas fa-phone-alt fa-flip-horizontal mr-3"></i>Contact Now</a
+                                    ><i class="fas fa-phone-alt fa-flip-horizontal mr-3" aria-hidden="true"></i>Contact Now</a
                                 >
                             </div>
                         </div>
@@ -1707,7 +1705,7 @@
                                 <div
                                     class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
                                 >
-                                    <i class="fas fa-user-tie text-white text-2xl"></i>
+                                    <i class="fas fa-user-tie text-white text-2xl" aria-hidden="true"></i>
                                 </div>
                                 <div>
                                     <p class="text-2xl font-bold text-gray-800">Gajendra Jain</p>
@@ -1722,6 +1720,7 @@
                                     <i
                                         class="fas fa-phone-alt text-white text-2xl"
                                         style="transform: rotate(-270deg)"
+                                        aria-hidden="true"
                                     ></i>
                                 </div>
                                 <div>
@@ -1738,7 +1737,7 @@
                                 <div
                                     class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
                                 >
-                                    <i class="fas fa-file-invoice-dollar text-white text-2xl"></i>
+                                    <i class="fas fa-file-invoice-dollar text-white text-2xl" aria-hidden="true"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">
@@ -1748,10 +1747,11 @@
                                         08CIJPS1734A1ZE<button
                                             type="button"
                                             class="text-gray-400 hover:text-blue-600"
-                                            onclick="copyText('08CIJPS1734A1ZE', this)"
+                                            data-action="copy"
+                                            data-copy-text="08CIJPS1734A1ZE"
                                             aria-label="Copy GST number"
                                         >
-                                            <i class="fas fa-copy text-sm"></i>
+                                            <i class="fas fa-copy text-sm" aria-hidden="true"></i>
                                         </button>
                                     </p>
                                 </div>
@@ -1762,7 +1762,7 @@
                                 <div
                                     class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
                                 >
-                                    <i class="fas fa-envelope text-white text-2xl"></i>
+                                    <i class="fas fa-envelope text-white text-2xl" aria-hidden="true"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">Email</h3>
@@ -1777,7 +1777,7 @@
                                 <div
                                     class="w-16 h-16 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
                                 >
-                                    <i class="fas fa-award text-white text-2xl"></i>
+                                    <i class="fas fa-award text-white text-2xl" aria-hidden="true"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">MSME</h3>
@@ -1790,7 +1790,7 @@
                                 <div
                                     class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
                                 >
-                                    <i class="fas fa-certificate text-white text-2xl"></i>
+                                    <i class="fas fa-certificate text-white text-2xl" aria-hidden="true"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">Udyam</h3>
@@ -1803,7 +1803,7 @@
                                 <div
                                     class="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
                                 >
-                                    <i class="fas fa-building text-white text-2xl"></i>
+                                    <i class="fas fa-building text-white text-2xl" aria-hidden="true"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">BRN</h3>
@@ -1839,7 +1839,7 @@
                                 aria-label="Search products"
                             />
                             <button type="button" id="voiceSearchBtn" class="voice-btn" aria-label="Search by voice">
-                                <i class="fas fa-microphone"></i>
+                                <i class="fas fa-microphone" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
@@ -1982,6 +1982,7 @@
                                             <i
                                                 class="fas fa-phone-alt text-white text-2xl"
                                                 style="transform: rotate(-270deg)"
+                                                aria-hidden="true"
                                             ></i>
                                         </div>
                                         <div>
@@ -1996,7 +1997,7 @@
                                         <div
                                             class="contact-icon w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg"
                                         >
-                                            <i class="fas fa-envelope text-white text-2xl"></i>
+                                            <i class="fas fa-envelope text-white text-2xl" aria-hidden="true"></i>
                                         </div>
                                         <div>
                                             <h3 class="font-semibold text-xl text-gray-800 mb-2">Email</h3>
@@ -2032,10 +2033,11 @@
                                                 <button
                                                     type="button"
                                                     class="text-gray-400 hover:text-blue-600"
-                                                    onclick="copyText('boism-9352470085@boi', this)"
+                                                    data-action="copy"
+                                                    data-copy-text="boism-9352470085@boi"
                                                     aria-label="Copy UPI ID"
                                                 >
-                                                    <i class="fas fa-copy text-sm"></i>
+                                                    <i class="fas fa-copy text-sm" aria-hidden="true"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -2063,12 +2065,10 @@
         </main>
 
         <button id="scrollToTop" class="fixed bottom-6 right-6 text-white hidden z-50" aria-label="Scroll to top">
-            <i class="fas fa-arrow-up text-lg"></i>
+            <i class="fas fa-arrow-up text-lg" aria-hidden="true"></i>
         </button>
 
-        <footer
-            class="text-white py-12"
-            style="background: linear-gradient(180deg,#4C1D95 0%, #4C1D95 50%, #4C1D95 50%, #4C1D95 100%)">
+        <footer class="text-white py-12" style="background: #4c1d95">
             <div class="container mx-auto px-4">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <div class="mb-8 md:mb-0 text-center md:text-left">
@@ -2081,12 +2081,16 @@
                             href="tel:9352470085"
                             class="w-12 h-12 bg-slate-700 rounded-xl flex items-center justify-center hover:bg-blue-600 transition"
                             aria-label="Call Swapnil Chemicals"
-                            ><i class="fas fa-phone-alt text-lg" style="transform: rotate(-270deg)"></i></a
+                            ><i
+                                class="fas fa-phone-alt text-lg"
+                                style="transform: rotate(-270deg)"
+                                aria-hidden="true"
+                            ></i></a
                         ><a
                             href="mailto:swapnilchemicals10@gmail.com"
                             class="w-12 h-12 bg-slate-700 rounded-xl flex items-center justify-center hover:bg-red-600 transition"
                             aria-label="Email Swapnil Chemicals"
-                            ><i class="fas fa-envelope text-lg"></i
+                            ><i class="fas fa-envelope text-lg" aria-hidden="true"></i
                         ></a>
                     </div>
                 </div>
@@ -2110,17 +2114,17 @@
 
                 <div style="display: flex; align-items: center; gap: 14px; margin-left: 30px">
                     <button
-                        onclick="toggleCart()"
+                        data-action="toggle-cart"
                         style="background: none; border: none; color: white; cursor: pointer; font-size: 16px"
                         aria-label="Close cart"
                     >
-                        <i class="fas fa-trash-can"></i>
+                        <i class="fas fa-xmark" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
             <div class="cart-items-list" id="cartItemsList">
                 <div class="cart-empty-msg">
-                    <i class="fas fa-shopping-cart text-3xl mb-3 block opacity-30"></i>Your cart is empty
+                    <i class="fas fa-shopping-cart text-3xl mb-3 block opacity-30" aria-hidden="true"></i>Your cart is empty
                 </div>
             </div>
             <div class="cart-panel-footer" id="cartFooter" style="display: none">
@@ -2129,7 +2133,7 @@
                     ><span class="text-base font-bold text-blue-700" id="cartTotal">₹0</span>
                 </div>
 
-                <button id="cartGpayBtn" class="gpay-btn" onclick="openCartEnquiry()">
+                <button id="cartGpayBtn" class="gpay-btn" data-action="open-cart-enquiry">
                     <img
                         src="https://www.gstatic.com/instantbuy/svg/dark_gpay.svg"
                         style="height: 20px; filter: brightness(0) invert(1)"
@@ -2141,7 +2145,7 @@
                 </button>
 
                 <button
-                    onclick="clearCart()"
+                    data-action="clear-cart"
                     style="
                         width: 100%;
                         margin-top: 8px;
@@ -2160,11 +2164,11 @@
         <button
             id="aiAssistantBtn"
             class="ai-assistant-btn"
-            onclick="toggleAssistant()"
+            data-action="toggle-assistant"
             aria-label="Open Swapnil Chemicals AI Assistant"
             aria-expanded="false"
         >
-            <i class="fas fa-robot"></i>
+            <i class="fas fa-robot" aria-hidden="true"></i>
             <span class="ai-assistant-btn-ring"></span>
         </button>
 
@@ -2176,18 +2180,18 @@
         >
             <div class="assistant-panel-header">
                 <div class="flex items-center gap-3">
-                    <div class="assistant-avatar"><i class="fas fa-robot"></i></div>
+                    <div class="assistant-avatar"><i class="fas fa-robot" aria-hidden="true"></i></div>
                     <div>
                         <p class="font-bold text-base leading-tight">Swapnil AI Assistant</p>
                         <p class="text-xs opacity-70">Products, pricing & orders</p>
                     </div>
                 </div>
                 <button
-                    onclick="toggleAssistant()"
+                    data-action="toggle-assistant"
                     style="background: none; border: none; color: white; cursor: pointer"
                     aria-label="Close assistant"
                 >
-                    <i class="fas fa-times"></i>
+                    <i class="fas fa-xmark" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="assistant-messages" id="assistantMessages" aria-live="polite"></div>
@@ -2203,10 +2207,10 @@
                     aria-label="Ask the AI assistant a question"
                 />
                 <button type="button" id="voiceAssistantBtn" class="voice-btn-inline" aria-label="Ask by voice">
-                    <i class="fas fa-microphone"></i>
+                    <i class="fas fa-microphone" aria-hidden="true"></i>
                 </button>
                 <button type="submit" class="assistant-send-btn" aria-label="Send message">
-                    <i class="fas fa-paper-plane"></i>
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
                 </button>
             </form>
         </div>
@@ -2220,8 +2224,8 @@
                             Tell us about your requirements
                         </p>
                     </div>
-                    <button class="enquiry-close-btn" onclick="closeEnquiryModal()" aria-label="Close enquiry form">
-                        <i class="fas fa-trash-can"></i>
+                    <button class="enquiry-close-btn" data-action="close-enquiry" aria-label="Close enquiry form">
+                        <i class="fas fa-xmark" aria-hidden="true"></i>
                     </button>
                 </div>
                 <div class="enquiry-body">
@@ -2235,7 +2239,7 @@
                     </div>
                     <div class="enquiry-field-wrap">
                         <label class="text-xs font-bold text-gray-600 uppercase" id="enquiry-qty-label"
-                            >Quantity <i class="fas fa-layer-group"></i
+                            >Quantity <i class="fas fa-layer-group" aria-hidden="true"></i
                         ></label>
                         <div
                             id="enquiry-qty-buttons"
@@ -2270,8 +2274,8 @@
                             Enter valid 10-digit number
                         </p>
                     </div>
-                    <button class="enquiry-submit-btn" onclick="submitEnquiry()">
-                        <i class="fab fa-whatsapp"></i> Send Enquiry via WhatsApp
+                    <button class="enquiry-submit-btn" data-action="submit-enquiry">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry via WhatsApp
                     </button>
                     <p class="text-center text-xs text-gray-400 mt-3">Directly sent to Swapnil Chemicals</p>
                 </div>
@@ -2280,8 +2284,8 @@
 
         <div id="addedCartModal">
             <div class="added-cart-box" role="dialog" aria-modal="true" aria-label="Added to cart" tabindex="-1">
-                <button class="added-cart-close-btn" onclick="closeAddedCartModal(event)" aria-label="Close">
-                    <i class="fas fa-trash-can"></i>
+                <button class="added-cart-close-btn" data-action="close-added-cart" aria-label="Close">
+                    <i class="fas fa-xmark" aria-hidden="true"></i>
                 </button>
                 <p class="added-cart-product-name" id="addedCartProductName"></p>
                 <p class="added-cart-msg">has been added to your cart</p>
@@ -2292,11 +2296,21 @@
                     <div class="added-cart-qty">
                         <p>Qty</p>
                         <div class="added-cart-qty-ctrl">
-                            <button type="button" onclick="changeAddedCartQty(-1)" aria-label="Decrease quantity">
+                            <button
+                                type="button"
+                                data-action="added-cart-qty"
+                                data-delta="-1"
+                                aria-label="Decrease quantity"
+                            >
                                 −
                             </button>
                             <input type="text" id="addedCartQtyValue" value="1" readonly aria-live="polite" />
-                            <button type="button" onclick="changeAddedCartQty(1)" aria-label="Increase quantity">
+                            <button
+                                type="button"
+                                data-action="added-cart-qty"
+                                data-delta="1"
+                                aria-label="Increase quantity"
+                            >
                                 +
                             </button>
                         </div>
@@ -2304,13 +2318,13 @@
                 </div>
                 <p class="added-cart-line">
                     There are
-                    <a href="#" onclick="viewCartFromAddedModal(event)" id="addedCartItemsCount">0 items</a> in your
+                    <a href="#" data-action="view-cart-from-added" id="addedCartItemsCount">0 items</a> in your
                     cart.
                 </p>
                 <p class="added-cart-subtotal">Cart Subtotal: <b id="addedCartSubtotal">₹0</b></p>
                 <div class="added-cart-actions">
-                    <button class="added-cart-continue-btn" onclick="closeAddedCartModal(event)">Continue</button>
-                    <button class="added-cart-viewcart-btn" onclick="viewCartFromAddedModal(event)">View Cart</button>
+                    <button class="added-cart-continue-btn" data-action="close-added-cart">Continue</button>
+                    <button class="added-cart-viewcart-btn" data-action="view-cart-from-added">View Cart</button>
                 </div>
             </div>
         </div>
@@ -2323,15 +2337,15 @@
                 aria-label="Remove item from cart"
                 tabindex="-1"
             >
-                <div class="remove-confirm-icon"><i class="fas fa-trash-can"></i></div>
+                <div class="remove-confirm-icon"><i class="fas fa-trash-can" aria-hidden="true"></i></div>
                 <p class="remove-confirm-title">Remove item?</p>
                 <p class="remove-confirm-msg">
                     Are you sure you would like to remove <b id="removeConfirmProductName"></b> from the shopping cart?
                 </p>
                 <div class="added-cart-actions">
-                    <button class="added-cart-continue-btn" onclick="closeRemoveConfirmModal()">Cancel</button>
-                    <button class="remove-confirm-ok-btn" onclick="confirmRemoveFromCart(event)">
-                        <i class="fas fa-trash-can"></i> Remove
+                    <button class="added-cart-continue-btn" data-action="close-remove-confirm">Cancel</button>
+                    <button class="remove-confirm-ok-btn" data-action="confirm-remove">
+                        <i class="fas fa-trash-can" aria-hidden="true"></i> Remove
                     </button>
                 </div>
             </div>
@@ -2401,7 +2415,7 @@
                     if (btn) {
                         const original = btn.innerHTML;
                         btn.disabled = true;
-                        btn.innerHTML = '<i class="fas fa-check"></i>';
+                        btn.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i>';
                         setTimeout(() => {
                             btn.innerHTML = original;
                             btn.disabled = false;
@@ -2410,22 +2424,6 @@
                 } catch (err) {
                     if (btn) btn.title = "Copy failed — please select the text manually";
                 }
-            }
-
-            async function shareProduct(productId) {
-                const product = products.find((p) => p.id === productId);
-                if (!product) return;
-                const shareText = `${product.name} — ${formatCurrency(product.price)}/${product.unit} at Swapnil Chemicals, Jaipur.`;
-                const shareUrl = window.location.href.split("#")[0] + "#products";
-                if (navigator.share) {
-                    try {
-                        await navigator.share({ title: product.name, text: shareText, url: shareUrl });
-                    } catch (err) {
-                        // user dismissed the native share sheet - nothing to do
-                    }
-                    return;
-                }
-                safeOpenNewTab(buildWhatsAppUrl(`${shareText}\n${shareUrl}`));
             }
 
             const products = [
@@ -2473,7 +2471,6 @@
                     unit: "Lt",
                     hasLtOptions: true,
                     description: "Streak-free glass cleaner for crystal clear visibility",
-                    
                 },
                 {
                     id: 6,
@@ -2615,7 +2612,7 @@
                 lastCartBadgeCount = totalItems;
 
                 if (keys.length === 0) {
-                    list.innerHTML = `<div class="cart-empty-msg"><i class="fas fa-shopping-cart text-3xl mb-3 block opacity-30"></i>Your cart is empty</div>`;
+                    list.innerHTML = `<div class="cart-empty-msg"><i class="fas fa-shopping-cart text-3xl mb-3 block opacity-30" aria-hidden="true"></i>Your cart is empty</div>`;
                     footer.style.display = "none";
                     return;
                 }
@@ -2638,20 +2635,18 @@
 
                     itemsHTML += `<div class="cart-item-row"><div style="flex:1"><p style="font-weight:500;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${product.name}</p>
          <p style="font-size:11px;color:#64748b;">${totalQty}${qLabel} × ${formatCurrency(product.price)}/${qLabel.trim()} </p>
-          </div><div class="cart-item-qty-ctrl"><button class="cart-qty-btn" onclick="changeCartQty('${key}',-1,event)">−</button><span style="min-width:40px;text-align:center;font-size:12px;">${totalQty}${qLabel}</span><button class="cart-qty-btn" onclick="changeCartQty('${key}',1,event)">+</button></div><div style="display:flex;align-items:center;gap:8px;"><span style="font-weight:700;color:#1d4ed8;">${formatCurrency(lineTotal)}</span><button onclick="removeFromCart('${key}',event)" aria-label="Remove ${escapeHtml(product.name)} from cart" style="background:#fee2e2;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:#ef4444;border:none;cursor:pointer;flex-shrink:0;"><i class="fas fa-trash-can" style="font-size:11px;"></i></button></div></div>`;
+          </div><div class="cart-item-qty-ctrl"><button class="cart-qty-btn" data-action="cart-qty" data-key="${key}" data-delta="-1">−</button><span style="min-width:40px;text-align:center;font-size:12px;">${totalQty}${qLabel}</span><button class="cart-qty-btn" data-action="cart-qty" data-key="${key}" data-delta="1">+</button></div><div style="display:flex;align-items:center;gap:8px;"><span style="font-weight:700;color:#1d4ed8;">${formatCurrency(lineTotal)}</span><button data-action="remove-from-cart" data-key="${key}" aria-label="Remove ${escapeHtml(product.name)} from cart" style="background:#fee2e2;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:#ef4444;border:none;cursor:pointer;flex-shrink:0;"><i class="fas fa-trash-can" style="font-size:11px;" aria-hidden="true"></i></button></div></div>`;
                 });
 
                 list.innerHTML = itemsHTML;
-                const subtotalEl = document.getElementById("cartSubtotal");
                 const totalEl = document.getElementById("cartTotal");
-                if (subtotalEl) subtotalEl.innerHTML = formatCurrency(grandTotal);
                 if (totalEl) totalEl.innerHTML = formatCurrency(grandTotal);
 
                 const safeAmount = Math.round(grandTotal);
                 const gpayBtn = document.getElementById("cartGpayBtn");
                 if (gpayBtn) {
                     gpayBtn.innerHTML = `
-      <i class="fab fa-whatsapp"></i>
+      <i class="fab fa-whatsapp" aria-hidden="true"></i>
       Enquiry ${formatCurrency(safeAmount)}
   `;
                 }
@@ -2862,8 +2857,8 @@
               <input type="tel" id="cart-enquiry-phone" class="enquiry-input" maxlength="10" inputmode="numeric" placeholder="9876543210">
               <p id="cart-phone-error" class="text-red-500 text-xs hidden mt-1" role="alert">Enter a valid 10-digit mobile number</p>
           </div>
-          <button class="enquiry-submit-btn" onclick="submitCartEnquiry()">
-              <i class="fab fa-whatsapp"></i>
+          <button class="enquiry-submit-btn" data-action="submit-cart-enquiry">
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
               Send Enquiry via WhatsApp
           </button>
           <p class="text-center text-xs text-gray-400 mt-3">Your enquiry will be sent directly to <b>Swapnil Chemicals</b> on WhatsApp</p>
@@ -2924,14 +2919,14 @@
                         qtyOpts
                             .map(
                                 (qty, i) =>
-                                    `<button type="button" class="qty-btn ${i === 0 ? "active" : ""}" data-lt="${qty}" data-price="${product.price}" data-product="${encodeURIComponent(product.name)}" data-qty-label="${qtyLabel}" aria-pressed="${i === 0}" onclick="selectQty(this)">${qty} ${qtyLabel}</button>`
+                                    `<button type="button" class="qty-btn ${i === 0 ? "active" : ""}" data-lt="${qty}" data-price="${product.price}" data-product="${encodeURIComponent(product.name)}" data-qty-label="${qtyLabel}" aria-pressed="${i === 0}" data-action="select-qty">${qty} ${qtyLabel}</button>`
                             )
                             .join("") +
                         `</div></div>`;
                 } else {
                     qtyBtnsHtml = "";
                 }
-                return `<div class="product-card rounded-2xl overflow-hidden group" data-product-id="${product.id}"><div class="product-image-container"><img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.style.display='none'; this.nextElementSibling.style.opacity='1';"><div class="product-image-fallback"><i class="fas fa-image text-4xl mb-2"></i><p>Image not available</p></div></div><div class="p-6"><h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600">${product.name}</h3><p class="text-gray-600 mb-4">${product.description}</p><div class="flex justify-between items-center"><div class="text-2xl font-bold gradient-text">${formatCurrency(product.price)}<span class="text-lg text-gray-500 ml-1">/${product.unit}</span></div><div class="flex space-x-2"><a href="tel:9352470085" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm" aria-label="Call for ${product.name}"><i class="fas fa-phone"></i></a><button class="enquiry-trigger-btn" onclick="openEnquiryModal(${product.id})"><i class="fas fa-clipboard-list"></i> Enquiry</button></div></div>${qtyBtnsHtml}<button class="add-to-cart-btn" data-add-cart="${product.id}" onclick="addToCart(${product.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>`;
+                return `<div class="product-card rounded-2xl overflow-hidden group" data-product-id="${product.id}"><div class="product-image-container"><img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" decoding="async"><div class="product-image-fallback"><i class="fas fa-image text-4xl mb-2" aria-hidden="true"></i><p>Image not available</p></div></div><div class="p-6"><h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600">${product.name}</h3><p class="text-gray-600 mb-4">${product.description}</p><div class="flex justify-between items-center"><div class="text-2xl font-bold gradient-text">${formatCurrency(product.price)}<span class="text-lg text-gray-500 ml-1">/${product.unit}</span></div><div class="flex space-x-2"><a href="tel:9352470085" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm" aria-label="Call for ${product.name}"><i class="fas fa-phone" aria-hidden="true"></i></a><button class="enquiry-trigger-btn" data-action="open-enquiry" data-product-id="${product.id}"><i class="fas fa-clipboard-list" aria-hidden="true"></i> Enquiry</button></div></div>${qtyBtnsHtml}<button class="add-to-cart-btn" data-action="add-to-cart" data-product-id="${product.id}"><i class="fas fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button></div></div>`;
             }
 
             function selectQty(btn) {
@@ -3498,7 +3493,7 @@
                     btn.className = "assistant-chip";
                     btn.style.cssText =
                         "align-self:flex-start;margin-top:-4px;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;";
-                    btn.innerHTML = '<i class="fab fa-whatsapp"></i> Ask on WhatsApp';
+                    btn.innerHTML = '<i class="fab fa-whatsapp" aria-hidden="true"></i> Ask on WhatsApp';
                     btn.addEventListener("click", () => {
                         safeOpenNewTab(buildWhatsAppUrl(`Hi Swapnil Chemicals, I have a question: ${trimmed}`));
                     });
@@ -3588,6 +3583,98 @@
                 }
                 initScrollAnimations();
             }
+
+            // Single delegated listener handles every data-action element, including
+            // ones rendered later via innerHTML (product cards, cart rows, qty buttons).
+            function handleGlobalClick(e) {
+                const target = e.target.closest("[data-action]");
+                if (!target) return;
+                const productId = Number(target.dataset.productId);
+                const delta = Number(target.dataset.delta);
+                switch (target.dataset.action) {
+                    case "toggle-cart":
+                        toggleCart();
+                        break;
+                    case "toggle-assistant":
+                        toggleAssistant();
+                        break;
+                    case "copy":
+                        copyText(target.dataset.copyText, target);
+                        break;
+                    case "open-cart-enquiry":
+                        openCartEnquiry();
+                        break;
+                    case "clear-cart":
+                        clearCart();
+                        break;
+                    case "close-enquiry":
+                        closeEnquiryModal();
+                        break;
+                    case "submit-enquiry":
+                        submitEnquiry();
+                        break;
+                    case "close-added-cart":
+                        closeAddedCartModal(e);
+                        break;
+                    case "added-cart-qty":
+                        changeAddedCartQty(delta);
+                        break;
+                    case "view-cart-from-added":
+                        viewCartFromAddedModal(e);
+                        break;
+                    case "close-remove-confirm":
+                        closeRemoveConfirmModal();
+                        break;
+                    case "confirm-remove":
+                        confirmRemoveFromCart(e);
+                        break;
+                    case "cart-qty":
+                        changeCartQty(target.dataset.key, delta, e);
+                        break;
+                    case "remove-from-cart":
+                        removeFromCart(target.dataset.key, e);
+                        break;
+                    case "submit-cart-enquiry":
+                        submitCartEnquiry();
+                        break;
+                    case "select-qty":
+                        selectQty(target);
+                        break;
+                    case "open-enquiry":
+                        openEnquiryModal(productId);
+                        break;
+                    case "add-to-cart":
+                        addToCart(productId);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            document.addEventListener("click", handleGlobalClick);
+
+            // load/error don't bubble, but the capture phase still sees them on the way
+            // down — this replaces per-image onload/onerror attributes for every
+            // .product-image, including ones rendered after this listener is attached.
+            document.addEventListener(
+                "load",
+                (e) => {
+                    if (e.target.matches && e.target.matches(".product-image")) {
+                        e.target.classList.add("loaded");
+                    }
+                },
+                true
+            );
+            document.addEventListener(
+                "error",
+                (e) => {
+                    if (e.target.matches && e.target.matches(".product-image")) {
+                        e.target.style.display = "none";
+                        const fallback = e.target.nextElementSibling;
+                        if (fallback) fallback.style.opacity = "1";
+                    }
+                },
+                true
+            );
 
             document.addEventListener("DOMContentLoaded", () => {
                 renderProducts();
