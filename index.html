@@ -459,27 +459,6 @@
                 transition: width 0.1s linear;
             }
 
-            @supports (animation-timeline: scroll()) {
-                .scroll-progress {
-                    width: 100%;
-                    transform: scaleX(0);
-                    transform-origin: left;
-                    transition: none;
-                    animation: scroll-progress-fill linear;
-                    animation-timeline: scroll(root);
-                }
-            }
-
-            @keyframes scroll-progress-fill {
-                from {
-                    transform: scaleX(0);
-                }
-
-                to {
-                    transform: scaleX(1);
-                }
-            }
-
             #business-details,
             #faq {
                 content-visibility: auto;
@@ -642,48 +621,20 @@
                 z-index: 70;
                 width: 320px;
                 max-height: 75vh;
-                margin: 0;
                 background: white;
-                border: none;
                 border-radius: 1.25rem;
                 box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 transform-origin: bottom right;
+            }
+
+            .cart-panel.hidden {
                 opacity: 0;
+                pointer-events: none;
                 transform: scale(0.85);
-                transition:
-                    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-
-            @supports (transition-behavior: allow-discrete) {
-                .cart-panel {
-                    transition:
-                        opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                        display 0.3s allow-discrete,
-                        overlay 0.3s allow-discrete;
-                }
-            }
-
-            .cart-panel:popover-open {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            @starting-style {
-                .cart-panel:popover-open {
-                    opacity: 0;
-                    transform: scale(0.85);
-                }
-            }
-
-            @supports not selector(:popover-open) {
-                .cart-panel {
-                    display: none;
-                }
             }
 
             .cart-panel-header {
@@ -767,69 +718,42 @@
                 transform: translateY(-1px);
             }
 
-            dialog.enquiry-modal-box {
+            #enquiryModal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
+                background: rgba(0, 0, 0, 0.6);
+                backdrop-filter: blur(6px);
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+            }
+
+            #enquiryModal.show {
+                display: flex !important;
+            }
+
+            .enquiry-modal-box {
                 background: #fff;
-                border: none;
                 border-radius: 22px;
                 width: 100%;
                 max-width: 500px;
                 max-height: 92vh;
                 overflow-y: auto;
-                padding: 0;
-                margin: auto;
                 box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-                transition:
-                    opacity 0.35s var(--ease-spring),
-                    transform 0.35s var(--ease-spring);
+                animation: enquiryModalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
-            @supports (transition-behavior: allow-discrete) {
-                dialog.enquiry-modal-box {
-                    transition:
-                        opacity 0.35s var(--ease-spring),
-                        transform 0.35s var(--ease-spring),
-                        display 0.35s allow-discrete,
-                        overlay 0.35s allow-discrete;
-                }
-            }
-
-            dialog.enquiry-modal-box[open] {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-
-            @starting-style {
-                dialog.enquiry-modal-box[open] {
+            @keyframes enquiryModalIn {
+                from {
                     opacity: 0;
                     transform: translateY(40px) scale(0.95);
                 }
-            }
 
-            dialog.enquiry-modal-box::backdrop {
-                background: rgba(0, 0, 0, 0.6);
-                backdrop-filter: blur(6px);
-                opacity: 0;
-                transition: opacity 0.35s ease;
-            }
-
-            @supports (transition-behavior: allow-discrete) {
-                dialog.enquiry-modal-box::backdrop {
-                    transition:
-                        opacity 0.35s ease,
-                        display 0.35s allow-discrete,
-                        overlay 0.35s allow-discrete;
-                }
-            }
-
-            dialog.enquiry-modal-box[open]::backdrop {
-                opacity: 1;
-            }
-
-            @starting-style {
-                dialog.enquiry-modal-box[open]::backdrop {
-                    opacity: 0;
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
                 }
             }
 
@@ -922,12 +846,6 @@
                 transition: 0.2s;
             }
 
-            .enquiry-textarea {
-                field-sizing: content;
-                min-height: 2.75rem;
-                max-height: 10rem;
-            }
-
             .enquiry-input:focus,
             .enquiry-textarea:focus {
                 border-color: #3b82f6;
@@ -957,70 +875,32 @@
                 margin-top: 8px;
             }
 
-            dialog.added-cart-box {
+            #addedCartModal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
+                background: rgba(0, 0, 0, 0.55);
+                backdrop-filter: blur(6px);
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+            }
+
+            #addedCartModal.show {
+                display: flex !important;
+            }
+
+            .added-cart-box {
                 position: relative;
                 background: #fff;
-                border: none;
                 border-radius: 20px;
                 width: 100%;
                 max-width: 420px;
                 padding: 28px 26px 26px;
-                margin: auto;
                 text-align: center;
                 box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-                transition:
-                    opacity 0.35s var(--ease-spring),
-                    transform 0.35s var(--ease-spring);
-            }
-
-            @supports (transition-behavior: allow-discrete) {
-                dialog.added-cart-box {
-                    transition:
-                        opacity 0.35s var(--ease-spring),
-                        transform 0.35s var(--ease-spring),
-                        display 0.35s allow-discrete,
-                        overlay 0.35s allow-discrete;
-                }
-            }
-
-            dialog.added-cart-box[open] {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-
-            @starting-style {
-                dialog.added-cart-box[open] {
-                    opacity: 0;
-                    transform: translateY(40px) scale(0.95);
-                }
-            }
-
-            dialog.added-cart-box::backdrop {
-                background: rgba(0, 0, 0, 0.55);
-                backdrop-filter: blur(6px);
-                opacity: 0;
-                transition: opacity 0.35s ease;
-            }
-
-            @supports (transition-behavior: allow-discrete) {
-                dialog.added-cart-box::backdrop {
-                    transition:
-                        opacity 0.35s ease,
-                        display 0.35s allow-discrete,
-                        overlay 0.35s allow-discrete;
-                }
-            }
-
-            dialog.added-cart-box[open]::backdrop {
-                opacity: 1;
-            }
-
-            @starting-style {
-                dialog.added-cart-box[open]::backdrop {
-                    opacity: 0;
-                }
+                animation: enquiryModalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
             .added-cart-close-btn {
@@ -1183,70 +1063,32 @@
                 transform: translateY(-1px);
             }
 
-            dialog.remove-confirm-box {
+            #removeConfirmModal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
+                background: rgba(0, 0, 0, 0.55);
+                backdrop-filter: blur(6px);
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+            }
+
+            #removeConfirmModal.show {
+                display: flex !important;
+            }
+
+            .remove-confirm-box {
                 position: relative;
                 background: #fff;
-                border: none;
                 border-radius: 20px;
                 width: 100%;
                 max-width: 380px;
                 padding: 28px 26px 26px;
-                margin: auto;
                 text-align: center;
                 box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-                transition:
-                    opacity 0.35s var(--ease-spring),
-                    transform 0.35s var(--ease-spring);
-            }
-
-            @supports (transition-behavior: allow-discrete) {
-                dialog.remove-confirm-box {
-                    transition:
-                        opacity 0.35s var(--ease-spring),
-                        transform 0.35s var(--ease-spring),
-                        display 0.35s allow-discrete,
-                        overlay 0.35s allow-discrete;
-                }
-            }
-
-            dialog.remove-confirm-box[open] {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-
-            @starting-style {
-                dialog.remove-confirm-box[open] {
-                    opacity: 0;
-                    transform: translateY(40px) scale(0.95);
-                }
-            }
-
-            dialog.remove-confirm-box::backdrop {
-                background: rgba(0, 0, 0, 0.55);
-                backdrop-filter: blur(6px);
-                opacity: 0;
-                transition: opacity 0.35s ease;
-            }
-
-            @supports (transition-behavior: allow-discrete) {
-                dialog.remove-confirm-box::backdrop {
-                    transition:
-                        opacity 0.35s ease,
-                        display 0.35s allow-discrete,
-                        overlay 0.35s allow-discrete;
-                }
-            }
-
-            dialog.remove-confirm-box[open]::backdrop {
-                opacity: 1;
-            }
-
-            @starting-style {
-                dialog.remove-confirm-box[open]::backdrop {
-                    opacity: 0;
-                }
+                animation: enquiryModalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
             .remove-confirm-icon {
@@ -1340,48 +1182,20 @@
                 z-index: 70;
                 width: 340px;
                 max-height: 70vh;
-                margin: 0;
                 background: white;
-                border: none;
                 border-radius: 1.25rem;
                 box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 transform-origin: bottom left;
+            }
+
+            .assistant-panel.hidden {
                 opacity: 0;
+                pointer-events: none;
                 transform: scale(0.85);
-                transition:
-                    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-
-            @supports (transition-behavior: allow-discrete) {
-                .assistant-panel {
-                    transition:
-                        opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                        display 0.3s allow-discrete,
-                        overlay 0.3s allow-discrete;
-                }
-            }
-
-            .assistant-panel:popover-open {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            @starting-style {
-                .assistant-panel:popover-open {
-                    opacity: 0;
-                    transform: scale(0.85);
-                }
-            }
-
-            @supports not selector(:popover-open) {
-                .assistant-panel {
-                    display: none;
-                }
             }
 
             .assistant-panel-header {
@@ -1802,7 +1616,6 @@
                                     width="56"
                                     height="56"
                                     decoding="async"
-                                    fetchpriority="high"
                                 />
                             </div>
                             <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full pulse-ring"></div>
@@ -1823,7 +1636,7 @@
                         </div>
                         <button
                             class="cart-icon-btn"
-                            popovertarget="cartPanel"
+                            onclick="toggleCart()"
                             aria-label="Open cart"
                             aria-expanded="false"
                         >
@@ -2012,7 +1825,7 @@
                         </p>
                         <div class="section-divider max-w-xs mx-auto"></div>
                     </div>
-                    <search class="max-w-xl mx-auto mb-8 block">
+                    <div class="max-w-xl mx-auto mb-8">
                         <div class="relative">
                             <i
                                 class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -2029,7 +1842,7 @@
                                 <i class="fas fa-microphone"></i>
                             </button>
                         </div>
-                    </search>
+                    </div>
                     <div
                         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
                         id="productsGrid"
@@ -2206,7 +2019,6 @@
                                                 alt="Google Pay"
                                                 loading="lazy"
                                                 decoding="async"
-                                                fetchpriority="low"
                                             />
                                         </div>
                                         <div>
@@ -2238,7 +2050,6 @@
                                                 alt="UPI QR"
                                                 loading="lazy"
                                                 decoding="async"
-                                                fetchpriority="low"
                                             />
                                         </div>
                                         <p class="mt-3 text-sm text-gray-500">📷 Scan to pay via any UPI app</p>
@@ -2290,7 +2101,7 @@
             </div>
         </footer>
 
-        <div class="cart-panel" id="cartPanel" popover="auto">
+        <div class="cart-panel hidden" id="cartPanel">
             <div class="cart-panel-header">
                 <div>
                     <p class="font-bold text-base">Your Cart</p>
@@ -2299,7 +2110,7 @@
 
                 <div style="display: flex; align-items: center; gap: 14px; margin-left: 30px">
                     <button
-                        popovertarget="cartPanel"
+                        onclick="toggleCart()"
                         style="background: none; border: none; color: white; cursor: pointer; font-size: 16px"
                         aria-label="Close cart"
                     >
@@ -2349,7 +2160,7 @@
         <button
             id="aiAssistantBtn"
             class="ai-assistant-btn"
-            popovertarget="assistantPanel"
+            onclick="toggleAssistant()"
             aria-label="Open Swapnil Chemicals AI Assistant"
             aria-expanded="false"
         >
@@ -2358,9 +2169,8 @@
         </button>
 
         <div
-            class="assistant-panel"
+            class="assistant-panel hidden"
             id="assistantPanel"
-            popover="auto"
             role="dialog"
             aria-label="Swapnil Chemicals AI Assistant"
         >
@@ -2373,7 +2183,7 @@
                     </div>
                 </div>
                 <button
-                    popovertarget="assistantPanel"
+                    onclick="toggleAssistant()"
                     style="background: none; border: none; color: white; cursor: pointer"
                     aria-label="Close assistant"
                 >
@@ -2401,119 +2211,131 @@
             </form>
         </div>
 
-        <dialog id="enquiryModal" class="enquiry-modal-box" aria-label="Enquiry form">
-            <div class="enquiry-modal-header">
-                <div>
-                    <h2 style="color: #fff; font-size: 1.15rem; font-weight: 700">📋 Enquiry Form</h2>
-                    <p style="color: rgba(255, 255, 255, 0.65); font-size: 0.75rem">
-                        Tell us about your requirements
-                    </p>
+        <div id="enquiryModal">
+            <div class="enquiry-modal-box" role="dialog" aria-modal="true" aria-label="Enquiry form" tabindex="-1">
+                <div class="enquiry-modal-header">
+                    <div>
+                        <h2 style="color: #fff; font-size: 1.15rem; font-weight: 700">📋 Enquiry Form</h2>
+                        <p style="color: rgba(255, 255, 255, 0.65); font-size: 0.75rem">
+                            Tell us about your requirements
+                        </p>
+                    </div>
+                    <button class="enquiry-close-btn" onclick="closeEnquiryModal()" aria-label="Close enquiry form">
+                        <i class="fas fa-trash-can"></i>
+                    </button>
                 </div>
-                <button class="enquiry-close-btn" onclick="closeEnquiryModal()" aria-label="Close enquiry form">
+                <div class="enquiry-body">
+                    <div class="enquiry-product-preview">
+                        <img id="enquiry-product-img" src="" alt="Selected Product" loading="lazy" decoding="async" />
+                        <div>
+                            <p class="text-xs font-bold text-sky-700">Selected Product</p>
+                            <p id="enquiry-product-name" class="font-bold text-gray-800"></p>
+                            <p id="enquiry-product-rate" class="text-sm font-semibold text-blue-600 mt-1"></p>
+                        </div>
+                    </div>
+                    <div class="enquiry-field-wrap">
+                        <label class="text-xs font-bold text-gray-600 uppercase" id="enquiry-qty-label"
+                            >Quantity <i class="fas fa-layer-group"></i
+                        ></label>
+                        <div
+                            id="enquiry-qty-buttons"
+                            class="enquiry-qty-buttons"
+                            role="group"
+                            aria-labelledby="enquiry-qty-label"
+                        ></div>
+                        <input type="hidden" id="enquiry-qty-value" />
+                    </div>
+                    <div class="enquiry-field-wrap">
+                        <label class="text-xs font-bold text-gray-600 uppercase" for="enquiry-details"
+                            >Workshop Name & Address</label
+                        ><textarea
+                            id="enquiry-details"
+                            class="enquiry-textarea"
+                            rows="2"
+                            placeholder="Any specific requirements..."
+                        ></textarea>
+                    </div>
+                    <div class="enquiry-field-wrap">
+                        <label class="text-xs font-bold text-gray-600 uppercase" for="enquiry-phone"
+                            >Your Phone Number *</label
+                        ><input
+                            type="tel"
+                            id="enquiry-phone"
+                            class="enquiry-input"
+                            maxlength="10"
+                            inputmode="numeric"
+                            placeholder="9876543210"
+                        />
+                        <p id="phone-error" class="text-red-500 text-xs hidden mt-1" role="alert">
+                            Enter valid 10-digit number
+                        </p>
+                    </div>
+                    <button class="enquiry-submit-btn" onclick="submitEnquiry()">
+                        <i class="fab fa-whatsapp"></i> Send Enquiry via WhatsApp
+                    </button>
+                    <p class="text-center text-xs text-gray-400 mt-3">Directly sent to Swapnil Chemicals</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="addedCartModal">
+            <div class="added-cart-box" role="dialog" aria-modal="true" aria-label="Added to cart" tabindex="-1">
+                <button class="added-cart-close-btn" onclick="closeAddedCartModal(event)" aria-label="Close">
                     <i class="fas fa-trash-can"></i>
                 </button>
-            </div>
-            <div class="enquiry-body">
-                <div class="enquiry-product-preview">
-                    <img id="enquiry-product-img" src="" alt="Selected Product" loading="lazy" decoding="async" />
-                    <div>
-                        <p class="text-xs font-bold text-sky-700">Selected Product</p>
-                        <p id="enquiry-product-name" class="font-bold text-gray-800"></p>
-                        <p id="enquiry-product-rate" class="text-sm font-semibold text-blue-600 mt-1"></p>
+                <p class="added-cart-product-name" id="addedCartProductName"></p>
+                <p class="added-cart-msg">has been added to your cart</p>
+                <div class="added-cart-body">
+                    <div class="added-cart-img-wrap">
+                        <img id="addedCartProductImg" src="" alt="" loading="lazy" decoding="async" />
+                    </div>
+                    <div class="added-cart-qty">
+                        <p>Qty</p>
+                        <div class="added-cart-qty-ctrl">
+                            <button type="button" onclick="changeAddedCartQty(-1)" aria-label="Decrease quantity">
+                                −
+                            </button>
+                            <input type="text" id="addedCartQtyValue" value="1" readonly aria-live="polite" />
+                            <button type="button" onclick="changeAddedCartQty(1)" aria-label="Increase quantity">
+                                +
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="enquiry-field-wrap">
-                    <label class="text-xs font-bold text-gray-600 uppercase" id="enquiry-qty-label"
-                        >Quantity <i class="fas fa-layer-group"></i
-                    ></label>
-                    <div
-                        id="enquiry-qty-buttons"
-                        class="enquiry-qty-buttons"
-                        role="group"
-                        aria-labelledby="enquiry-qty-label"
-                    ></div>
-                    <input type="hidden" id="enquiry-qty-value" />
+                <p class="added-cart-line">
+                    There are
+                    <a href="#" onclick="viewCartFromAddedModal(event)" id="addedCartItemsCount">0 items</a> in your
+                    cart.
+                </p>
+                <p class="added-cart-subtotal">Cart Subtotal: <b id="addedCartSubtotal">₹0</b></p>
+                <div class="added-cart-actions">
+                    <button class="added-cart-continue-btn" onclick="closeAddedCartModal(event)">Continue</button>
+                    <button class="added-cart-viewcart-btn" onclick="viewCartFromAddedModal(event)">View Cart</button>
                 </div>
-                <div class="enquiry-field-wrap">
-                    <label class="text-xs font-bold text-gray-600 uppercase" for="enquiry-details"
-                        >Workshop Name & Address</label
-                    ><textarea
-                        id="enquiry-details"
-                        class="enquiry-textarea"
-                        rows="2"
-                        placeholder="Any specific requirements..."
-                    ></textarea>
-                </div>
-                <div class="enquiry-field-wrap">
-                    <label class="text-xs font-bold text-gray-600 uppercase" for="enquiry-phone"
-                        >Your Phone Number *</label
-                    ><input
-                        type="tel"
-                        id="enquiry-phone"
-                        class="enquiry-input"
-                        maxlength="10"
-                        inputmode="numeric"
-                        placeholder="9876543210"
-                    />
-                    <p id="phone-error" class="text-red-500 text-xs hidden mt-1" role="alert">
-                        Enter valid 10-digit number
-                    </p>
-                </div>
-                <button class="enquiry-submit-btn" onclick="submitEnquiry()">
-                    <i class="fab fa-whatsapp"></i> Send Enquiry via WhatsApp
-                </button>
-                <p class="text-center text-xs text-gray-400 mt-3">Directly sent to Swapnil Chemicals</p>
             </div>
-        </dialog>
+        </div>
 
-        <dialog id="addedCartModal" class="added-cart-box" aria-label="Added to cart">
-            <button class="added-cart-close-btn" onclick="closeAddedCartModal(event)" aria-label="Close">
-                <i class="fas fa-trash-can"></i>
-            </button>
-            <p class="added-cart-product-name" id="addedCartProductName"></p>
-            <p class="added-cart-msg">has been added to your cart</p>
-            <div class="added-cart-body">
-                <div class="added-cart-img-wrap">
-                    <img id="addedCartProductImg" src="" alt="" loading="lazy" decoding="async" />
-                </div>
-                <div class="added-cart-qty">
-                    <p>Qty</p>
-                    <div class="added-cart-qty-ctrl">
-                        <button type="button" onclick="changeAddedCartQty(-1)" aria-label="Decrease quantity">
-                            −
-                        </button>
-                        <input type="text" id="addedCartQtyValue" value="1" readonly aria-live="polite" />
-                        <button type="button" onclick="changeAddedCartQty(1)" aria-label="Increase quantity">
-                            +
-                        </button>
-                    </div>
+        <div id="removeConfirmModal">
+            <div
+                class="remove-confirm-box"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Remove item from cart"
+                tabindex="-1"
+            >
+                <div class="remove-confirm-icon"><i class="fas fa-trash-can"></i></div>
+                <p class="remove-confirm-title">Remove item?</p>
+                <p class="remove-confirm-msg">
+                    Are you sure you would like to remove <b id="removeConfirmProductName"></b> from the shopping cart?
+                </p>
+                <div class="added-cart-actions">
+                    <button class="added-cart-continue-btn" onclick="closeRemoveConfirmModal()">Cancel</button>
+                    <button class="remove-confirm-ok-btn" onclick="confirmRemoveFromCart(event)">
+                        <i class="fas fa-trash-can"></i> Remove
+                    </button>
                 </div>
             </div>
-            <p class="added-cart-line">
-                There are
-                <a href="#" onclick="viewCartFromAddedModal(event)" id="addedCartItemsCount">0 items</a> in your
-                cart.
-            </p>
-            <p class="added-cart-subtotal">Cart Subtotal: <b id="addedCartSubtotal">₹0</b></p>
-            <div class="added-cart-actions">
-                <button class="added-cart-continue-btn" onclick="closeAddedCartModal(event)">Continue</button>
-                <button class="added-cart-viewcart-btn" onclick="viewCartFromAddedModal(event)">View Cart</button>
-            </div>
-        </dialog>
-
-        <dialog id="removeConfirmModal" class="remove-confirm-box" aria-label="Remove item from cart">
-            <div class="remove-confirm-icon"><i class="fas fa-trash-can"></i></div>
-            <p class="remove-confirm-title">Remove item?</p>
-            <p class="remove-confirm-msg">
-                Are you sure you would like to remove <b id="removeConfirmProductName"></b> from the shopping cart?
-            </p>
-            <div class="added-cart-actions">
-                <button class="added-cart-continue-btn" onclick="closeRemoveConfirmModal()">Cancel</button>
-                <button class="remove-confirm-ok-btn" onclick="confirmRemoveFromCart(event)">
-                    <i class="fas fa-trash-can"></i> Remove
-                </button>
-            </div>
-        </dialog>
+        </div>
 
         <script>
             "use strict";
@@ -2846,6 +2668,7 @@
             }
 
             let pendingRemoveKey = null;
+            let lastFocusedBeforeRemoveConfirm = null;
 
             function removeFromCart(key, e) {
                 if (e) e.stopPropagation();
@@ -2854,21 +2677,26 @@
                 const nameEl = document.getElementById("removeConfirmProductName");
                 if (nameEl) nameEl.textContent = cart[key].product.name;
                 const modal = document.getElementById("removeConfirmModal");
-                if (!modal) return;
-                if (modal.showModal) modal.showModal();
-                else modal.setAttribute("open", "");
+                if (modal) {
+                    lastFocusedBeforeRemoveConfirm = document.activeElement;
+                    modal.classList.add("show");
+                    const box = modal.querySelector(".remove-confirm-box");
+                    if (box) box.focus({ preventScroll: true });
+                }
             }
 
             function closeRemoveConfirmModal() {
                 const modal = document.getElementById("removeConfirmModal");
-                if (modal) {
-                    if (modal.close) modal.close();
-                    else modal.removeAttribute("open");
-                }
+                if (modal) modal.classList.remove("show");
                 pendingRemoveKey = null;
+                if (lastFocusedBeforeRemoveConfirm && typeof lastFocusedBeforeRemoveConfirm.focus === "function") {
+                    lastFocusedBeforeRemoveConfirm.focus();
+                }
+                lastFocusedBeforeRemoveConfirm = null;
             }
 
             function confirmRemoveFromCart(e) {
+                // Prevent this click from reaching the document click event
                 if (e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -2879,17 +2707,36 @@
                     return;
                 }
 
+                // Remove only the selected product
                 delete cart[pendingRemoveKey];
+
+                // Save updated cart
                 localStorage.setItem(APP.CART_STORAGE_KEY, JSON.stringify(cart));
 
+                // Close only the remove confirmation popup
                 const modal = document.getElementById("removeConfirmModal");
                 if (modal) {
-                    if (modal.close) modal.close();
-                    else modal.removeAttribute("open");
+                    modal.classList.remove("show");
                 }
-                pendingRemoveKey = null;
 
+                // Reset variables
+                pendingRemoveKey = null;
+                lastFocusedBeforeRemoveConfirm = null;
+
+                // Update cart items
                 updateCartUI();
+
+                // Make sure the cart remains open
+                const cartPanel = document.getElementById("cartPanel");
+                const cartBtn = document.querySelector(".cart-icon-btn");
+
+                if (cartPanel) {
+                    cartPanel.classList.remove("hidden");
+                }
+
+                if (cartBtn) {
+                    cartBtn.setAttribute("aria-expanded", "true");
+                }
             }
 
             function clearCart() {
@@ -2897,10 +2744,25 @@
                 localStorage.removeItem(APP.CART_STORAGE_KEY);
                 updateCartUI();
                 const cartPanel = document.getElementById("cartPanel");
-                if (cartPanel && typeof cartPanel.togglePopover === "function") cartPanel.togglePopover(false);
+                const cartBtn = document.querySelector(".cart-icon-btn");
+                if (cartPanel) cartPanel.classList.add("hidden");
+                if (cartBtn) cartBtn.setAttribute("aria-expanded", "false");
+            }
+
+            function toggleCart() {
+                const panel = document.getElementById("cartPanel");
+                const btn = document.querySelector(".cart-icon-btn");
+                if (!panel) return;
+                const willOpen = panel.classList.contains("hidden");
+                panel.classList.toggle("hidden");
+                if (btn) {
+                    btn.setAttribute("aria-expanded", String(willOpen));
+                    if (!willOpen) btn.focus();
+                }
             }
 
             let addedCartModalKey = null;
+            let lastFocusedBeforeAddedCart = null;
 
             function refreshAddedCartModalTotals() {
                 const item = cart[addedCartModalKey];
@@ -2928,18 +2790,23 @@
                     imgEl.alt = item.product.name;
                 }
                 refreshAddedCartModalTotals();
-                if (modal.showModal) modal.showModal();
-                else modal.setAttribute("open", "");
+                lastFocusedBeforeAddedCart = document.activeElement;
+                modal.classList.add("show");
+                const box = modal.querySelector(".added-cart-box");
+                if (box) box.focus({ preventScroll: true });
+                document.body.style.overflow = "hidden";
             }
 
             function closeAddedCartModal(e) {
                 if (e) e.stopPropagation();
                 const modal = document.getElementById("addedCartModal");
-                if (modal) {
-                    if (modal.close) modal.close();
-                    else modal.removeAttribute("open");
-                }
+                if (modal) modal.classList.remove("show");
+                document.body.style.overflow = "";
                 addedCartModalKey = null;
+                if (lastFocusedBeforeAddedCart && typeof lastFocusedBeforeAddedCart.focus === "function") {
+                    lastFocusedBeforeAddedCart.focus();
+                }
+                lastFocusedBeforeAddedCart = null;
             }
 
             function changeAddedCartQty(delta) {
@@ -2959,7 +2826,7 @@
                 }
                 closeAddedCartModal(e);
                 const panel = document.getElementById("cartPanel");
-                if (panel && typeof panel.togglePopover === "function") panel.togglePopover(true);
+                if (panel && panel.classList.contains("hidden")) toggleCart();
             }
 
             function openCartEnquiry() {
@@ -3003,9 +2870,12 @@
       `;
                 const modal = document.getElementById("enquiryModal");
                 if (modal) {
-                    if (modal.showModal) modal.showModal();
-                    else modal.setAttribute("open", "");
+                    lastFocusedBeforeEnquiry = document.activeElement;
+                    modal.classList.add("show");
+                    const box = modal.querySelector(".enquiry-modal-box");
+                    if (box) box.focus({ preventScroll: true });
                 }
+                document.body.style.overflow = "hidden";
             }
 
             function submitCartEnquiry() {
@@ -3245,6 +3115,32 @@
             }
 
             let currentEnquiryProduct = null;
+            let lastFocusedBeforeEnquiry = null;
+
+            function getFocusableElements(container) {
+                return Array.from(
+                    container.querySelectorAll(
+                        'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                    )
+                ).filter((el) => el.offsetParent !== null);
+            }
+
+            function trapEnquiryFocus(e) {
+                const modal = document.getElementById("enquiryModal");
+                const box = modal && modal.querySelector(".enquiry-modal-box");
+                if (e.key !== "Tab" || !box) return;
+                const focusable = getFocusableElements(box);
+                if (!focusable.length) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
 
             function openEnquiryModal(productId) {
                 const product = products.find((p) => p.id === productId);
@@ -3297,16 +3193,28 @@
 
                 const modal = document.getElementById("enquiryModal");
                 if (modal) {
-                    if (modal.showModal) modal.showModal();
-                    else modal.setAttribute("open", "");
+                    lastFocusedBeforeEnquiry = document.activeElement;
+                    modal.classList.add("show");
+                    const box = modal.querySelector(".enquiry-modal-box");
+                    if (box) box.focus({ preventScroll: true });
                 }
+                document.body.style.overflow = "hidden";
             }
 
             function closeEnquiryModal() {
-                const modal = document.getElementById("enquiryModal");
-                if (modal) {
-                    if (modal.close) modal.close();
-                    else modal.removeAttribute("open");
+                const doClose = () => {
+                    const modal = document.getElementById("enquiryModal");
+                    if (modal) modal.classList.remove("show");
+                    document.body.style.overflow = "";
+                    if (lastFocusedBeforeEnquiry && typeof lastFocusedBeforeEnquiry.focus === "function") {
+                        lastFocusedBeforeEnquiry.focus();
+                    }
+                    lastFocusedBeforeEnquiry = null;
+                };
+                if (document.startViewTransition) {
+                    document.startViewTransition(doClose);
+                } else {
+                    doClose();
                 }
             }
 
@@ -3360,19 +3268,61 @@
                 });
             }
 
-            // Native <dialog> already handles Escape-to-close and focus containment,
-            // and native popovers already handle Escape/outside-click light-dismiss,
-            // so no manual document-level click/keydown plumbing is needed here.
+            document.addEventListener("click", (e) => {
+                if (enquiryModal && enquiryModal.classList.contains("show") && enquiryModal.contains(e.target)) return;
+                if (addedCartModal && addedCartModal.classList.contains("show") && addedCartModal.contains(e.target))
+                    return;
+                if (
+                    removeConfirmModal &&
+                    removeConfirmModal.classList.contains("show") &&
+                    removeConfirmModal.contains(e.target)
+                )
+                    return;
 
-            const cartPanel = document.getElementById("cartPanel");
-            const cartTriggerBtn = document.querySelector(".cart-icon-btn");
-            if (cartPanel && cartTriggerBtn) {
-                cartPanel.addEventListener("toggle", (e) => {
-                    const isOpen = e.newState === "open";
-                    cartTriggerBtn.setAttribute("aria-expanded", String(isOpen));
-                    if (!isOpen) cartTriggerBtn.focus();
-                });
-            }
+                const cartPanel = document.getElementById("cartPanel");
+                const cartBtn = document.querySelector(".cart-icon-btn");
+                if (
+                    cartPanel &&
+                    !cartPanel.classList.contains("hidden") &&
+                    !cartPanel.contains(e.target) &&
+                    !(cartBtn && cartBtn.contains(e.target))
+                ) {
+                    toggleCart();
+                }
+
+                const assistantPanel = document.getElementById("assistantPanel");
+                const assistantBtn = document.getElementById("aiAssistantBtn");
+                if (
+                    assistantPanel &&
+                    !assistantPanel.classList.contains("hidden") &&
+                    !assistantPanel.contains(e.target) &&
+                    !(assistantBtn && assistantBtn.contains(e.target))
+                ) {
+                    toggleAssistant();
+                }
+            });
+
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") {
+                    const cartPanel = document.getElementById("cartPanel");
+                    const assistantPanel = document.getElementById("assistantPanel");
+                    if (enquiryModal && enquiryModal.classList.contains("show")) {
+                        closeEnquiryModal();
+                    } else if (removeConfirmModal && removeConfirmModal.classList.contains("show")) {
+                        closeRemoveConfirmModal();
+                    } else if (addedCartModal && addedCartModal.classList.contains("show")) {
+                        closeAddedCartModal();
+                    } else if (cartPanel && !cartPanel.classList.contains("hidden")) {
+                        toggleCart();
+                    } else if (assistantPanel && !assistantPanel.classList.contains("hidden")) {
+                        toggleAssistant();
+                    }
+                    return;
+                }
+                if (enquiryModal && enquiryModal.classList.contains("show")) {
+                    trapEnquiryFocus(e);
+                }
+            });
 
             const ASSISTANT_QUICK_REPLIES = [
                 { label: "Our Products", query: "What products do you sell?" },
@@ -3384,27 +3334,27 @@
 
             let assistantStarted = false;
 
-            const assistantPanel = document.getElementById("assistantPanel");
-            const assistantTriggerBtn = document.getElementById("aiAssistantBtn");
-            if (assistantPanel && assistantTriggerBtn) {
-                assistantPanel.addEventListener("toggle", (e) => {
-                    const isOpen = e.newState === "open";
-                    assistantTriggerBtn.setAttribute("aria-expanded", String(isOpen));
-                    if (isOpen) {
-                        if (!assistantStarted) {
-                            assistantStarted = true;
-                            appendAssistantMessage(
-                                "bot",
-                                `Hi! 👋 I'm the Swapnil Chemicals assistant. I can help with product info, pricing, bulk orders, payment & contact details. What would you like to know?`
-                            );
-                            renderAssistantQuickReplies();
-                        }
-                        const input = document.getElementById("assistantInput");
-                        if (input) setTimeout(() => input.focus(), 250);
-                    } else {
-                        assistantTriggerBtn.focus();
-                    }
-                });
+            function toggleAssistant() {
+                const panel = document.getElementById("assistantPanel");
+                const btn = document.getElementById("aiAssistantBtn");
+                if (!panel) return;
+                const willOpen = panel.classList.contains("hidden");
+                panel.classList.toggle("hidden");
+                if (btn) btn.setAttribute("aria-expanded", String(willOpen));
+                if (willOpen && !assistantStarted) {
+                    assistantStarted = true;
+                    appendAssistantMessage(
+                        "bot",
+                        `Hi! 👋 I'm the Swapnil Chemicals assistant. I can help with product info, pricing, bulk orders, payment & contact details. What would you like to know?`
+                    );
+                    renderAssistantQuickReplies();
+                }
+                if (willOpen) {
+                    const input = document.getElementById("assistantInput");
+                    if (input) setTimeout(() => input.focus(), 250);
+                } else if (btn) {
+                    btn.focus();
+                }
             }
 
             function renderAssistantQuickReplies() {
@@ -3585,7 +3535,6 @@
             function initScrollProgress() {
                 const bar = document.getElementById("scrollProgress");
                 if (!bar) return;
-                if (window.CSS && CSS.supports && CSS.supports("animation-timeline: scroll()")) return;
                 const update = () => {
                     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
                     const pct = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
