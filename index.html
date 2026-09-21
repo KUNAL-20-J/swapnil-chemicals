@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Automobile new code 21-09-26 -->
+<!-- Automobile new code 04-09-26 -->
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -7,7 +7,6 @@
         <title>Swapnil Chemicals | Automobile Cleaning Products Manufacturer, Jaipur</title>
         <link rel="icon" type="image/jpeg" href="SC Logo.jpg" />
         <link rel="apple-touch-icon" href="SC Logo.jpg" />
-        <link rel="canonical" href="<?php echo $canonicalUrl; ?>" />
         <link
             rel="manifest"
             href='data:application/manifest+json,{"name":"Swapnil Chemicals - Automobile Cleaning Products","short_name":"Swapnil Chemicals","description":"Manufacturers and marketers of automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner and more.","start_url":".","scope":".","display":"standalone","background_color":"%23f8fafc","theme_color":"%231e293b","lang":"en-IN","icons":[{"src":"SC Logo.jpg","sizes":"any","type":"image/jpeg"}]}'
@@ -31,7 +30,6 @@
 
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Swapnil Chemicals" />
-        <meta property="og:url" content="<?php echo $canonicalUrl; ?>" />
         <meta property="og:title" content="Swapnil Chemicals | Automobile Cleaning Products Manufacturer, Jaipur" />
         <meta
             property="og:description"
@@ -47,15 +45,18 @@
         />
         <meta name="twitter:image" content="SC Logo.jpg" />
 
-        <!-- CSP, X-Frame-Options, Referrer-Policy and Permissions-Policy are now sent as real
-             response headers (see top of file) so frame-ancestors and the script nonce actually apply. -->
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.gstatic.com https://api.qrserver.com; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
+        />
+        <!-- frame-ancestors is ignored by browsers when set via <meta>; real clickjacking protection needs an X-Frame-Options/CSP response header from the server -->
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
         <script src="https://cdn.tailwindcss.com"></script>
-        <script nonce="<?php echo $cspNonce; ?>">
+        <script>
             tailwind.config = {
                 theme: {
                     extend: {
@@ -135,11 +136,6 @@
             h2,
             h3 {
                 text-wrap: balance;
-            }
-
-            p,
-            li {
-                text-wrap: pretty;
             }
 
             @media (prefers-reduced-motion: reduce) {
@@ -364,9 +360,7 @@
                 background-clip: text;
             }
 
-            /* Dedicated class instead of piggybacking on the .mb-4 spacing utility —
-               a spacing utility shouldn't also carry typographic meaning. */
-            .section-heading {
+            .gradient-text.mb-4 {
                 font-size: clamp(1.75rem, 1.35rem + 2vw, 2.75rem);
             }
 
@@ -560,10 +554,6 @@
                 box-shadow: 0 6px 18px rgba(234, 88, 12, 0.4);
             }
 
-            #shareBtn[hidden] {
-                display: none;
-            }
-
             .cart-icon-btn {
                 position: relative;
                 z-index: 60;
@@ -658,7 +648,6 @@
 
             .cart-items-list {
                 overflow-y: auto;
-                overscroll-behavior: contain;
                 flex: 1;
                 padding: 12px 16px;
                 max-height: 320px;
@@ -751,7 +740,6 @@
                 max-width: 500px;
                 max-height: 92vh;
                 overflow-y: auto;
-                overscroll-behavior: contain;
                 box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
                 animation: enquiryModalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
@@ -862,12 +850,6 @@
                 border-color: #3b82f6;
                 outline: none;
                 background: #fff;
-            }
-
-            .enquiry-textarea {
-                field-sizing: content;
-                min-height: 44px;
-                max-height: 160px;
             }
 
             .enquiry-field-wrap:has(#phone-error:not(.hidden)) .enquiry-input,
@@ -1237,7 +1219,6 @@
             .assistant-messages {
                 flex: 1;
                 overflow-y: auto;
-                overscroll-behavior: contain;
                 padding: 16px;
                 display: flex;
                 flex-direction: column;
@@ -1633,7 +1614,6 @@
                                     class="w-full h-full object-cover"
                                     width="56"
                                     height="56"
-                                    fetchpriority="high"
                                     decoding="async"
                                 />
                             </div>
@@ -1654,15 +1634,6 @@
                             </p>
                         </div>
                         <button
-                            id="shareBtn"
-                            class="cart-icon-btn"
-                            style="background: var(--brand-accent)"
-                            aria-label="Share this page"
-                            hidden
-                        >
-                            <i class="fas fa-share-nodes text-base" aria-hidden="true"></i>
-                        </button>
-                        <button
                             class="cart-icon-btn"
                             data-action="toggle-cart"
                             aria-label="Open cart"
@@ -1682,7 +1653,7 @@
                     <div class="container mx-auto px-4">
                         <div class="max-w-5xl mx-auto text-center hero-content-in">
                             <h2 class="text-4xl md:text-6xl font-bold leading-tight">
-                                Premium Automobileeeeeee <br /><span class="text-blue-400">Cleaning Solutions</span>
+                                Premium Automobileeeee <br /><span class="text-blue-400">Cleaning Solutions</span>
                             </h2>
                         </div>
                     </div>
@@ -1725,7 +1696,7 @@
             <section id="business-details" class="pt-6 pb-0 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-6 mt-8">
-                        <h2 class="text-4xl font-bold gradient-text section-heading mb-4">Business Details</h2>
+                        <h2 class="text-4xl font-bold gradient-text mb-4">Business Details</h2>
                         <div class="section-divider max-w-xs mx-auto"></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -1847,7 +1818,7 @@
             <section id="products" class="pt-2 pb-8 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
-                        <h2 class="text-4xl font-bold gradient-text section-heading mb-4">Our Premium Products</h2>
+                        <h2 class="text-4xl font-bold gradient-text mb-4">Our Premium Products</h2>
                         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                             Discover our range of high-quality automobile cleaning solutions designed for professional
                             results.
@@ -1882,7 +1853,7 @@
             <section id="faq" class="py-8 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
-                        <h2 class="text-4xl font-bold gradient-text section-heading mb-4">Frequently Asked Questions</h2>
+                        <h2 class="text-4xl font-bold gradient-text mb-4">Frequently Asked Questions</h2>
                         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                             Quick answers about ordering, payment and our products.
                         </p>
@@ -1994,7 +1965,7 @@
             <section id="contact" class="py-8 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
-                        <h2 class="text-4xl font-bold gradient-text section-heading mb-4">Get In Touch</h2>
+                        <h2 class="text-4xl font-bold gradient-text mb-4">Get In Touch</h2>
                         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                             Ready to experience premium automobile cleaning solutions? Contact us today.
                         </p>
@@ -2046,7 +2017,6 @@
                                             <img
                                                 src="https://www.gstatic.com/instantbuy/svg/dark_gpay.svg"
                                                 width="48"
-                                                height="20"
                                                 alt="Google Pay"
                                                 loading="lazy"
                                                 decoding="async"
@@ -2381,7 +2351,7 @@
             </div>
         </div>
 
-        <script nonce="<?php echo $cspNonce; ?>">
+        <script>
             "use strict";
 
             const APP = Object.freeze({
@@ -2434,46 +2404,6 @@
                     clearTimeout(timeoutId);
                     timeoutId = setTimeout(() => fn(...args), delay);
                 };
-            }
-
-            // Wraps a DOM mutation in a View Transition for a native cross-fade when the
-            // browser supports it; falls back to running it immediately otherwise. Skipped
-            // under prefers-reduced-motion so it never fights that setting.
-            function withViewTransition(fn) {
-                const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-                if (!reduceMotion && document.startViewTransition) {
-                    document.startViewTransition(fn);
-                } else {
-                    fn();
-                }
-            }
-
-            // While a blocking modal (enquiry / added-to-cart / remove-confirm) is open,
-            // everything behind it is made inert: unreachable by Tab and hidden from
-            // screen readers, on top of the modal's own focus handling. A counter (rather
-            // than a boolean) means it stays correct if a second modal opens before the
-            // first one's close animation finishes.
-            let inertModalCount = 0;
-            function getInertBackgroundTargets() {
-                return document.querySelectorAll(
-                    "body > header, body > main, body > footer, body > #scrollToTop, body > #cartPanel, body > #aiAssistantBtn, body > #assistantPanel"
-                );
-            }
-            function pushBackgroundInert() {
-                inertModalCount += 1;
-                if (inertModalCount === 1) {
-                    getInertBackgroundTargets().forEach((el) => {
-                        el.inert = true;
-                    });
-                }
-            }
-            function popBackgroundInert() {
-                inertModalCount = Math.max(0, inertModalCount - 1);
-                if (inertModalCount === 0) {
-                    getInertBackgroundTargets().forEach((el) => {
-                        el.inert = false;
-                    });
-                }
             }
 
             async function copyText(text, btn) {
@@ -2745,8 +2675,6 @@
                 if (modal) {
                     lastFocusedBeforeRemoveConfirm = document.activeElement;
                     modal.classList.add("show");
-                    document.body.style.overflow = "hidden";
-                    pushBackgroundInert();
                     const box = modal.querySelector(".remove-confirm-box");
                     if (box) box.focus({ preventScroll: true });
                 }
@@ -2754,11 +2682,7 @@
 
             function closeRemoveConfirmModal() {
                 const modal = document.getElementById("removeConfirmModal");
-                if (modal && modal.classList.contains("show")) {
-                    modal.classList.remove("show");
-                    document.body.style.overflow = "";
-                    popBackgroundInert();
-                }
+                if (modal) modal.classList.remove("show");
                 pendingRemoveKey = null;
                 if (lastFocusedBeforeRemoveConfirm && typeof lastFocusedBeforeRemoveConfirm.focus === "function") {
                     lastFocusedBeforeRemoveConfirm.focus();
@@ -2789,8 +2713,6 @@
                 if (modal) {
                     modal.classList.remove("show");
                 }
-                document.body.style.overflow = "";
-                popBackgroundInert();
 
                 // Reset variables
                 pendingRemoveKey = null;
@@ -2865,7 +2787,6 @@
                 refreshAddedCartModalTotals();
                 lastFocusedBeforeAddedCart = document.activeElement;
                 modal.classList.add("show");
-                pushBackgroundInert();
                 const box = modal.querySelector(".added-cart-box");
                 if (box) box.focus({ preventScroll: true });
                 document.body.style.overflow = "hidden";
@@ -2874,10 +2795,7 @@
             function closeAddedCartModal(e) {
                 if (e) e.stopPropagation();
                 const modal = document.getElementById("addedCartModal");
-                if (modal && modal.classList.contains("show")) {
-                    modal.classList.remove("show");
-                    popBackgroundInert();
-                }
+                if (modal) modal.classList.remove("show");
                 document.body.style.overflow = "";
                 addedCartModalKey = null;
                 if (lastFocusedBeforeAddedCart && typeof lastFocusedBeforeAddedCart.focus === "function") {
@@ -2948,8 +2866,7 @@
                 const modal = document.getElementById("enquiryModal");
                 if (modal) {
                     lastFocusedBeforeEnquiry = document.activeElement;
-                    withViewTransition(() => modal.classList.add("show"));
-                    pushBackgroundInert();
+                    modal.classList.add("show");
                     const box = modal.querySelector(".enquiry-modal-box");
                     if (box) box.focus({ preventScroll: true });
                 }
@@ -3267,13 +3184,12 @@
                 const phoneError = document.getElementById("phone-error");
                 if (details) details.value = "";
                 if (phone) phone.value = "";
-                if (phoneError) phoneError.classList.add("hidden");
+                if (phoneError) phoneError.style.display = "none";
 
                 const modal = document.getElementById("enquiryModal");
                 if (modal) {
                     lastFocusedBeforeEnquiry = document.activeElement;
-                    withViewTransition(() => modal.classList.add("show"));
-                    pushBackgroundInert();
+                    modal.classList.add("show");
                     const box = modal.querySelector(".enquiry-modal-box");
                     if (box) box.focus({ preventScroll: true });
                 }
@@ -3281,17 +3197,20 @@
             }
 
             function closeEnquiryModal() {
-                const modal = document.getElementById("enquiryModal");
-                const wasShown = Boolean(modal && modal.classList.contains("show"));
-                withViewTransition(() => {
+                const doClose = () => {
+                    const modal = document.getElementById("enquiryModal");
                     if (modal) modal.classList.remove("show");
-                });
-                document.body.style.overflow = "";
-                if (wasShown) popBackgroundInert();
-                if (lastFocusedBeforeEnquiry && typeof lastFocusedBeforeEnquiry.focus === "function") {
-                    lastFocusedBeforeEnquiry.focus();
+                    document.body.style.overflow = "";
+                    if (lastFocusedBeforeEnquiry && typeof lastFocusedBeforeEnquiry.focus === "function") {
+                        lastFocusedBeforeEnquiry.focus();
+                    }
+                    lastFocusedBeforeEnquiry = null;
+                };
+                if (document.startViewTransition) {
+                    document.startViewTransition(doClose);
+                } else {
+                    doClose();
                 }
-                lastFocusedBeforeEnquiry = null;
             }
 
             function submitEnquiry() {
@@ -3301,11 +3220,10 @@
 
                 const phone = phoneEl.value.trim();
                 if (!isValidIndianMobile(phone)) {
-                    phoneError.classList.remove("hidden");
-                    phoneEl.focus();
+                    phoneError.style.display = "block";
                     return;
                 }
-                phoneError.classList.add("hidden");
+                phoneError.style.display = "none";
 
                 const qtyEl = document.getElementById("enquiry-qty-value");
                 const detailsEl = document.getElementById("enquiry-details");
@@ -3597,24 +3515,6 @@
                 });
             }
 
-            function initShareButton() {
-                const btn = document.getElementById("shareBtn");
-                if (!btn) return;
-                if (!navigator.share) return;
-                btn.hidden = false;
-                btn.addEventListener("click", async () => {
-                    try {
-                        await navigator.share({
-                            title: document.title,
-                            text: "Swapnil Chemicals — Premium Automobile Cleaning Products, Jaipur",
-                            url: window.location.href,
-                        });
-                    } catch {
-                        // User dismissed the native share sheet — nothing to do.
-                    }
-                });
-            }
-
             function initScrollToTop() {
                 const btn = document.getElementById("scrollToTop");
                 if (!btn) return;
@@ -3781,7 +3681,6 @@
                 initProductSearch();
                 initVoiceSearch();
                 initVoiceAssistant();
-                initShareButton();
                 initScrollToTop();
                 initScrollProgress();
                 initSmoothScrolling();
