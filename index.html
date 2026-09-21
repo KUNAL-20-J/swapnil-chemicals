@@ -1,3 +1,39 @@
+<?php
+/**
+ * Real HTTP security headers. A <meta http-equiv="Content-Security-Policy"> tag cannot
+ * set frame-ancestors and offers no clickjacking protection at all — these must come
+ * from actual response headers, and a per-request nonce lets script-src drop
+ * 'unsafe-inline' entirely (style-src keeps it; see comment below).
+ */
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY'); // legacy fallback; frame-ancestors below is authoritative in modern browsers
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Permissions-Policy: geolocation=(), camera=(), microphone=(self)');
+
+$cspNonce = base64_encode(random_bytes(16));
+
+header(
+    "Content-Security-Policy: default-src 'self'; " .
+        "script-src 'self' 'nonce-$cspNonce' https://cdn.tailwindcss.com; " .
+        // 'unsafe-inline' stays here because the Tailwind Play CDN (cdn.tailwindcss.com)
+        // injects its generated utility CSS into a runtime <style> tag with no nonce
+        // support — removing this would silently break all Tailwind styling. Moving to
+        // a compiled Tailwind build (see notes) removes the need for it entirely.
+        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; " .
+        "font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; " .
+        "img-src 'self' data: https://www.gstatic.com https://api.qrserver.com; " .
+        "connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
+);
+
+// Canonical / og:url reflect the real request host so they stay correct on staging too.
+// Replace the fallback below with the live domain if this ever runs outside a web server.
+$scheme = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443)
+    ? 'https'
+    : 'http';
+$host = preg_replace('/[^a-zA-Z0-9.\-:]/', '', $_SERVER['HTTP_HOST'] ?? 'your-domain-example.com');
+$path = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
+$canonicalUrl = htmlspecialchars("$scheme://$host$path", ENT_QUOTES, 'UTF-8');
+?>
 <!doctype html>
 <!-- Automobile new code 04-09-26 -->
 <html lang="en">
@@ -7,6 +43,7 @@
         <title>Swapnil Chemicals | Automobile Cleaning Products Manufacturer, Jaipur</title>
         <link rel="icon" type="image/jpeg" href="SC Logo.jpg" />
         <link rel="apple-touch-icon" href="SC Logo.jpg" />
+        <link rel="canonical" href="<?php echo $canonicalUrl; ?>" />
         <link
             rel="manifest"
             href='data:application/manifest+json,{"name":"Swapnil Chemicals - Automobile Cleaning Products","short_name":"Swapnil Chemicals","description":"Manufacturers and marketers of automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner and more.","start_url":".","scope":".","display":"standalone","background_color":"%23f8fafc","theme_color":"%231e293b","lang":"en-IN","icons":[{"src":"SC Logo.jpg","sizes":"any","type":"image/jpeg"}]}'
@@ -30,6 +67,7 @@
 
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Swapnil Chemicals" />
+        <meta property="og:url" content="<?php echo $canonicalUrl; ?>" />
         <meta property="og:title" content="Swapnil Chemicals | Automobile Cleaning Products Manufacturer, Jaipur" />
         <meta
             property="og:description"
@@ -45,18 +83,15 @@
         />
         <meta name="twitter:image" content="SC Logo.jpg" />
 
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.gstatic.com https://api.qrserver.com; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
-        />
-        <!-- frame-ancestors is ignored by browsers when set via <meta>; real clickjacking protection needs an X-Frame-Options/CSP response header from the server -->
+        <!-- CSP, X-Frame-Options, Referrer-Policy and Permissions-Policy are now sent as real
+             response headers (see top of file) so frame-ancestors and the script nonce actually apply. -->
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
         <script src="https://cdn.tailwindcss.com"></script>
-        <script>
+        <script nonce="<?php echo $cspNonce; ?>">
             tailwind.config = {
                 theme: {
                     extend: {
@@ -360,7 +395,9 @@
                 background-clip: text;
             }
 
-            .gradient-text.mb-4 {
+            /* Dedicated class instead of piggybacking on the .mb-4 spacing utility —
+               a spacing utility shouldn't also carry typographic meaning. */
+            .section-heading {
                 font-size: clamp(1.75rem, 1.35rem + 2vw, 2.75rem);
             }
 
@@ -1614,6 +1651,7 @@
                                     class="w-full h-full object-cover"
                                     width="56"
                                     height="56"
+                                    fetchpriority="high"
                                     decoding="async"
                                 />
                             </div>
@@ -1696,7 +1734,7 @@
             <section id="business-details" class="pt-6 pb-0 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-6 mt-8">
-                        <h2 class="text-4xl font-bold gradient-text mb-4">Business Details</h2>
+                        <h2 class="text-4xl font-bold gradient-text section-heading mb-4">Business Details</h2>
                         <div class="section-divider max-w-xs mx-auto"></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -1818,7 +1856,7 @@
             <section id="products" class="pt-2 pb-8 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
-                        <h2 class="text-4xl font-bold gradient-text mb-4">Our Premium Products</h2>
+                        <h2 class="text-4xl font-bold gradient-text section-heading mb-4">Our Premium Products</h2>
                         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                             Discover our range of high-quality automobile cleaning solutions designed for professional
                             results.
@@ -1853,7 +1891,7 @@
             <section id="faq" class="py-8 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
-                        <h2 class="text-4xl font-bold gradient-text mb-4">Frequently Asked Questions</h2>
+                        <h2 class="text-4xl font-bold gradient-text section-heading mb-4">Frequently Asked Questions</h2>
                         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                             Quick answers about ordering, payment and our products.
                         </p>
@@ -1965,7 +2003,7 @@
             <section id="contact" class="py-8 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
-                        <h2 class="text-4xl font-bold gradient-text mb-4">Get In Touch</h2>
+                        <h2 class="text-4xl font-bold gradient-text section-heading mb-4">Get In Touch</h2>
                         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                             Ready to experience premium automobile cleaning solutions? Contact us today.
                         </p>
@@ -2017,6 +2055,7 @@
                                             <img
                                                 src="https://www.gstatic.com/instantbuy/svg/dark_gpay.svg"
                                                 width="48"
+                                                height="20"
                                                 alt="Google Pay"
                                                 loading="lazy"
                                                 decoding="async"
@@ -2351,7 +2390,7 @@
             </div>
         </div>
 
-        <script>
+        <script nonce="<?php echo $cspNonce; ?>">
             "use strict";
 
             const APP = Object.freeze({
@@ -3184,7 +3223,7 @@
                 const phoneError = document.getElementById("phone-error");
                 if (details) details.value = "";
                 if (phone) phone.value = "";
-                if (phoneError) phoneError.style.display = "none";
+                if (phoneError) phoneError.classList.add("hidden");
 
                 const modal = document.getElementById("enquiryModal");
                 if (modal) {
@@ -3220,10 +3259,11 @@
 
                 const phone = phoneEl.value.trim();
                 if (!isValidIndianMobile(phone)) {
-                    phoneError.style.display = "block";
+                    phoneError.classList.remove("hidden");
+                    phoneEl.focus();
                     return;
                 }
-                phoneError.style.display = "none";
+                phoneError.classList.add("hidden");
 
                 const qtyEl = document.getElementById("enquiry-qty-value");
                 const detailsEl = document.getElementById("enquiry-details");
