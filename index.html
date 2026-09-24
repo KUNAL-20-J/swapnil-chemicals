@@ -2518,12 +2518,11 @@
                     </button>
                 </div>
                 <p class="upi-pay-hint">
-                    On this phone? Copy the UPI ID, open your UPI app, choose "Pay UPI ID" and enter the amount.
-                    If "Open UPI App" shows a bank-limit or security error, use the QR / UPI ID instead - your money is
-                    not debited in that case.
+                    On this phone? Tap "Open UPI App" - it opens with Swapnil Chemicals selected. Type the amount
+                    shown above (it is also copied for you) and complete the payment with your UPI PIN.
                 </p>
                 <a id="upiPayDeepLink" href="#" class="gpay-btn" data-action="open-upi-app" style="margin-bottom: 12px">
-                    <i class="fas fa-mobile-screen" aria-hidden="true"></i> Open UPI App
+                    <i class="fas fa-mobile-screen" aria-hidden="true"></i> <span id="upiPayDeepLinkLabel">Open UPI App</span>
                 </a>
                 <div class="added-cart-actions">
                     <button class="added-cart-continue-btn" data-action="close-upi-pay">Cancel</button>
@@ -2958,10 +2957,11 @@
                 const params = new URLSearchParams({
                     pa: UPI_CONFIG.PAYEE_ID,
                     pn: UPI_CONFIG.PAYEE_NAME,
-                    am: Math.max(1, Math.round(amount)).toFixed(2),
-                    cu: APP.CURRENCY,
                 });
-                if (note) params.set("tn", note);
+                // amount === null builds a plain "pay to UPI ID" link with no pre-filled amount/note.
+                if (amount !== null) params.set("am", Math.max(1, Math.round(amount)).toFixed(2));
+                params.set("cu", APP.CURRENCY);
+                if (note && amount !== null) params.set("tn", note);
                 if (UPI_CONFIG.IS_MERCHANT && UPI_CONFIG.MERCHANT_CODE) {
                     params.set("mc", UPI_CONFIG.MERCHANT_CODE);
                     params.set("tr", `SC${Date.now()}`);
@@ -2977,11 +2977,16 @@
                 const amount = cartGrandTotal();
                 if (amount <= 0) return;
                 pendingGpayAmount = amount;
+                // QR scans (camera flow) accept a pre-filled amount even for personal UPI IDs.
                 const upiUrl = buildUpiPayUrl(amount, buildOrderNote());
+                // Tapping a website deep link to a personal UPI ID with a pre-filled amount is blocked by
+                // GPay/PhonePe ("exceeded bank limit"). Only a merchant ID may pre-fill it; for a personal ID
+                // the app opens with the payee only and the customer types the amount.
+                const deepLinkUrl = UPI_CONFIG.IS_MERCHANT ? upiUrl : buildUpiPayUrl(null);
                 const modal = document.getElementById("upiPayModal");
                 if (!modal) {
                     gpayPaymentPending = true;
-                    window.location.href = upiUrl;
+                    window.location.href = deepLinkUrl;
                     return;
                 }
                 const amountText = formatCurrency(Math.round(amount));
@@ -2999,7 +3004,16 @@
                 const qr = document.getElementById("upiPayQr");
                 if (qr) qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
                 const deepLink = document.getElementById("upiPayDeepLink");
-                if (deepLink) deepLink.href = upiUrl;
+                if (deepLink) {
+                    deepLink.href = deepLinkUrl;
+                    deepLink.dataset.amount = String(Math.max(1, Math.round(amount)));
+                }
+                const deepLinkLabel = document.getElementById("upiPayDeepLinkLabel");
+                if (deepLinkLabel) {
+                    deepLinkLabel.textContent = UPI_CONFIG.IS_MERCHANT
+                        ? "Open UPI App"
+                        : `Open UPI App & enter ${amountText}`;
+                }
                 const addedCartModalEl = document.getElementById("addedCartModal");
                 if (addedCartModalEl) addedCartModalEl.classList.remove("show");
                 lastFocusedBeforeUpiPay = document.activeElement;
@@ -3024,6 +3038,8 @@
                 if (e) e.preventDefault();
                 const link = document.getElementById("upiPayDeepLink");
                 if (!link || !link.href.startsWith("upi:")) return;
+                // No pre-filled amount for a personal ID, so put it on the clipboard for the customer to paste.
+                if (!UPI_CONFIG.IS_MERCHANT && link.dataset.amount) copyText(link.dataset.amount);
                 gpayPaymentPending = true;
                 window.location.href = link.href;
             }
