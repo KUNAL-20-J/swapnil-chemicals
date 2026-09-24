@@ -2953,6 +2953,11 @@
                 // Copy "mc=" from BOI's merchant QR (decode it with any QR reader). Leave empty if unsure -
                 // a wrong MCC fails the payment the same way a missing one does.
                 MERCHANT_CODE: "",
+                // BEST FIX for "Your money will be refunded": scan the BOI merchant QR sticker with any QR
+                // reader app and paste the full text here (starts with "upi://pay?"). Every parameter the bank
+                // registered (mc, mode, purpose, orgid, sign...) is then sent exactly as the bank expects;
+                // only the cart amount is added. Leave empty to fall back to PAYEE_ID / MERCHANT_CODE.
+                BANK_QR_STRING: "",
             });
             const UPI_PAYEE_ID = UPI_CONFIG.PAYEE_ID;
             let gpayPaymentPending = false;
@@ -2974,7 +2979,37 @@
                 return note.slice(0, 50).trim();
             }
 
+            // Parameters from the bank's own merchant QR, or null when BANK_QR_STRING is not set / invalid.
+            function bankQrParams() {
+                const raw = String(UPI_CONFIG.BANK_QR_STRING || "").trim();
+                if (!/^upi:\/\/pay\?/i.test(raw)) return null;
+                const params = new URLSearchParams(raw.slice(raw.indexOf("?") + 1));
+                return params.get("pa") ? params : null;
+            }
+
+            // A signed QR ("sign=") is verified by the UPI app against the exact original string, so an
+            // amount cannot be added to it - the customer enters the amount, as with the printed sticker.
+            function canPrefillAmount() {
+                const bank = bankQrParams();
+                return !(bank && bank.has("sign"));
+            }
+
+            function upiUrlFromParams(params) {
+                // URLSearchParams encodes spaces as "+", which some UPI apps show literally.
+                // "@" must stay unencoded in the payee ID for older UPI apps.
+                return `upi://pay?${params.toString().replace(/\+/g, "%20").replace(/%40/g, "@")}`;
+            }
+
             function buildUpiPayUrl(amount, note) {
+                const bank = bankQrParams();
+                if (bank) {
+                    // Mirror the bank QR exactly and only add the amount. No "tn"/"tr": the bank did not
+                    // register them, and extra fields are a common cause of the post-PIN credit reversal.
+                    if (bank.has("sign")) return String(UPI_CONFIG.BANK_QR_STRING).trim();
+                    bank.set("am", Math.max(1, Math.round(amount)).toFixed(2));
+                    if (!bank.has("cu")) bank.set("cu", APP.CURRENCY);
+                    return upiUrlFromParams(bank);
+                }
                 // "am" without "mam" (minimum amount) makes the amount fixed / non-editable in the UPI app.
                 const params = new URLSearchParams({
                     pa: UPI_CONFIG.PAYEE_ID,
@@ -2982,7 +3017,9 @@
                     am: Math.max(1, Math.round(amount)).toFixed(2),
                     cu: APP.CURRENCY,
                 });
-                if (note) params.set("tn", note);
+                // A free-text note on a merchant VPA without its registered MCC is another trigger for the
+                // payee bank reversing the credit, so the note is only sent alongside mc/tr.
+                if (note && (!UPI_CONFIG.IS_MERCHANT || UPI_CONFIG.MERCHANT_CODE)) params.set("tn", note);
                 if (UPI_CONFIG.IS_MERCHANT && UPI_CONFIG.MERCHANT_CODE) {
                     // "mc" and "tr" must go together and match the bank's merchant registration. A made-up
                     // "tr" without the registered MCC makes the payee bank reject the credit after the
@@ -2990,18 +3027,19 @@
                     params.set("mc", UPI_CONFIG.MERCHANT_CODE);
                     params.set("tr", `SC${Date.now()}`);
                 } else if (UPI_CONFIG.IS_MERCHANT) {
-                    console.warn("UPI_CONFIG.MERCHANT_CODE (MCC) is empty - sending pa/pn/am only, like the bank QR.");
+                    console.warn(
+                        "UPI merchant parameters missing - set UPI_CONFIG.BANK_QR_STRING (or MERCHANT_CODE). Pre-filled payments may be reversed after the UPI PIN."
+                    );
                 }
-                // URLSearchParams encodes spaces as "+", which some UPI apps show literally.
-                // "@" must stay unencoded in the payee ID for older UPI apps.
-                return `upi://pay?${params.toString().replace(/\+/g, "%20").replace(/%40/g, "@")}`;
+                return upiUrlFromParams(params);
             }
 
             // Same as scanning the bank's static QR: no amount/note/ref, the customer types the amount.
             // This is the most widely accepted UPI payment, used as a fallback when a pre-filled one fails.
             function buildUpiManualUrl() {
+                if (bankQrParams()) return String(UPI_CONFIG.BANK_QR_STRING).trim();
                 const params = new URLSearchParams({ pa: UPI_CONFIG.PAYEE_ID, pn: UPI_CONFIG.PAYEE_NAME, cu: APP.CURRENCY });
-                return `upi://pay?${params.toString().replace(/\+/g, "%20").replace(/%40/g, "@")}`;
+                return upiUrlFromParams(params);
             }
 
             let lastFocusedBeforeUpiPay = null;
@@ -3033,6 +3071,10 @@
                 if (qr) qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
                 const amountEl = document.getElementById("upiPayAmount");
                 if (amountEl) amountEl.textContent = formatCurrency(Math.round(amount));
+                const hintEl = document.querySelector("#upiPayModal .upi-pay-hint");
+                if (hintEl && !canPrefillAmount()) {
+                    hintEl.textContent = `Scan or tap below, then enter ${formatCurrency(Math.round(amount))} in your UPI app before the PIN.`;
+                }
                 const isPhone = Boolean(gpayUrl);
                 const isAndroid = /android/i.test(navigator.userAgent || "");
                 // Android: plain upi:// opens the UPI app chooser (PhonePe, Paytm, BHIM, BOI...).
