@@ -2504,25 +2504,11 @@
                 </button>
                 <p class="remove-confirm-title">Pay <span id="upiPayAmount">₹0</span> via UPI</p>
                 <img id="upiPayQr" class="upi-pay-qr" src="" alt="UPI QR code for the cart amount" width="200" height="200" />
-                <p class="upi-pay-hint">Scan with any UPI app (Google Pay, PhonePe, Paytm, BHIM).</p>
-                <div class="upi-pay-row">
-                    <span>UPI ID<br /><b id="upiPayId"></b></span>
-                    <button type="button" class="text-gray-400 hover:text-blue-600" data-action="copy" id="upiPayCopyId" aria-label="Copy UPI ID">
-                        <i class="fas fa-copy" aria-hidden="true"></i>
-                    </button>
-                </div>
-                <div class="upi-pay-row">
-                    <span>Amount<br /><b id="upiPayAmountRow">₹0</b></span>
-                    <button type="button" class="text-gray-400 hover:text-blue-600" data-action="copy" id="upiPayCopyAmount" aria-label="Copy amount">
-                        <i class="fas fa-copy" aria-hidden="true"></i>
-                    </button>
-                </div>
                 <p class="upi-pay-hint">
-                    On this phone? Tap "Open UPI App" - it opens with Swapnil Chemicals selected. Type the amount
-                    shown above (it is also copied for you) and complete the payment with your UPI PIN.
+                    Scan with Google Pay or any UPI app. The amount is fixed to your cart total and cannot be changed.
                 </p>
                 <a id="upiPayDeepLink" href="#" class="gpay-btn" data-action="open-upi-app" style="margin-bottom: 12px">
-                    <i class="fas fa-mobile-screen" aria-hidden="true"></i> <span id="upiPayDeepLinkLabel">Open UPI App</span>
+                    <i class="fab fa-google-pay" aria-hidden="true"></i> Open Google Pay
                 </a>
                 <div class="added-cart-actions">
                     <button class="added-cart-continue-btn" data-action="close-upi-pay">Cancel</button>
@@ -2926,11 +2912,12 @@
                 if (cartBtn) cartBtn.setAttribute("aria-expanded", "false");
             }
 
-            // Personal (P2P) UPI IDs opened via a website deep link with a pre-filled amount are
-            // often rejected by GPay/PhonePe ("exceeded bank limit" / "declined for security reasons")
-            // even for tiny amounts. The QR + UPI ID sheet below works for personal IDs. Once a
-            // merchant UPI ID is available (GPay/Paytm/PhonePe for Business), set it here with
-            // IS_MERCHANT: true and its MERCHANT_CODE (MCC) so the deep link is sent as a merchant payment.
+            // IMPORTANT: Google Pay only accepts a website-opened payment with a fixed, pre-filled amount
+            // when the payee is a MERCHANT UPI ID. A personal UPI ID is rejected by GPay/NPCI risk rules
+            // ("You've exceeded the bank limit" / "declined for security reasons") even for ₹1 - no
+            // website code can change that. Get a merchant UPI ID from Google Pay for Business (or
+            // PhonePe / Paytm for Business), then set PAYEE_ID to it, IS_MERCHANT: true and
+            // MERCHANT_CODE to the 4-digit MCC shown in that merchant account.
             const UPI_CONFIG = Object.freeze({
                 PAYEE_ID: "gajendra25feb68-1@oksbi",
                 PAYEE_NAME: "Swapnil Chemicals",
@@ -2954,14 +2941,14 @@
             }
 
             function buildUpiPayUrl(amount, note) {
+                // "am" without "mam" (minimum amount) makes the amount fixed / non-editable in the UPI app.
                 const params = new URLSearchParams({
                     pa: UPI_CONFIG.PAYEE_ID,
                     pn: UPI_CONFIG.PAYEE_NAME,
+                    am: Math.max(1, Math.round(amount)).toFixed(2),
+                    cu: APP.CURRENCY,
                 });
-                // amount === null builds a plain "pay to UPI ID" link with no pre-filled amount/note.
-                if (amount !== null) params.set("am", Math.max(1, Math.round(amount)).toFixed(2));
-                params.set("cu", APP.CURRENCY);
-                if (note && amount !== null) params.set("tn", note);
+                if (note) params.set("tn", note);
                 if (UPI_CONFIG.IS_MERCHANT && UPI_CONFIG.MERCHANT_CODE) {
                     params.set("mc", UPI_CONFIG.MERCHANT_CODE);
                     params.set("tr", `SC${Date.now()}`);
@@ -2972,50 +2959,66 @@
             }
 
             let lastFocusedBeforeUpiPay = null;
+            let gpayFallbackTimer = null;
+
+            // Opens Google Pay itself (not the UPI app chooser) with the upi://pay parameters.
+            function buildGpayAppUrl(upiUrl) {
+                const query = upiUrl.slice(upiUrl.indexOf("?") + 1);
+                const ua = navigator.userAgent || "";
+                if (/android/i.test(ua)) {
+                    return `intent://pay?${query}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+                }
+                if (/iphone|ipad|ipod/i.test(ua)) return `gpay://upi/pay?${query}`;
+                return null;
+            }
+
+            function launchGpay(gpayUrl) {
+                gpayPaymentPending = true;
+                clearTimeout(gpayFallbackTimer);
+                // If the page is still visible shortly after, GPay did not open (not installed) - show the QR.
+                gpayFallbackTimer = setTimeout(() => {
+                    if (document.visibilityState === "visible" && gpayPaymentPending) {
+                        gpayPaymentPending = false;
+                        showUpiQrSheet();
+                    }
+                }, 2500);
+                window.location.href = gpayUrl;
+            }
 
             function initiateGpayPayment() {
                 const amount = cartGrandTotal();
                 if (amount <= 0) return;
-                pendingGpayAmount = amount;
-                // QR scans (camera flow) accept a pre-filled amount even for personal UPI IDs.
-                const upiUrl = buildUpiPayUrl(amount, buildOrderNote());
-                // Tapping a website deep link to a personal UPI ID with a pre-filled amount is blocked by
-                // GPay/PhonePe ("exceeded bank limit"). Only a merchant ID may pre-fill it; for a personal ID
-                // the app opens with the payee only and the customer types the amount.
-                const deepLinkUrl = UPI_CONFIG.IS_MERCHANT ? upiUrl : buildUpiPayUrl(null);
-                const modal = document.getElementById("upiPayModal");
-                if (!modal) {
-                    gpayPaymentPending = true;
-                    window.location.href = deepLinkUrl;
-                    return;
+                if (!UPI_CONFIG.IS_MERCHANT) {
+                    console.warn(
+                        "UPI_CONFIG.PAYEE_ID is a personal UPI ID - Google Pay will reject this payment. Configure a merchant UPI ID."
+                    );
                 }
-                const amountText = formatCurrency(Math.round(amount));
-                const setText = (id, text) => {
-                    const el = document.getElementById(id);
-                    if (el) el.textContent = text;
-                };
-                setText("upiPayAmount", amountText);
-                setText("upiPayAmountRow", amountText);
-                setText("upiPayId", UPI_CONFIG.PAYEE_ID);
-                const copyIdBtn = document.getElementById("upiPayCopyId");
-                const copyAmountBtn = document.getElementById("upiPayCopyAmount");
-                if (copyIdBtn) copyIdBtn.dataset.copyText = UPI_CONFIG.PAYEE_ID;
-                if (copyAmountBtn) copyAmountBtn.dataset.copyText = String(Math.max(1, Math.round(amount)));
+                pendingGpayAmount = amount;
+                const upiUrl = buildUpiPayUrl(amount, buildOrderNote());
+                const gpayUrl = buildGpayAppUrl(upiUrl);
+
                 const qr = document.getElementById("upiPayQr");
                 if (qr) qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+                const amountEl = document.getElementById("upiPayAmount");
+                if (amountEl) amountEl.textContent = formatCurrency(Math.round(amount));
                 const deepLink = document.getElementById("upiPayDeepLink");
                 if (deepLink) {
-                    deepLink.href = deepLinkUrl;
-                    deepLink.dataset.amount = String(Math.max(1, Math.round(amount)));
+                    deepLink.href = gpayUrl || upiUrl;
+                    deepLink.style.display = gpayUrl ? "" : "none";
                 }
-                const deepLinkLabel = document.getElementById("upiPayDeepLinkLabel");
-                if (deepLinkLabel) {
-                    deepLinkLabel.textContent = UPI_CONFIG.IS_MERCHANT
-                        ? "Open UPI App"
-                        : `Open UPI App & enter ${amountText}`;
-                }
+
                 const addedCartModalEl = document.getElementById("addedCartModal");
                 if (addedCartModalEl) addedCartModalEl.classList.remove("show");
+                document.body.style.overflow = "";
+
+                // Phone: go straight to Google Pay with the fixed cart amount. Desktop: show the QR to scan.
+                if (gpayUrl) launchGpay(gpayUrl);
+                else showUpiQrSheet();
+            }
+
+            function showUpiQrSheet() {
+                const modal = document.getElementById("upiPayModal");
+                if (!modal || modal.classList.contains("show")) return;
                 lastFocusedBeforeUpiPay = document.activeElement;
                 modal.classList.add("show");
                 const box = modal.querySelector(".added-cart-box");
@@ -3028,6 +3031,7 @@
                 if (modal) modal.classList.remove("show");
                 document.body.style.overflow = "";
                 gpayPaymentPending = false;
+                clearTimeout(gpayFallbackTimer);
                 if (lastFocusedBeforeUpiPay && typeof lastFocusedBeforeUpiPay.focus === "function") {
                     lastFocusedBeforeUpiPay.focus();
                 }
@@ -3037,11 +3041,10 @@
             function openUpiApp(e) {
                 if (e) e.preventDefault();
                 const link = document.getElementById("upiPayDeepLink");
-                if (!link || !link.href.startsWith("upi:")) return;
-                // No pre-filled amount for a personal ID, so put it on the clipboard for the customer to paste.
-                if (!UPI_CONFIG.IS_MERCHANT && link.dataset.amount) copyText(link.dataset.amount);
+                const href = link ? link.getAttribute("href") : "";
+                if (!href || href === "#") return;
                 gpayPaymentPending = true;
-                window.location.href = link.href;
+                window.location.href = href;
             }
 
             let lastFocusedBeforePaymentConfirm = null;
@@ -3109,6 +3112,10 @@
             }
 
             document.addEventListener("visibilitychange", () => {
+                if (document.visibilityState === "hidden" && gpayPaymentPending) {
+                    clearTimeout(gpayFallbackTimer);
+                    return;
+                }
                 if (document.visibilityState === "visible" && gpayPaymentPending) {
                     gpayPaymentPending = false;
                     setTimeout(openPaymentConfirmModal, 400);
