@@ -1138,7 +1138,8 @@
             }
 
             #paymentConfirmModal,
-            #thankYouModal {
+            #thankYouModal,
+            #upiPayModal {
                 display: none;
                 position: fixed;
                 inset: 0;
@@ -1151,8 +1152,49 @@
             }
 
             #paymentConfirmModal.show,
-            #thankYouModal.show {
+            #thankYouModal.show,
+            #upiPayModal.show {
                 display: flex !important;
+            }
+
+            .upi-pay-qr {
+                width: 200px;
+                height: 200px;
+                margin: 0 auto 14px;
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                border-radius: 14px;
+                padding: 8px;
+            }
+
+            .upi-pay-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 10px 14px;
+                margin-bottom: 10px;
+                font-size: 0.85rem;
+                text-align: left;
+            }
+
+            .upi-pay-row b {
+                word-break: break-all;
+                color: #1e293b;
+            }
+
+            .upi-pay-hint {
+                font-size: 0.75rem;
+                color: #64748b;
+                line-height: 1.5;
+                margin: 4px 0 16px;
+            }
+
+            #paymentConfirmModal {
+                z-index: 10000;
             }
 
             .payment-confirm-icon {
@@ -2455,6 +2497,43 @@
             </div>
         </div>
 
+        <div id="upiPayModal">
+            <div class="added-cart-box" role="dialog" aria-modal="true" aria-label="Pay via UPI" tabindex="-1">
+                <button class="added-cart-close-btn" data-action="close-upi-pay" aria-label="Close">
+                    <i class="fas fa-xmark" aria-hidden="true"></i>
+                </button>
+                <p class="remove-confirm-title">Pay <span id="upiPayAmount">₹0</span> via UPI</p>
+                <img id="upiPayQr" class="upi-pay-qr" src="" alt="UPI QR code for the cart amount" width="200" height="200" />
+                <p class="upi-pay-hint">Scan with any UPI app (Google Pay, PhonePe, Paytm, BHIM).</p>
+                <div class="upi-pay-row">
+                    <span>UPI ID<br /><b id="upiPayId"></b></span>
+                    <button type="button" class="text-gray-400 hover:text-blue-600" data-action="copy" id="upiPayCopyId" aria-label="Copy UPI ID">
+                        <i class="fas fa-copy" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="upi-pay-row">
+                    <span>Amount<br /><b id="upiPayAmountRow">₹0</b></span>
+                    <button type="button" class="text-gray-400 hover:text-blue-600" data-action="copy" id="upiPayCopyAmount" aria-label="Copy amount">
+                        <i class="fas fa-copy" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <p class="upi-pay-hint">
+                    On this phone? Copy the UPI ID, open your UPI app, choose "Pay UPI ID" and enter the amount.
+                    If "Open UPI App" shows a bank-limit or security error, use the QR / UPI ID instead - your money is
+                    not debited in that case.
+                </p>
+                <a id="upiPayDeepLink" href="#" class="gpay-btn" data-action="open-upi-app" style="margin-bottom: 12px">
+                    <i class="fas fa-mobile-screen" aria-hidden="true"></i> Open UPI App
+                </a>
+                <div class="added-cart-actions">
+                    <button class="added-cart-continue-btn" data-action="close-upi-pay">Cancel</button>
+                    <button class="added-cart-viewcart-btn" data-action="payment-done">
+                        <i class="fas fa-check" aria-hidden="true"></i> I've Paid
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <script>
             "use strict";
 
@@ -2848,7 +2927,18 @@
                 if (cartBtn) cartBtn.setAttribute("aria-expanded", "false");
             }
 
-            const UPI_PAYEE_ID = "gajendra25feb68-1@oksbi";
+            // Personal (P2P) UPI IDs opened via a website deep link with a pre-filled amount are
+            // often rejected by GPay/PhonePe ("exceeded bank limit" / "declined for security reasons")
+            // even for tiny amounts. The QR + UPI ID sheet below works for personal IDs. Once a
+            // merchant UPI ID is available (GPay/Paytm/PhonePe for Business), set it here with
+            // IS_MERCHANT: true and its MERCHANT_CODE (MCC) so the deep link is sent as a merchant payment.
+            const UPI_CONFIG = Object.freeze({
+                PAYEE_ID: "gajendra25feb68-1@oksbi",
+                PAYEE_NAME: "Swapnil Chemicals",
+                IS_MERCHANT: false,
+                MERCHANT_CODE: "",
+            });
+            const UPI_PAYEE_ID = UPI_CONFIG.PAYEE_ID;
             let gpayPaymentPending = false;
             let pendingGpayAmount = 0;
 
@@ -2865,18 +2955,77 @@
             }
 
             function buildUpiPayUrl(amount, note) {
-                const amt = Math.max(1, Math.round(amount));
-                let url = `upi://pay?pa=${UPI_PAYEE_ID}&pn=Swapnil%20Chemicals&cu=${APP.CURRENCY}&am=${amt}`;
-                if (note) url += `&tn=${encodeURIComponent(note)}`;
-                return url;
+                const params = new URLSearchParams({
+                    pa: UPI_CONFIG.PAYEE_ID,
+                    pn: UPI_CONFIG.PAYEE_NAME,
+                    am: Math.max(1, Math.round(amount)).toFixed(2),
+                    cu: APP.CURRENCY,
+                });
+                if (note) params.set("tn", note);
+                if (UPI_CONFIG.IS_MERCHANT && UPI_CONFIG.MERCHANT_CODE) {
+                    params.set("mc", UPI_CONFIG.MERCHANT_CODE);
+                    params.set("tr", `SC${Date.now()}`);
+                }
+                // URLSearchParams encodes spaces as "+", which some UPI apps show literally.
+                // "@" must stay unencoded in the payee ID for older UPI apps.
+                return `upi://pay?${params.toString().replace(/\+/g, "%20").replace(/%40/g, "@")}`;
             }
+
+            let lastFocusedBeforeUpiPay = null;
 
             function initiateGpayPayment() {
                 const amount = cartGrandTotal();
                 if (amount <= 0) return;
                 pendingGpayAmount = amount;
+                const upiUrl = buildUpiPayUrl(amount, buildOrderNote());
+                const modal = document.getElementById("upiPayModal");
+                if (!modal) {
+                    gpayPaymentPending = true;
+                    window.location.href = upiUrl;
+                    return;
+                }
+                const amountText = formatCurrency(Math.round(amount));
+                const setText = (id, text) => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = text;
+                };
+                setText("upiPayAmount", amountText);
+                setText("upiPayAmountRow", amountText);
+                setText("upiPayId", UPI_CONFIG.PAYEE_ID);
+                const copyIdBtn = document.getElementById("upiPayCopyId");
+                const copyAmountBtn = document.getElementById("upiPayCopyAmount");
+                if (copyIdBtn) copyIdBtn.dataset.copyText = UPI_CONFIG.PAYEE_ID;
+                if (copyAmountBtn) copyAmountBtn.dataset.copyText = String(Math.max(1, Math.round(amount)));
+                const qr = document.getElementById("upiPayQr");
+                if (qr) qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+                const deepLink = document.getElementById("upiPayDeepLink");
+                if (deepLink) deepLink.href = upiUrl;
+                const addedCartModalEl = document.getElementById("addedCartModal");
+                if (addedCartModalEl) addedCartModalEl.classList.remove("show");
+                lastFocusedBeforeUpiPay = document.activeElement;
+                modal.classList.add("show");
+                const box = modal.querySelector(".added-cart-box");
+                if (box) box.focus({ preventScroll: true });
+                document.body.style.overflow = "hidden";
+            }
+
+            function closeUpiPayModal() {
+                const modal = document.getElementById("upiPayModal");
+                if (modal) modal.classList.remove("show");
+                document.body.style.overflow = "";
+                gpayPaymentPending = false;
+                if (lastFocusedBeforeUpiPay && typeof lastFocusedBeforeUpiPay.focus === "function") {
+                    lastFocusedBeforeUpiPay.focus();
+                }
+                lastFocusedBeforeUpiPay = null;
+            }
+
+            function openUpiApp(e) {
+                if (e) e.preventDefault();
+                const link = document.getElementById("upiPayDeepLink");
+                if (!link || !link.href.startsWith("upi:")) return;
                 gpayPaymentPending = true;
-                window.location.href = buildUpiPayUrl(amount, buildOrderNote());
+                window.location.href = link.href;
             }
 
             let lastFocusedBeforePaymentConfirm = null;
@@ -2904,13 +3053,17 @@
             function handlePaymentDone() {
                 const amount = pendingGpayAmount;
                 closePaymentConfirmModal();
+                const upiModal = document.getElementById("upiPayModal");
+                if (upiModal && upiModal.classList.contains("show")) closeUpiPayModal();
                 clearCart();
                 openThankYouModal(amount);
             }
 
             function handlePaymentNotDone() {
                 closePaymentConfirmModal();
-                pendingGpayAmount = 0;
+                // Keep the amount while the UPI sheet is still open so the user can pay via QR / UPI ID.
+                const upiModal = document.getElementById("upiPayModal");
+                if (!upiModal || !upiModal.classList.contains("show")) pendingGpayAmount = 0;
             }
 
             let lastFocusedBeforeThankYou = null;
@@ -3472,6 +3625,13 @@
                 });
             }
 
+            const upiPayModal = document.getElementById("upiPayModal");
+            if (upiPayModal) {
+                upiPayModal.addEventListener("click", (e) => {
+                    if (e.target === upiPayModal) closeUpiPayModal();
+                });
+            }
+
             const thankYouModal = document.getElementById("thankYouModal");
             if (thankYouModal) {
                 thankYouModal.addEventListener("click", (e) => {
@@ -3497,6 +3657,7 @@
                     return;
                 if (thankYouModal && thankYouModal.classList.contains("show") && thankYouModal.contains(e.target))
                     return;
+                if (upiPayModal && upiPayModal.classList.contains("show") && upiPayModal.contains(e.target)) return;
 
                 const cartPanel = document.getElementById("cartPanel");
                 const cartBtn = document.querySelector(".cart-icon-btn");
@@ -3531,6 +3692,8 @@
                         closeRemoveConfirmModal();
                     } else if (paymentConfirmModal && paymentConfirmModal.classList.contains("show")) {
                         handlePaymentNotDone();
+                    } else if (upiPayModal && upiPayModal.classList.contains("show")) {
+                        closeUpiPayModal();
                     } else if (thankYouModal && thankYouModal.classList.contains("show")) {
                         closeThankYouModal();
                     } else if (addedCartModal && addedCartModal.classList.contains("show")) {
@@ -3877,6 +4040,12 @@
                         break;
                     case "close-thankyou":
                         closeThankYouModal();
+                        break;
+                    case "close-upi-pay":
+                        closeUpiPayModal();
+                        break;
+                    case "open-upi-app":
+                        openUpiApp(e);
                         break;
                     case "select-qty":
                         selectQty(target);
