@@ -2505,11 +2505,39 @@
                 <p class="remove-confirm-title">Pay <span id="upiPayAmount">₹0</span> via UPI</p>
                 <img id="upiPayQr" class="upi-pay-qr" src="" alt="UPI QR code for the cart amount" width="200" height="200" />
                 <p class="upi-pay-hint">
-                    Scan with Google Pay or any UPI app. The amount is fixed to your cart total and cannot be changed.
+                    Scan with any UPI app (PhonePe, Paytm, BHIM, BOI, Google Pay), or tap a button below on your phone.
                 </p>
-                <a id="upiPayDeepLink" href="#" class="gpay-btn" data-action="open-upi-app" style="margin-bottom: 12px">
-                    <i class="fab fa-google-pay" aria-hidden="true"></i> Open Google Pay
+                <a id="upiPayDeepLink" href="#" class="gpay-btn" data-action="open-upi-app" style="margin-bottom: 10px">
+                    <i class="fas fa-mobile-screen-button" aria-hidden="true"></i> Pay with any UPI app
                 </a>
+                <a
+                    id="upiPayGpayLink"
+                    href="#"
+                    class="gpay-btn"
+                    data-action="open-upi-app"
+                    style="margin-bottom: 12px; background: #1e293b"
+                >
+                    <i class="fab fa-google-pay" aria-hidden="true"></i> Google Pay
+                </a>
+                <div class="upi-pay-row">
+                    <span>UPI ID</span>
+                    <b>boism-9352470085@boi</b>
+                    <button
+                        type="button"
+                        class="text-gray-400 hover:text-blue-600"
+                        data-action="copy"
+                        data-copy-text="boism-9352470085@boi"
+                        aria-label="Copy UPI ID"
+                    >
+                        <i class="fas fa-copy text-sm" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <p class="upi-pay-hint">
+                    Payment failed or "money will be refunded"?
+                    <a id="upiPayManualLink" href="#" data-action="open-upi-app" class="text-blue-600 underline font-semibold"
+                        >Pay to UPI ID and enter <span id="upiPayManualAmount">₹0</span> yourself</a
+                    >.
+                </p>
                 <div class="added-cart-actions">
                     <button class="added-cart-continue-btn" data-action="close-upi-pay">Cancel</button>
                     <button class="added-cart-viewcart-btn" data-action="payment-done">
@@ -2922,6 +2950,8 @@
                 PAYEE_ID: "boism-9352470085@boi",
                 PAYEE_NAME: "Swapnil Chemicals",
                 IS_MERCHANT: true,
+                // Copy "mc=" from BOI's merchant QR (decode it with any QR reader). Leave empty if unsure -
+                // a wrong MCC fails the payment the same way a missing one does.
                 MERCHANT_CODE: "",
             });
             const UPI_PAYEE_ID = UPI_CONFIG.PAYEE_ID;
@@ -2936,8 +2966,12 @@
                 const names = Object.values(cart)
                     .map((i) => i.product.name)
                     .filter((name, idx, arr) => arr.indexOf(name) === idx);
-                const note = `Swapnil Chemicals order: ${names.join(", ")}`;
-                return note.length > 60 ? `${note.slice(0, 57)}...` : note;
+                // Banks reject/reverse UPI credits whose note has symbols like ":" "," "&" - keep it plain.
+                const note = `Swapnil Chemicals order ${names.join(" ")}`
+                    .replace(/[^A-Za-z0-9 ]/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim();
+                return note.slice(0, 50).trim();
             }
 
             function buildUpiPayUrl(amount, note) {
@@ -2950,16 +2984,27 @@
                 });
                 if (note) params.set("tn", note);
                 if (UPI_CONFIG.IS_MERCHANT && UPI_CONFIG.MERCHANT_CODE) {
+                    // "mc" and "tr" must go together and match the bank's merchant registration. A made-up
+                    // "tr" without the registered MCC makes the payee bank reject the credit after the
+                    // UPI PIN ("Your money will be refunded"), so both are sent only once MCC is set.
                     params.set("mc", UPI_CONFIG.MERCHANT_CODE);
                     params.set("tr", `SC${Date.now()}`);
+                } else if (UPI_CONFIG.IS_MERCHANT) {
+                    console.warn("UPI_CONFIG.MERCHANT_CODE (MCC) is empty - sending pa/pn/am only, like the bank QR.");
                 }
                 // URLSearchParams encodes spaces as "+", which some UPI apps show literally.
                 // "@" must stay unencoded in the payee ID for older UPI apps.
                 return `upi://pay?${params.toString().replace(/\+/g, "%20").replace(/%40/g, "@")}`;
             }
 
+            // Same as scanning the bank's static QR: no amount/note/ref, the customer types the amount.
+            // This is the most widely accepted UPI payment, used as a fallback when a pre-filled one fails.
+            function buildUpiManualUrl() {
+                const params = new URLSearchParams({ pa: UPI_CONFIG.PAYEE_ID, pn: UPI_CONFIG.PAYEE_NAME, cu: APP.CURRENCY });
+                return `upi://pay?${params.toString().replace(/\+/g, "%20").replace(/%40/g, "@")}`;
+            }
+
             let lastFocusedBeforeUpiPay = null;
-            let gpayFallbackTimer = null;
 
             // Opens Google Pay itself (not the UPI app chooser) with the upi://pay parameters.
             function buildGpayAppUrl(upiUrl) {
@@ -2970,19 +3015,6 @@
                 }
                 if (/iphone|ipad|ipod/i.test(ua)) return `gpay://upi/pay?${query}`;
                 return null;
-            }
-
-            function launchGpay(gpayUrl) {
-                gpayPaymentPending = true;
-                clearTimeout(gpayFallbackTimer);
-                // If the page is still visible shortly after, GPay did not open (not installed) - show the QR.
-                gpayFallbackTimer = setTimeout(() => {
-                    if (document.visibilityState === "visible" && gpayPaymentPending) {
-                        gpayPaymentPending = false;
-                        showUpiQrSheet();
-                    }
-                }, 2500);
-                window.location.href = gpayUrl;
             }
 
             function initiateGpayPayment() {
@@ -3001,19 +3033,35 @@
                 if (qr) qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
                 const amountEl = document.getElementById("upiPayAmount");
                 if (amountEl) amountEl.textContent = formatCurrency(Math.round(amount));
+                const isPhone = Boolean(gpayUrl);
+                const isAndroid = /android/i.test(navigator.userAgent || "");
+                // Android: plain upi:// opens the UPI app chooser (PhonePe, Paytm, BHIM, BOI...).
+                // iOS has no system chooser for upi://, so only the Google Pay button is shown there.
                 const deepLink = document.getElementById("upiPayDeepLink");
                 if (deepLink) {
-                    deepLink.href = gpayUrl || upiUrl;
-                    deepLink.style.display = gpayUrl ? "" : "none";
+                    deepLink.href = upiUrl;
+                    deepLink.style.display = isAndroid ? "" : "none";
                 }
+                const gpayLink = document.getElementById("upiPayGpayLink");
+                if (gpayLink) {
+                    gpayLink.href = gpayUrl || "#";
+                    gpayLink.style.display = isPhone ? "" : "none";
+                }
+                const manualLink = document.getElementById("upiPayManualLink");
+                if (manualLink) {
+                    manualLink.href = buildUpiManualUrl();
+                    manualLink.parentElement.style.display = isAndroid ? "" : "none";
+                }
+                const manualAmountEl = document.getElementById("upiPayManualAmount");
+                if (manualAmountEl) manualAmountEl.textContent = formatCurrency(Math.round(amount));
 
                 const addedCartModalEl = document.getElementById("addedCartModal");
                 if (addedCartModalEl) addedCartModalEl.classList.remove("show");
                 document.body.style.overflow = "";
 
-                // Phone: go straight to Google Pay with the fixed cart amount. Desktop: show the QR to scan.
-                if (gpayUrl) launchGpay(gpayUrl);
-                else showUpiQrSheet();
+                // Let the customer choose the app instead of forcing Google Pay, which is the strictest
+                // about payments opened from a website and most often fails after the UPI PIN.
+                showUpiQrSheet();
             }
 
             function showUpiQrSheet() {
@@ -3031,16 +3079,14 @@
                 if (modal) modal.classList.remove("show");
                 document.body.style.overflow = "";
                 gpayPaymentPending = false;
-                clearTimeout(gpayFallbackTimer);
                 if (lastFocusedBeforeUpiPay && typeof lastFocusedBeforeUpiPay.focus === "function") {
                     lastFocusedBeforeUpiPay.focus();
                 }
                 lastFocusedBeforeUpiPay = null;
             }
 
-            function openUpiApp(e) {
+            function openUpiApp(e, link) {
                 if (e) e.preventDefault();
-                const link = document.getElementById("upiPayDeepLink");
                 const href = link ? link.getAttribute("href") : "";
                 if (!href || href === "#") return;
                 gpayPaymentPending = true;
@@ -3112,10 +3158,6 @@
             }
 
             document.addEventListener("visibilitychange", () => {
-                if (document.visibilityState === "hidden" && gpayPaymentPending) {
-                    clearTimeout(gpayFallbackTimer);
-                    return;
-                }
                 if (document.visibilityState === "visible" && gpayPaymentPending) {
                     gpayPaymentPending = false;
                     setTimeout(openPaymentConfirmModal, 400);
@@ -4068,7 +4110,7 @@
                         closeUpiPayModal();
                         break;
                     case "open-upi-app":
-                        openUpiApp(e);
+                        openUpiApp(e, target);
                         break;
                     case "select-qty":
                         selectQty(target);
