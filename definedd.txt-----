@@ -1,0 +1,26 @@
+I've redesigned index.php in place and created no other project files. I checked the page by rendering it in headless Chrome at desktop and phone width, and the JavaScript passes a syntax check. I haven't tried the hover, click and cart interactions by hand in a real browser. A backup of your original file is at /tmp/claude-1000/-home-emizentech/18e1e578-a316-4682-bdd1-c05c896fc539/scratchpad/index.php.bak.
+
+What changed
+
+Hero: the two flat purple bands are now one dark violet section with:
+slowly drifting colour glows and a faint grid;
+soap-foam bubbles rising through it, which fits a car-wash brand;
+"Cleaning Solutions" in a moving colour gradient over a new heading font (Sora);
+a "Since 2020" label, four credential tags (in-house manufacturing, GST, MSME & Udyam, bulk & retail) and a wave-shaped bottom edge.
+Product name ticker: a scrolling strip of your product names under the hero. It pauses when the mouse is over it.
+Section headings: each has a small label above it ("Who we are", "Shop the range", and so on) and a moving gradient underline.
+Product cards: they tilt slightly and a soft light follows the mouse, a shine passes over the image on hover, a coloured border appears, and each has a "Per litre" / "Per piece" tag.
+Buttons: a shine on hover and a ripple on click. The two hero buttons also lean slightly towards the mouse.
+Header: gets smaller and gains a shadow once you scroll.
+FAQ: answers slide open smoothly in recent Chrome and Edge. Other browsers open them instantly, as before.
+Theme: the cart, the assistant chat, the pop-ups, the footer and the scroll bar now share the violet colours.
+Bugs fixed along the way
+
+Card hover lift never worked in Chrome. The fade-in-on-scroll effect was blocking it. Cards now lift and tilt as intended.
+The scroll-to-top button was always visible, even at the top of the page. A CSS rule overrode the one that hides it. It now appears only after you scroll down.
+Things to know
+
+All motion effects switch off for visitors whose device is set to reduce motion. The tilt and lean effects only run with a mouse, so touch screens don't get them.
+Your wording, SEO tags, contact details, cart, enquiry and WhatsApp flow, search, voice input and assistant all work as before. The new tags only restate facts already on your page. I didn't add any customer numbers or statistics.
+In my local test the logo and product photos showed as missing because those image files aren't in the uploads folder. That was already the case before my changes. They will show once the images sit next to index.php on your server.
+The page still loads Tailwind from its public CDN, which Tailwind doesn't recommend for live sites. If you want it faster later, the next step is to build the CSS once and serve it as a file.
