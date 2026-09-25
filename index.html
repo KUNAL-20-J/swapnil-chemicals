@@ -74,7 +74,7 @@
             };
         </script>
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@600;700;800&display=swap"
             rel="stylesheet"
         />
         <style>
@@ -156,14 +156,6 @@
             .hero-gradient {
                 position: relative;
                 overflow: hidden;
-            }
-
-            .hero-band-top {
-                background: #4c1d95;
-            }
-
-            .hero-band-bottom {
-                background: #6d28d9;
             }
 
             .hero-gradient::before {
@@ -343,12 +335,14 @@
                 @keyframes reveal-in {
                     from {
                         opacity: 0;
-                        transform: translateY(30px);
+                        translate: 0 40px;
+                        scale: 0.96;
                     }
 
                     to {
                         opacity: 1;
-                        transform: translateY(0);
+                        translate: 0 0;
+                        scale: 1;
                     }
                 }
             }
@@ -418,6 +412,10 @@
                 justify-content: center;
                 background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-dark));
                 box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+            }
+
+            #scrollToTop.hidden {
+                display: none;
             }
 
             #scrollToTop:hover {
@@ -1417,6 +1415,782 @@
                 ):active {
                 transform: scale(0.96);
             }
+
+            /* ================================================================
+               Visual refresh — layered on top of the base styles above.
+               ================================================================ */
+            :root {
+                --page-bg: #f6f5fb;
+                --violet-deep: #1e0b4b;
+                --violet: #6d28d9;
+                --violet-bright: #7c3aed;
+                --indigo: #4f46e5;
+                --cyan: #22d3ee;
+                --font-display: "Sora", "Inter", system-ui, sans-serif;
+                --glow-violet:
+                    0 0 0 1px rgba(124, 58, 237, 0.18),
+                    0 24px 50px -16px rgba(76, 29, 149, 0.35);
+                interpolate-size: allow-keywords;
+            }
+
+            html,
+            body {
+                overflow-x: clip;
+            }
+
+            ::selection {
+                background: var(--violet-bright);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: linear-gradient(180deg, var(--violet-bright), var(--indigo));
+            }
+
+            body {
+                background: var(--page-bg);
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                z-index: -1;
+                pointer-events: none;
+                background:
+                    radial-gradient(40vw 40vw at 0% 30%, rgba(124, 58, 237, 0.08), transparent 70%),
+                    radial-gradient(35vw 35vw at 100% 60%, rgba(34, 211, 238, 0.08), transparent 70%),
+                    radial-gradient(30vw 30vw at 50% 100%, rgba(234, 88, 12, 0.05), transparent 70%);
+            }
+
+            h1,
+            h2,
+            h3 {
+                font-family: var(--font-display);
+                letter-spacing: -0.02em;
+            }
+
+            /* ---------- Header ---------- */
+            .nav-blur {
+                background: rgba(255, 255, 255, 0.72);
+                backdrop-filter: saturate(180%) blur(20px);
+                transition:
+                    box-shadow 0.3s var(--ease-standard),
+                    background 0.3s var(--ease-standard);
+            }
+
+            .nav-blur > .container {
+                transition: padding 0.3s var(--ease-standard);
+            }
+
+            .nav-blur.scrolled {
+                background: rgba(255, 255, 255, 0.9);
+                box-shadow: 0 12px 30px -14px rgba(30, 27, 75, 0.25);
+            }
+
+            .nav-blur.scrolled > .container {
+                padding-top: 0.6rem;
+                padding-bottom: 0.6rem;
+            }
+
+            .scroll-progress {
+                background: linear-gradient(90deg, var(--violet-bright), #3b82f6, var(--cyan));
+                box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
+            }
+
+            /* ---------- Gradient text & section headings ---------- */
+            .gradient-text {
+                background: linear-gradient(120deg, #4c1d95, var(--violet-bright) 35%, #2563eb 70%, #0891b2);
+                -webkit-background-clip: text;
+                background-clip: text;
+            }
+
+            .section-eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 0.9rem;
+                padding: 6px 14px;
+                border-radius: 999px;
+                font-size: 0.72rem;
+                font-weight: 700;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--violet);
+                background: rgba(124, 58, 237, 0.08);
+                border: 1px solid rgba(124, 58, 237, 0.18);
+            }
+
+            .section-eyebrow::before {
+                content: "";
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--brand-cta);
+                box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.18);
+            }
+
+            .section-divider.max-w-xs {
+                height: 4px;
+                max-width: 88px;
+                margin: 1.25rem auto 0;
+                border-radius: 999px;
+                background: linear-gradient(90deg, var(--violet-bright), #3b82f6, var(--cyan), var(--violet-bright));
+                background-size: 300% 100%;
+                animation: gradient-pan 6s linear infinite;
+            }
+
+            @keyframes gradient-pan {
+                to {
+                    background-position: 300% 0;
+                }
+            }
+
+            /* ---------- Hero ---------- */
+            .hero-gradient {
+                isolation: isolate;
+                background:
+                    radial-gradient(1100px 600px at 8% -10%, rgba(124, 58, 237, 0.9), transparent 60%),
+                    radial-gradient(900px 520px at 105% 15%, rgba(14, 165, 233, 0.55), transparent 55%),
+                    radial-gradient(700px 400px at 50% 110%, rgba(234, 88, 12, 0.35), transparent 60%),
+                    linear-gradient(160deg, var(--violet-deep) 0%, #2e1065 45%, #4c1d95 80%, #312e81 100%);
+            }
+
+            .hero-gradient::before {
+                z-index: 0;
+            }
+
+            .hero-aurora {
+                position: absolute;
+                inset: 0;
+                z-index: 0;
+                overflow: hidden;
+                pointer-events: none;
+            }
+
+            .aurora-orb {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(70px);
+                opacity: 0.55;
+                mix-blend-mode: screen;
+                animation: aurora-drift 18s ease-in-out infinite alternate;
+            }
+
+            .orb-1 {
+                width: 460px;
+                height: 460px;
+                top: -120px;
+                left: -80px;
+                background: #a855f7;
+            }
+
+            .orb-2 {
+                width: 380px;
+                height: 380px;
+                top: 30%;
+                right: -100px;
+                background: #06b6d4;
+                animation-duration: 22s;
+                animation-delay: -6s;
+            }
+
+            .orb-3 {
+                width: 320px;
+                height: 320px;
+                bottom: -120px;
+                left: 35%;
+                background: #f97316;
+                opacity: 0.35;
+                animation-duration: 26s;
+                animation-delay: -12s;
+            }
+
+            @keyframes aurora-drift {
+                0% {
+                    transform: translate(0, 0) scale(1);
+                }
+
+                50% {
+                    transform: translate(60px, 40px) scale(1.15);
+                }
+
+                100% {
+                    transform: translate(-40px, 70px) scale(0.95);
+                }
+            }
+
+            .hero-grid {
+                position: absolute;
+                inset: 0;
+                z-index: 0;
+                pointer-events: none;
+                background-image:
+                    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+                background-size: 56px 56px;
+                mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+                -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+            }
+
+            .hero-bubbles {
+                position: absolute;
+                inset: 0;
+                z-index: 1;
+                overflow: hidden;
+                pointer-events: none;
+            }
+
+            .bubble {
+                position: absolute;
+                bottom: -60px;
+                left: var(--x);
+                width: var(--s);
+                height: var(--s);
+                border-radius: 50%;
+                background: radial-gradient(
+                    circle at 30% 30%,
+                    rgba(255, 255, 255, 0.85) 0 8%,
+                    rgba(255, 255, 255, 0.18) 22%,
+                    rgba(165, 243, 252, 0.08) 60%,
+                    rgba(255, 255, 255, 0.25) 100%
+                );
+                border: 1px solid rgba(255, 255, 255, 0.25);
+                animation: bubble-rise var(--dur) linear infinite;
+                animation-delay: var(--delay);
+            }
+
+            @keyframes bubble-rise {
+                0% {
+                    transform: translate(0, 0) scale(0.6);
+                    opacity: 0;
+                }
+
+                10% {
+                    opacity: 0.9;
+                }
+
+                100% {
+                    transform: translate(var(--drift), -105vh) scale(1.1);
+                    opacity: 0;
+                }
+            }
+
+            .hero-chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                padding: 8px 18px;
+                border-radius: 999px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: #e0e7ff;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                backdrop-filter: blur(10px);
+            }
+
+            .hero-chip-dot {
+                position: relative;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #4ade80;
+            }
+
+            .hero-chip-dot::after {
+                content: "";
+                position: absolute;
+                inset: -4px;
+                border-radius: 50%;
+                border: 2px solid #4ade80;
+                animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+            }
+
+            .hero-shine-text {
+                background: linear-gradient(90deg, #67e8f9, #a5b4fc, #f0abfc, #fdba74, #67e8f9);
+                background-size: 300% 100%;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                filter: drop-shadow(0 6px 24px rgba(103, 232, 249, 0.25));
+                animation: gradient-pan 8s linear infinite;
+            }
+
+            .hero-lead {
+                color: rgba(226, 232, 240, 0.92);
+            }
+
+            .hero-trust {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px 14px;
+                margin-top: 2.75rem;
+                padding: 0;
+                list-style: none;
+            }
+
+            .hero-trust li {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 14px;
+                border-radius: 12px;
+                font-size: 0.85rem;
+                font-weight: 500;
+                color: #e2e8f0;
+                background: rgba(255, 255, 255, 0.06);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                transition:
+                    background 0.3s ease,
+                    transform 0.3s ease;
+            }
+
+            .hero-trust li:hover {
+                background: rgba(255, 255, 255, 0.12);
+                transform: translateY(-2px);
+            }
+
+            .hero-trust i {
+                color: #67e8f9;
+            }
+
+            .hero-scroll-cue {
+                position: absolute;
+                left: 50%;
+                bottom: 78px;
+                z-index: 10;
+                translate: -50% 0;
+            }
+
+            .hero-scroll-mouse {
+                display: block;
+                width: 26px;
+                height: 42px;
+                border: 2px solid rgba(255, 255, 255, 0.5);
+                border-radius: 14px;
+                position: relative;
+            }
+
+            .hero-scroll-mouse span {
+                position: absolute;
+                top: 7px;
+                left: 50%;
+                width: 4px;
+                height: 8px;
+                margin-left: -2px;
+                border-radius: 2px;
+                background: #fff;
+                animation: scroll-wheel 1.8s ease-in-out infinite;
+            }
+
+            @keyframes scroll-wheel {
+                0% {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+
+                100% {
+                    transform: translateY(14px);
+                    opacity: 0;
+                }
+            }
+
+            @media (max-height: 980px), (max-width: 640px) {
+                .hero-scroll-cue {
+                    display: none;
+                }
+            }
+
+            .hero-wave {
+                position: absolute;
+                left: 0;
+                bottom: -1px;
+                z-index: 5;
+                width: 100%;
+                height: 70px;
+                color: var(--page-bg);
+            }
+
+            /* ---------- Product marquee ---------- */
+            .product-marquee {
+                overflow: hidden;
+                padding: 14px 0 6px;
+                mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+                -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+            }
+
+            .product-marquee-track {
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                width: max-content;
+                animation: marquee 38s linear infinite;
+            }
+
+            .product-marquee:hover .product-marquee-track {
+                animation-play-state: paused;
+            }
+
+            .product-marquee span {
+                font-family: var(--font-display);
+                font-size: clamp(1.1rem, 0.9rem + 1vw, 1.6rem);
+                font-weight: 700;
+                letter-spacing: -0.01em;
+                white-space: nowrap;
+                color: transparent;
+                -webkit-text-stroke: 1px rgba(76, 29, 149, 0.45);
+            }
+
+            .product-marquee span:nth-of-type(odd) {
+                color: #4c1d95;
+                -webkit-text-stroke: 0;
+            }
+
+            .product-marquee i {
+                color: var(--brand-cta);
+                font-size: 0.9rem;
+            }
+
+            @keyframes marquee {
+                to {
+                    transform: translateX(calc(-50% - 1rem));
+                }
+            }
+
+            /* ---------- Buttons ---------- */
+            .btn-primary {
+                background: linear-gradient(135deg, var(--violet-bright), var(--indigo) 55%, #2563eb);
+                box-shadow: 0 10px 30px -10px rgba(124, 58, 237, 0.7);
+            }
+
+            .btn-primary:hover {
+                background: linear-gradient(135deg, #6d28d9, #4338ca 55%, #1d4ed8);
+                box-shadow: 0 16px 36px -10px rgba(124, 58, 237, 0.8);
+            }
+
+            .btn-secondary {
+                background: linear-gradient(135deg, #f97316, var(--brand-cta) 60%, #db2777);
+                box-shadow: 0 10px 30px -10px rgba(234, 88, 12, 0.7);
+            }
+
+            .btn-shine,
+            .add-to-cart-btn,
+            .enquiry-trigger-btn,
+            .enquiry-submit-btn,
+            .added-cart-viewcart-btn {
+                position: relative;
+                overflow: hidden;
+                isolation: isolate;
+            }
+
+            .btn-shine::after,
+            .add-to-cart-btn::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                z-index: -1;
+                background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%);
+                transform: translateX(-120%);
+                transition: transform 0.8s var(--ease-standard);
+                pointer-events: none;
+            }
+
+            .btn-shine:hover::after,
+            .add-to-cart-btn:hover::after {
+                transform: translateX(120%);
+            }
+
+            .magnetic {
+                transform: translate(var(--tx, 0px), var(--ty, 0px));
+            }
+
+            .magnetic:hover:not(:active) {
+                transform: translate(var(--tx, 0px), calc(var(--ty, 0px) - 2px));
+            }
+
+            .ripple {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.45);
+                transform: scale(0);
+                animation: ripple-out 0.6s ease-out forwards;
+                pointer-events: none;
+            }
+
+            @keyframes ripple-out {
+                to {
+                    transform: scale(1);
+                    opacity: 0;
+                }
+            }
+
+            .add-to-cart-btn {
+                background: linear-gradient(135deg, #f97316, var(--brand-cta) 60%, #db2777);
+                padding: 11px 14px;
+                font-size: 0.85rem;
+            }
+
+            .enquiry-trigger-btn {
+                background: linear-gradient(135deg, var(--violet-bright), var(--indigo));
+                box-shadow: 0 6px 16px -6px rgba(124, 58, 237, 0.6);
+            }
+
+            .enquiry-trigger-btn:hover {
+                background: linear-gradient(135deg, #6d28d9, #4338ca);
+                box-shadow: 0 10px 22px -8px rgba(124, 58, 237, 0.7);
+            }
+
+            .qty-btn.active,
+            .enquiry-qty-btn.active {
+                background: linear-gradient(135deg, var(--violet-bright), var(--indigo));
+                box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+            }
+
+            .qty-btn:hover {
+                border-color: var(--violet-bright);
+                color: var(--violet-bright);
+            }
+
+            /* ---------- Cards (shared gradient border on hover) ---------- */
+            .feature-card,
+            .glass-card,
+            .product-card {
+                position: relative;
+            }
+
+            .feature-card::before,
+            .glass-card::before,
+            .product-card::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                z-index: 3;
+                padding: 1.5px;
+                border-radius: inherit;
+                background: linear-gradient(135deg, rgba(124, 58, 237, 0.7), rgba(34, 211, 238, 0.6) 50%, rgba(249, 115, 22, 0.5));
+                -webkit-mask:
+                    linear-gradient(#000 0 0) content-box,
+                    linear-gradient(#000 0 0);
+                -webkit-mask-composite: xor;
+                mask-composite: exclude;
+                opacity: 0;
+                transition: opacity 0.4s var(--ease-standard);
+                pointer-events: none;
+            }
+
+            :is(.feature-card, .glass-card, .product-card):hover::before {
+                opacity: 1;
+            }
+
+            .feature-card {
+                overflow: hidden;
+                background: rgba(255, 255, 255, 0.72);
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                box-shadow:
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                    0 10px 30px -14px rgba(30, 27, 75, 0.18);
+                transition:
+                    transform 0.4s var(--ease-standard),
+                    box-shadow 0.4s var(--ease-standard);
+            }
+
+            .feature-card:hover {
+                transform: translateY(-6px);
+                box-shadow: var(--glow-violet);
+            }
+
+            .feature-card .shadow-lg,
+            .glass-card .contact-icon {
+                transition: transform 0.45s var(--ease-spring);
+            }
+
+            .feature-card:hover .shadow-lg {
+                transform: rotate(-6deg) scale(1.08);
+            }
+
+            .glass-card {
+                background: rgba(255, 255, 255, 0.8);
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                box-shadow: 0 10px 30px -14px rgba(30, 27, 75, 0.2);
+            }
+
+            .glass-card:hover {
+                box-shadow: var(--glow-violet);
+            }
+
+            .product-card {
+                background: rgba(255, 255, 255, 0.85);
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                box-shadow:
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                    0 14px 34px -16px rgba(30, 27, 75, 0.22);
+                transition:
+                    transform 0.45s var(--ease-standard),
+                    box-shadow 0.45s var(--ease-standard);
+            }
+
+            .product-card:hover {
+                transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-8px);
+                box-shadow: var(--glow-violet);
+            }
+
+            .product-card.is-tilting {
+                transition:
+                    transform 0.12s ease-out,
+                    box-shadow 0.45s var(--ease-standard);
+            }
+
+            .product-spotlight {
+                position: absolute;
+                inset: 0;
+                z-index: 2;
+                pointer-events: none;
+                border-radius: inherit;
+                background: radial-gradient(
+                    380px circle at var(--mx, 50%) var(--my, 50%),
+                    rgba(124, 58, 237, 0.12),
+                    transparent 45%
+                );
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            }
+
+            .product-card:hover .product-spotlight {
+                opacity: 1;
+            }
+
+            .product-image-container::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                z-index: 1;
+                background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.65) 50%, transparent 60%);
+                transform: translateX(-110%);
+                transition: transform 0.9s var(--ease-standard);
+                pointer-events: none;
+            }
+
+            .product-card:hover .product-image-container::after {
+                transform: translateX(110%);
+            }
+
+            .product-tag {
+                position: absolute;
+                top: 14px;
+                left: 14px;
+                z-index: 2;
+                padding: 4px 10px;
+                border-radius: 999px;
+                font-size: 0.7rem;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                color: #fff;
+                background: rgba(30, 11, 75, 0.78);
+                backdrop-filter: blur(6px);
+            }
+
+            #productSearch {
+                border-radius: 999px;
+                box-shadow: 0 10px 30px -18px rgba(30, 27, 75, 0.35);
+            }
+
+            #productSearch:focus {
+                border-color: var(--violet-bright);
+                box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
+            }
+
+            /* ---------- FAQ ---------- */
+            #faq details {
+                transition:
+                    box-shadow 0.3s ease,
+                    transform 0.3s ease;
+            }
+
+            #faq details:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 14px 30px -16px rgba(30, 27, 75, 0.3);
+            }
+
+            #faq details[open] {
+                box-shadow: var(--glow-violet);
+            }
+
+            #faq details::details-content {
+                block-size: 0;
+                overflow: hidden;
+                transition:
+                    block-size 0.35s var(--ease-standard),
+                    content-visibility 0.35s allow-discrete;
+            }
+
+            #faq details[open]::details-content {
+                block-size: auto;
+            }
+
+            /* ---------- Footer ---------- */
+            .site-footer {
+                position: relative;
+                overflow: hidden;
+                isolation: isolate;
+                background:
+                    radial-gradient(600px 300px at 90% 0%, rgba(34, 211, 238, 0.18), transparent 60%),
+                    radial-gradient(600px 300px at 0% 100%, rgba(124, 58, 237, 0.35), transparent 60%),
+                    linear-gradient(160deg, var(--violet-deep), #2e1065 55%, #312e81);
+            }
+
+            .site-footer .border-t {
+                border-color: rgba(255, 255, 255, 0.12);
+            }
+
+            .site-footer a {
+                transition:
+                    transform 0.3s var(--ease-spring),
+                    background 0.3s ease;
+            }
+
+            .site-footer a:hover {
+                transform: translateY(-3px);
+            }
+
+            /* ---------- Floating UI in theme ---------- */
+            .cart-panel-header,
+            .assistant-panel-header,
+            .enquiry-modal-header {
+                background: linear-gradient(135deg, var(--violet-deep), var(--violet) 55%, var(--indigo));
+            }
+
+            .cart-panel,
+            .assistant-panel {
+                background: rgba(255, 255, 255, 0.94);
+                backdrop-filter: blur(18px);
+                border: 1px solid rgba(255, 255, 255, 0.7);
+            }
+
+            #scrollToTop,
+            .ai-assistant-btn {
+                background: linear-gradient(135deg, var(--violet-bright), var(--indigo));
+                box-shadow: 0 10px 24px -6px rgba(124, 58, 237, 0.55);
+            }
+
+            .ai-assistant-btn-ring {
+                border-color: var(--violet-bright);
+            }
+
+            .assistant-msg.user {
+                background: linear-gradient(135deg, var(--violet-bright), var(--indigo));
+            }
+
+            .assistant-msg {
+                animation: msg-in 0.3s var(--ease-spring);
+            }
+
+            @keyframes msg-in {
+                from {
+                    opacity: 0;
+                    translate: 0 8px;
+                }
+            }
         </style>
         <script type="application/ld+json">
             {
@@ -1648,54 +2422,81 @@
         </header>
 
         <main id="main-content" tabindex="-1">
-            <section class="hero-gradient text-white min-h-[86.5vh] flex flex-col relative">
-                <div class="hero-band-top flex-1 flex items-start relative z-10 pt-16 md:pt-24 pb-6">
-                    <div class="container mx-auto px-4">
-                        <div class="max-w-5xl mx-auto text-center hero-content-in">
-                            <h2 class="text-4xl md:text-6xl font-bold leading-tight">
-                                Premium Automobile <br /><span class="text-blue-400">Cleaning Solutions</span>
-                            </h2>
+            <section class="hero-gradient text-white min-h-[88vh] flex items-center relative" id="hero">
+                <div class="hero-aurora" aria-hidden="true">
+                    <span class="aurora-orb orb-1"></span>
+                    <span class="aurora-orb orb-2"></span>
+                    <span class="aurora-orb orb-3"></span>
+                </div>
+                <div class="hero-grid" aria-hidden="true"></div>
+                <div class="hero-bubbles" id="heroBubbles" aria-hidden="true"></div>
+
+                <div class="container mx-auto px-4 relative z-10 py-16 md:py-24">
+                    <div class="max-w-5xl mx-auto text-center hero-content-in">
+                        <span class="hero-chip">
+                            <span class="hero-chip-dot" aria-hidden="true"></span>
+                            Jaipur-based manufacturer &bull; Since 2020
+                        </span>
+                        <h2 class="font-bold leading-tight mt-6 mb-6">
+                            Premium Automobile <br /><span class="hero-shine-text">Cleaning Solutions</span>
+                        </h2>
+                        <p class="text-lg md:text-xl mb-10 opacity-90 max-w-3xl mx-auto leading-relaxed hero-lead">
+                            Swapnil Chemicals is a Jaipur-based manufacturer of Premium Automobile Cleaning
+                            Products, trusted by bulk and retail customers since 2020. We produce our own
+                            Dashboard Polish, Tyre Polish, Car Foaming Wash, Glass Cleaner and more, ensuring
+                            consistent quality. As a GST registered, MSME and Udyam certified business, we supply
+                            orders across India. Call us at 9352470085 or 9024598298 for bulk orders or pricing.
+                        </p>
+                        <div class="flex flex-wrap justify-center gap-4 md:gap-6">
+                            <a
+                                href="#products"
+                                class="btn-primary btn-shine magnetic text-white px-10 py-4 rounded-xl font-semibold text-lg"
+                                ><i class="fas fa-boxes mr-3" aria-hidden="true"></i>View Products</a
+                            ><a
+                                href="#contact"
+                                class="btn-secondary btn-shine magnetic text-white px-10 py-4 rounded-xl font-semibold text-lg"
+                                ><i class="fas fa-phone-alt fa-flip-horizontal mr-3" aria-hidden="true"></i>Contact Now</a
+                            >
                         </div>
+                        <ul class="hero-trust" aria-label="Business credentials">
+                            <li><i class="fas fa-industry" aria-hidden="true"></i> In-house manufacturing</li>
+                            <li><i class="fas fa-file-invoice" aria-hidden="true"></i> GST registered</li>
+                            <li><i class="fas fa-award" aria-hidden="true"></i> MSME &amp; Udyam certified</li>
+                            <li><i class="fas fa-truck-fast" aria-hidden="true"></i> Bulk &amp; retail</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="hero-band-bottom flex-1 flex items-start relative z-10 pt-6 pb-10">
-                    <div class="container mx-auto px-4">
-                        <div class="max-w-5xl mx-auto text-center">
-                            <p class="text-lg md:text-xl mb-10 opacity-90 max-w-3xl mx-auto leading-relaxed">
-                                Swapnil Chemicals is a Jaipur-based manufacturer of Premium Automobile Cleaning
-                                Products, trusted by bulk and retail customers since 2020. We produce our own
-                                Dashboard Polish, Tyre Polish, Car Foaming Wash, Glass Cleaner and more, ensuring
-                                consistent quality. As a GST registered, MSME and Udyam certified business, we supply
-                                orders across India. Call us at 9352470085 or 9024598298 for bulk orders or pricing.
-                            </p>
-                            <div class="flex flex-wrap justify-center gap-6">
-                                <a
-                                    href="#products"
-                                    class="btn-primary text-white px-10 py-4 rounded-xl font-semibold text-lg"
-                                    ><i class="fas fa-boxes mr-3" aria-hidden="true"></i>View Products</a
-                                ><a
-                                    href="#contact"
-                                    class="btn-secondary text-white px-10 py-4 rounded-xl font-semibold text-lg"
-                                    ><i class="fas fa-phone-alt fa-flip-horizontal mr-3" aria-hidden="true"></i>Contact Now</a
-                                >
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="absolute top-20 left-10 w-20 h-20 bg-blue-500/10 rounded-full blur-xl ambient-blob"></div>
-                <div
-                    class="absolute bottom-20 right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-xl ambient-blob"
-                    style="animation-delay: -4s"
-                ></div>
-                <div
-                    class="absolute top-1/2 right-1/4 w-24 h-24 bg-cyan-400/10 rounded-full blur-xl ambient-blob"
-                    style="animation-delay: -2s"
-                ></div>
+
+                <a href="#business-details" class="hero-scroll-cue" aria-label="Scroll to business details">
+                    <span class="hero-scroll-mouse" aria-hidden="true"><span></span></span>
+                </a>
+                <svg class="hero-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+                    <path
+                        d="M0,40 C240,90 480,0 720,30 C960,60 1200,10 1440,45 L1440,90 L0,90 Z"
+                        fill="currentColor"
+                    />
+                </svg>
             </section>
+
+            <div class="product-marquee" aria-hidden="true">
+                <div class="product-marquee-track">
+                    <span>Dashboard Polish</span><i class="fas fa-star"></i><span>Tyre Polish</span
+                    ><i class="fas fa-droplet"></i><span>Car Foaming Wash</span><i class="fas fa-star"></i
+                    ><span>Glass Cleaner</span><i class="fas fa-droplet"></i><span>Interior Cleaner</span
+                    ><i class="fas fa-star"></i><span>Foaming Gun</span><i class="fas fa-droplet"></i
+                    ><span>Micro Towel</span><i class="fas fa-star"></i>
+                    <span>Dashboard Polish</span><i class="fas fa-star"></i><span>Tyre Polish</span
+                    ><i class="fas fa-droplet"></i><span>Car Foaming Wash</span><i class="fas fa-star"></i
+                    ><span>Glass Cleaner</span><i class="fas fa-droplet"></i><span>Interior Cleaner</span
+                    ><i class="fas fa-star"></i><span>Foaming Gun</span><i class="fas fa-droplet"></i
+                    ><span>Micro Towel</span><i class="fas fa-star"></i>
+                </div>
+            </div>
 
             <section id="business-details" class="pt-6 pb-0 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-6 mt-8">
+                        <span class="section-eyebrow">Who we are</span>
                         <h2 class="text-4xl font-bold gradient-text mb-4">Business Details</h2>
                         <div class="section-divider max-w-xs mx-auto"></div>
                     </div>
@@ -1818,6 +2619,7 @@
             <section id="products" class="pt-2 pb-8 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
+                        <span class="section-eyebrow">Shop the range</span>
                         <h2 class="text-4xl font-bold gradient-text mb-4">Our Premium Products</h2>
                         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                             Discover our range of high-quality automobile cleaning solutions designed for professional
@@ -1853,6 +2655,7 @@
             <section id="faq" class="py-8 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
+                        <span class="section-eyebrow">Good to know</span>
                         <h2 class="text-4xl font-bold gradient-text mb-4">Frequently Asked Questions</h2>
                         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                             Quick answers about ordering, payment and our products.
@@ -1965,6 +2768,7 @@
             <section id="contact" class="py-8 relative">
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
+                        <span class="section-eyebrow">Let's talk</span>
                         <h2 class="text-4xl font-bold gradient-text mb-4">Get In Touch</h2>
                         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                             Ready to experience premium automobile cleaning solutions? Contact us today.
@@ -2068,7 +2872,7 @@
             <i class="fas fa-arrow-up text-lg" aria-hidden="true"></i>
         </button>
 
-        <footer class="text-white py-12" style="background: #4c1d95">
+        <footer class="site-footer text-white py-12">
             <div class="container mx-auto px-4">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <div class="mb-8 md:mb-0 text-center md:text-left">
@@ -2926,7 +3730,7 @@
                 } else {
                     qtyBtnsHtml = "";
                 }
-                return `<div class="product-card rounded-2xl overflow-hidden group" data-product-id="${product.id}"><div class="product-image-container"><img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" decoding="async"><div class="product-image-fallback"><i class="fas fa-image text-4xl mb-2" aria-hidden="true"></i><p>Image not available</p></div></div><div class="p-6"><h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600">${product.name}</h3><p class="text-gray-600 mb-4">${product.description}</p><div class="flex justify-between items-center"><div class="text-2xl font-bold gradient-text">${formatCurrency(product.price)}<span class="text-lg text-gray-500 ml-1">/${product.unit}</span></div><div class="flex space-x-2"><a href="tel:9352470085" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm" aria-label="Call for ${product.name}"><i class="fas fa-phone" aria-hidden="true"></i></a><button class="enquiry-trigger-btn" data-action="open-enquiry" data-product-id="${product.id}"><i class="fas fa-clipboard-list" aria-hidden="true"></i> Enquiry</button></div></div>${qtyBtnsHtml}<button class="add-to-cart-btn" data-action="add-to-cart" data-product-id="${product.id}"><i class="fas fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button></div></div>`;
+                return `<div class="product-card rounded-2xl overflow-hidden group" data-product-id="${product.id}"><span class="product-spotlight" aria-hidden="true"></span><div class="product-image-container"><span class="product-tag">${product.hasLtOptions && !product.qtyOptions ? "Per litre" : "Per piece"}</span><img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" decoding="async"><div class="product-image-fallback"><i class="fas fa-image text-4xl mb-2" aria-hidden="true"></i><p>Image not available</p></div></div><div class="p-6"><h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600">${product.name}</h3><p class="text-gray-600 mb-4">${product.description}</p><div class="flex justify-between items-center"><div class="text-2xl font-bold gradient-text">${formatCurrency(product.price)}<span class="text-lg text-gray-500 ml-1">/${product.unit}</span></div><div class="flex space-x-2"><a href="tel:9352470085" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm" aria-label="Call for ${product.name}"><i class="fas fa-phone" aria-hidden="true"></i></a><button class="enquiry-trigger-btn" data-action="open-enquiry" data-product-id="${product.id}"><i class="fas fa-clipboard-list" aria-hidden="true"></i> Enquiry</button></div></div>${qtyBtnsHtml}<button class="add-to-cart-btn" data-action="add-to-cart" data-product-id="${product.id}"><i class="fas fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button></div></div>`;
             }
 
             function selectQty(btn) {
@@ -3560,7 +4364,8 @@
                         e.forEach((entry) => {
                             if (entry.isIntersecting) {
                                 entry.target.style.opacity = "1";
-                                entry.target.style.transform = "translateY(0)";
+                                entry.target.style.translate = "0 0";
+                                obs.unobserve(entry.target);
                             }
                         }),
                     {
@@ -3568,10 +4373,106 @@
                     }
                 );
                 cards.forEach((c) => {
+                    // Animate `translate` (not `transform`) so hover lift/tilt transforms still apply.
                     c.style.opacity = "0";
-                    c.style.transform = "translateY(30px)";
-                    c.style.transition = "0.6s";
+                    c.style.translate = "0 30px";
+                    c.style.transition = "opacity 0.6s ease, translate 0.6s ease, transform 0.35s ease, box-shadow 0.35s ease";
                     obs.observe(c);
+                });
+            }
+
+            function prefersReducedMotion() {
+                return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            }
+
+            function hasFinePointer() {
+                return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+            }
+
+            // Decorative foam bubbles rising through the hero; skipped for reduced motion.
+            function initHeroBubbles() {
+                const wrap = document.getElementById("heroBubbles");
+                if (!wrap || prefersReducedMotion()) return;
+                const count = window.innerWidth < 768 ? 10 : 20;
+                const frag = document.createDocumentFragment();
+                for (let i = 0; i < count; i++) {
+                    const bubble = document.createElement("span");
+                    bubble.className = "bubble";
+                    bubble.style.setProperty("--s", `${8 + Math.random() * 38}px`);
+                    bubble.style.setProperty("--x", `${Math.random() * 100}%`);
+                    bubble.style.setProperty("--dur", `${9 + Math.random() * 10}s`);
+                    bubble.style.setProperty("--delay", `${-Math.random() * 18}s`);
+                    bubble.style.setProperty("--drift", `${(Math.random() - 0.5) * 120}px`);
+                    frag.appendChild(bubble);
+                }
+                wrap.appendChild(frag);
+            }
+
+            function initHeaderOnScroll() {
+                const header = document.querySelector("header.nav-blur");
+                if (!header) return;
+                const update = () => header.classList.toggle("scrolled", window.scrollY > 24);
+                window.addEventListener("scroll", update, { passive: true });
+                update();
+            }
+
+            // Delegated on the grid so it keeps working after search re-renders the cards.
+            function initCardTilt() {
+                const grid = document.getElementById("productsGrid");
+                if (!grid || prefersReducedMotion() || !hasFinePointer()) return;
+                const MAX_TILT_DEG = 5;
+                grid.addEventListener("pointermove", (e) => {
+                    const card = e.target.closest(".product-card");
+                    if (!card) return;
+                    const rect = card.getBoundingClientRect();
+                    const px = (e.clientX - rect.left) / rect.width;
+                    const py = (e.clientY - rect.top) / rect.height;
+                    card.style.setProperty("--mx", `${px * 100}%`);
+                    card.style.setProperty("--my", `${py * 100}%`);
+                    card.style.setProperty("--ry", `${(px - 0.5) * MAX_TILT_DEG * 2}deg`);
+                    card.style.setProperty("--rx", `${(0.5 - py) * MAX_TILT_DEG * 2}deg`);
+                    card.classList.add("is-tilting");
+                });
+                grid.addEventListener("pointerout", (e) => {
+                    const card = e.target.closest(".product-card");
+                    if (!card || card.contains(e.relatedTarget)) return;
+                    card.classList.remove("is-tilting");
+                    card.style.setProperty("--rx", "0deg");
+                    card.style.setProperty("--ry", "0deg");
+                });
+            }
+
+            function initMagneticButtons() {
+                if (prefersReducedMotion() || !hasFinePointer()) return;
+                document.querySelectorAll(".magnetic").forEach((el) => {
+                    el.addEventListener("pointermove", (e) => {
+                        const rect = el.getBoundingClientRect();
+                        el.style.setProperty("--tx", `${(e.clientX - rect.left - rect.width / 2) * 0.18}px`);
+                        el.style.setProperty("--ty", `${(e.clientY - rect.top - rect.height / 2) * 0.25}px`);
+                    });
+                    el.addEventListener("pointerleave", () => {
+                        el.style.setProperty("--tx", "0px");
+                        el.style.setProperty("--ty", "0px");
+                    });
+                });
+            }
+
+            const RIPPLE_SELECTOR =
+                ".btn-shine, .add-to-cart-btn, .enquiry-trigger-btn, .enquiry-submit-btn, .added-cart-viewcart-btn";
+
+            function initRipples() {
+                if (prefersReducedMotion()) return;
+                document.addEventListener("pointerdown", (e) => {
+                    const btn = e.target.closest(RIPPLE_SELECTOR);
+                    if (!btn) return;
+                    const rect = btn.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height) * 2;
+                    const ripple = document.createElement("span");
+                    ripple.className = "ripple";
+                    ripple.setAttribute("aria-hidden", "true");
+                    ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size / 2}px;top:${e.clientY - rect.top - size / 2}px`;
+                    btn.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 700);
                 });
             }
 
@@ -3685,6 +4586,11 @@
                 initScrollProgress();
                 initSmoothScrolling();
                 initCardReveal();
+                initHeroBubbles();
+                initHeaderOnScroll();
+                initCardTilt();
+                initMagneticButtons();
+                initRipples();
                 const yearEl = document.getElementById("copyrightYear");
                 if (yearEl) yearEl.textContent = String(new Date().getFullYear());
                 const saved = localStorage.getItem(APP.CART_STORAGE_KEY);
