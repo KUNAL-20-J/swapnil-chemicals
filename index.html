@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Automobile new code 04-09-26 -->
+<!-- Automobile new code 25-09-26 -->
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -1832,20 +1832,24 @@
                 animation-play-state: paused;
             }
 
-            .product-marquee span {
-                font-family: var(--font-display);
-                font-size: clamp(1.1rem, 0.9rem + 1vw, 1.6rem);
-                font-weight: 700;
-                letter-spacing: -0.01em;
-                white-space: nowrap;
-                color: transparent;
-                -webkit-text-stroke: 1px rgba(76, 29, 149, 0.45);
-            }
+.product-marquee span {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 0.9rem + 1vw, 1.6rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    background: linear-gradient(90deg, #4c1d95, var(--violet-bright) 25%, #2563eb 50%, #0891b2 75%, #4c1d95);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-pan 6s linear infinite;
+}
 
-            .product-marquee span:nth-of-type(odd) {
-                color: #4c1d95;
-                -webkit-text-stroke: 0;
-            }
+.product-marquee span:nth-of-type(odd) {
+    color: #4c1d95;
+    -webkit-text-stroke: 0;
+}
 
             .product-marquee i {
                 color: var(--brand-cta);
@@ -1942,14 +1946,20 @@
             }
 
             .qty-btn.active,
-            .enquiry-qty-btn.active {
-                background: linear-gradient(135deg, var(--violet-bright), var(--indigo));
-                box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+                .enquiry-qty-btn.active {
+                    background: linear-gradient(135deg, var(--violet-bright), var(--indigo));
+                    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
             }
 
             .qty-btn:hover {
                 border-color: var(--violet-bright);
                 color: var(--violet-bright);
+            }
+
+            .qty-btn.active:hover,
+                .enquiry-qty-btn.active:hover {
+                    color: #fff !important;
+                    border-color: transparent;
             }
 
             /* ---------- Cards (shared gradient border on hover) ---------- */
@@ -2151,6 +2161,79 @@
 
             .site-footer a:hover {
                 transform: translateY(-3px);
+            }
+
+            .site-footer .footer-brand-name {
+                background: linear-gradient(90deg, #67e8f9, #a5b4fc, #f0abfc, #fdba74, #67e8f9);
+                background-size: 300% 100%;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                filter: drop-shadow(0 6px 24px rgba(103, 232, 249, 0.25));
+                animation: gradient-pan 8s linear infinite;
+            }
+
+            .site-footer .footer-chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                padding: 7px 16px;
+                border-radius: 999px;
+                font-size: 0.82rem;
+                font-weight: 600;
+                color: #e0e7ff;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                backdrop-filter: blur(10px);
+                transition:
+                    background 0.3s ease,
+                    transform 0.3s ease;
+            }
+
+            .site-footer .footer-chip:hover {
+                background: rgba(255, 255, 255, 0.14);
+                transform: translateY(-2px);
+            }
+
+            .site-footer .footer-chip-dot {
+                position: relative;
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: #4ade80;
+            }
+
+            .site-footer .footer-chip-dot::after {
+                content: "";
+                position: absolute;
+                inset: -4px;
+                border-radius: 50%;
+                border: 2px solid #4ade80;
+                animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+            }
+
+            .site-footer .footer-credentials {
+                background: linear-gradient(120deg, #67e8f9, #a5b4fc 45%, #f0abfc 75%, #67e8f9);
+                background-size: 300% 100%;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                animation: gradient-pan 8s linear infinite;
+                font-weight: 600;
+                letter-spacing: 0.02em;
+            }
+
+            .site-footer .social-icon-link {
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.4);
+            }
+
+            .site-footer .social-icon-link:hover {
+                background: linear-gradient(135deg, var(--violet-bright), var(--indigo));
+                border-color: transparent;
+                box-shadow: 0 10px 26px -8px rgba(124, 58, 237, 0.6);
+                transform: translateY(-3px) scale(1.05);
             }
 
             /* ---------- Floating UI in theme ---------- */
@@ -2732,7 +2815,7 @@
                             >
                         </div>
                         <ul class="hero-trust" aria-label="Business credentials">
-                            <li><i class="fas fa-industry" aria-hidden="true"></i> In-house manufacturing</li>
+                            <!-- <li><i class="fas fa-industry" aria-hidden="true"></i> In-house manufacturing</li> -->
                             <li><i class="fas fa-file-invoice" aria-hidden="true"></i> GST registered</li>
                             <li><i class="fas fa-award" aria-hidden="true"></i> MSME &amp; Udyam certified</li>
                             <li><i class="fas fa-truck-fast" aria-hidden="true"></i> Bulk &amp; retail</li>
@@ -3149,14 +3232,17 @@
             <div class="container mx-auto px-4">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <div class="mb-8 md:mb-0 text-center md:text-left">
-                        <h3 class="text-3xl font-bold mb-3">Swapnil Chemicals</h3>
+                        <h3 class="text-3xl font-bold mb-3 footer-brand-name">Swapnil Chemicals</h3>
                         <p class="text-slate-300 text-lg">Manufacturers & marketers of automobile cleaning products</p>
-                        <p class="text-slate-300 mt-2">Jaipur • Bulk & Retail</p>
+                        <span class="footer-chip mt-3">
+                            <span class="footer-chip-dot" aria-hidden="true"></span>
+                            Jaipur • Bulk & Retail
+                        </span>
                     </div>
                     <div class="flex space-x-6">
                         <a
                             href="tel:9352470085"
-                            class="w-12 h-12 bg-slate-700 rounded-xl flex items-center justify-center hover:bg-blue-600 transition"
+                            class="social-icon-link w-12 h-12 rounded-xl flex items-center justify-center transition"
                             aria-label="Call Swapnil Chemicals"
                             ><i
                                 class="fas fa-phone-alt text-lg"
@@ -3165,7 +3251,7 @@
                             ></i></a
                         ><a
                             href="mailto:swapnilchemicals10@gmail.com"
-                            class="w-12 h-12 bg-slate-700 rounded-xl flex items-center justify-center hover:bg-red-600 transition"
+                            class="social-icon-link w-12 h-12 rounded-xl flex items-center justify-center transition"
                             aria-label="Email Swapnil Chemicals"
                             ><i class="fas fa-envelope text-lg" aria-hidden="true"></i
                         ></a>
@@ -3175,7 +3261,7 @@
                     <p class="text-slate-300">
                         © <span id="copyrightYear">2026</span> Swapnil Chemicals. All rights reserved.
                     </p>
-                    <p class="text-slate-400 text-sm mt-2">
+                    <p class="footer-credentials text-sm mt-2">
                         MSME Registered • GST Certified • Quality Assured Products
                     </p>
                 </div>
@@ -3306,7 +3392,7 @@
                             class="enquiry-textarea"
                             rows="2"
                             maxlength="300"
-                            placeholder="Workshop name, address, any specific requirements..."
+                            placeholder="Any specific requirements..."
                         ></textarea>
                     </div>
                     <div class="enquiry-field-wrap mb-4">
@@ -3995,6 +4081,7 @@
           <button class="enquiry-submit-btn" data-action="submit-cart-enquiry">
               <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry via WhatsApp
           </button>
+          <p class="text-center text-xs text-gray-400 mt-3">Your enquiry will be sent directly to <b>Swapnil Chemicals</b> on WhatsApp</p>
       `;
                 const totalItems = keys.reduce((s, k) => s + cart[k].qty, 0);
                 setEnquiryHeader(
@@ -4061,7 +4148,7 @@
                 } else {
                     qtyBtnsHtml = "";
                 }
-                return `<div class="product-card rounded-2xl overflow-hidden group" data-product-id="${product.id}"><span class="product-spotlight" aria-hidden="true"></span><div class="product-image-container"><span class="product-tag">${product.hasLtOptions && !product.qtyOptions ? "Per litre" : "Per piece"}</span><img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" decoding="async"><div class="product-image-fallback"><i class="fas fa-image text-4xl mb-2" aria-hidden="true"></i><p>Image not available</p></div></div><div class="p-6"><h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600">${product.name}</h3><p class="text-gray-600 mb-4">${product.description}</p><div class="flex justify-between items-center"><div class="text-2xl font-bold gradient-text">${formatCurrency(product.price)}<span class="text-lg text-gray-500 ml-1">/${product.unit}</span></div><div class="flex space-x-2"><a href="tel:9352470085" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm" aria-label="Call for ${product.name}"><i class="fas fa-phone" aria-hidden="true"></i></a><button class="enquiry-trigger-btn" data-action="open-enquiry" data-product-id="${product.id}"><i class="fas fa-clipboard-list" aria-hidden="true"></i> Enquiry</button></div></div>${qtyBtnsHtml}<button class="add-to-cart-btn" data-action="add-to-cart" data-product-id="${product.id}"><i class="fas fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button></div></div>`;
+                return `<div class="product-card rounded-2xl overflow-hidden group" data-product-id="${product.id}"><span class="product-spotlight" aria-hidden="true"></span><div class="product-image-container"><img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" decoding="async"><div class="product-image-fallback"><i class="fas fa-image text-4xl mb-2" aria-hidden="true"></i><p>Image not available</p></div></div><div class="p-6"><h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600">${product.name}</h3><p class="text-gray-600 mb-4">${product.description}</p><div class="flex justify-between items-center"><div class="text-2xl font-bold gradient-text">${formatCurrency(product.price)}<span class="text-lg text-gray-500 ml-1">/${product.unit}</span></div><div class="flex space-x-2"><a href="tel:9352470085" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm" aria-label="Call for ${product.name}"><i class="fas fa-phone" aria-hidden="true"></i></a><button class="enquiry-trigger-btn" data-action="open-enquiry" data-product-id="${product.id}"><i class="fas fa-clipboard-list" aria-hidden="true"></i> Enquiry</button></div></div>${qtyBtnsHtml}<button class="add-to-cart-btn" data-action="add-to-cart" data-product-id="${product.id}"><i class="fas fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button></div></div>`;
             }
 
             function selectQty(btn) {
