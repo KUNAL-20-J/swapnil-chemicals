@@ -1,142 +1,3 @@
-<?php /*><!-- If this file is ever opened without PHP (Live Server, double-click), the browser treats
- * everything up to the matching marker after the lookup handler as an HTML comment, so the
- * customer list below is never shown on the page. Never write the HTML comment-close marker
- * (two dashes followed by a greater-than sign) anywhere in the PHP code in between. */
-declare(strict_types=1);
-/*
- * Workshop directory taken from the Khatabook "Customer List Report" PDF
- * (khatabook-book-customers-28.09.2026-07.58.28.AM.pdf, 168 rows, 28 Sep 2026).
- * Only the workshop name and phone number are kept - balances are deliberately
- * left out. "Dead A/C's" (internal ledger) is skipped and Khatabook's 0000000000
- * placeholder is stored as '' (no phone on record).
- *
- * The list is stored packed (JSON -> gzdeflate -> base64) so that if this file is
- * ever shown as raw text (opened without PHP), no customer name or number is readable.
- * This only hides the list from casual view - it is not encryption, so do not share this file.
- * The list stays on the server and is never sent to the page. The enquiry form sends
- * only the customer's own WhatsApp number to index.php?workshop_lookup=1&phone=(10 digits)
- * and gets back just the workshop name registered to that number.
- *
- * To refresh from a newer Khatabook export: save it as a CSV with "workshop name,phone"
- * per line, run   php index.php pack < customers.csv   and paste the output between
- * the PACKED markers below. Then delete the CSV (it holds the plain list).
- */
-const KHATABOOK_CUSTOMERS_PACKED = <<<'PACKED'
-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
-PACKED;
-
-/** @return list<array{0: string, 1: string}> [workshop name, 10-digit phone or ''] rows. */
-function khatabookCustomers(): array
-{
-    static $rows = null;
-    if ($rows === null) {
-        $json = gzinflate((string) base64_decode(KHATABOOK_CUSTOMERS_PACKED));
-        $rows = $json === false ? [] : (json_decode($json, true) ?: []);
-        if ($rows === []) {
-            error_log('index.php: Khatabook customer list could not be unpacked.');
-        }
-    }
-    return $rows;
-}
-
-// CLI helper for refreshing the list: php index.php pack < customers.csv
-if (PHP_SAPI === 'cli' && ($argv[1] ?? '') === 'pack') {
-    $rows = [];
-    while (($row = fgetcsv(STDIN)) !== false) {
-        $name = trim((string) ($row[0] ?? ''));
-        $phone = preg_replace('/\D/', '', (string) ($row[1] ?? ''));
-        if ($name === '') {
-            continue;
-        }
-        $rows[] = [$name, preg_match('/^[6-9]\d{9}$/', $phone) === 1 ? $phone : ''];
-    }
-    echo chunk_split(base64_encode(gzdeflate(json_encode($rows, JSON_UNESCAPED_UNICODE), 9)), 100, "\n");
-    fwrite(STDERR, count($rows) . " rows packed\n");
-    exit;
-}
-function workshopNamesForPhone(string $phone): array
-{
-    $names = [];
-    foreach (khatabookCustomers() as [$name, $number]) {
-        if ($number === $phone) {
-            $names[] = $name;
-        }
-    }
-    return $names;
-}
-
-if (isset($_GET['workshop_lookup'])) {
-    header('Content-Type: application/json; charset=utf-8');
-    header('Cache-Control: no-store');
-    header('X-Content-Type-Options: nosniff');
-    header('X-Robots-Tag: noindex');
-
-    $phone = is_string($_GET['phone'] ?? null) ? trim($_GET['phone']) : '';
-    if (preg_match('/^[6-9]\d{9}$/', $phone) !== 1) {
-        http_response_code(400);
-        echo json_encode(['results' => [], 'error' => 'Pass a 10-digit mobile number.']);
-        exit;
-    }
-
-    $results = array_map(static fn (string $name) => ['name' => $name], workshopNamesForPhone($phone));
-    echo json_encode(['results' => $results], JSON_UNESCAPED_UNICODE);
-    exit;
-}
-# --><?php ?>
 <!doctype html>
 <!-- Automobile new code 25-09-26 -->
 <!-- Please add the Khatabook PDF to the code so that the Workshop Name and Phone Number are automatically fetched from the PDF. The customer should not have to enter them manually.
@@ -3739,6 +3600,15 @@ in this code only do not create any other file -->
             }
 
             const products = [
+                // {
+                //     id: 1,
+                //     name: "Dashboard Polish",
+                //     image: "Dashboard Polish.jpg",
+                //     price: 200,
+                //     unit: "Lt",
+                //     hasLtOptions: true,
+                //     description: "Premium dashboard polish for long-lasting shine",
+                // },
                 {
                     id: 1,
                     name: "Dashboard Polish",
@@ -3746,6 +3616,8 @@ in this code only do not create any other file -->
                     price: 200,
                     unit: "Lt",
                     hasLtOptions: true,
+                    qtyOptions: [5, 10, 35, 50],
+                    qtyLabel: "Lt",
                     description: "Premium dashboard polish for long-lasting shine",
                 },
                 {
@@ -3755,6 +3627,8 @@ in this code only do not create any other file -->
                     price: 150,
                     unit: "Lt",
                     hasLtOptions: true,
+                    qtyOptions: [5, 10, 35, 50],
+                    qtyLabel: "Lt",
                     description: "High-gloss tyre polish for enhanced appearance",
                 },
                 {
@@ -3773,6 +3647,8 @@ in this code only do not create any other file -->
                     price: 130,
                     unit: "Lt",
                     hasLtOptions: true,
+                    qtyOptions: [5, 10, 35, 50],
+                    qtyLabel: "Lt",
                     description: "Effective interior cleaner for all surfaces",
                 },
                 {
@@ -3782,6 +3658,8 @@ in this code only do not create any other file -->
                     price: 70,
                     unit: "Lt",
                     hasLtOptions: true,
+                    qtyOptions: [5, 10, 35, 50],
+                    qtyLabel: "Lt",
                     description: "Streak-free glass cleaner for crystal clear visibility",
                 },
                 {
@@ -3828,6 +3706,7 @@ in this code only do not create any other file -->
                 },
             ];
 
+            // const LT_OPTIONS = [5, 10, 35, 50];
             const LT_OPTIONS = [10, 35, 50];
             let cart = {};
             let lastCartBadgeCount = 0;
