@@ -853,10 +853,83 @@ Also, add Date and Time Slot selection options to the form.-->
                 background: #fff;
             }
 
-            .enquiry-field-wrap:has(#phone-error:not(.hidden)) .enquiry-input,
-            .enquiry-field-wrap:has(#cart-phone-error:not(.hidden)) .enquiry-input {
+            .enquiry-field-wrap:has(.enquiry-error:not(.hidden)) .enquiry-input {
                 border-color: #ef4444;
                 background: #fef2f2;
+            }
+
+            .enquiry-input[readonly] {
+                background: #eef2ff;
+                border-color: #c7d2fe;
+                color: #3730a3;
+                font-weight: 600;
+            }
+
+            .enquiry-row-2 {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            @media (max-width: 420px) {
+                .enquiry-row-2 {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .workshop-combo {
+                position: relative;
+            }
+
+            .workshop-suggestions {
+                position: absolute;
+                top: calc(100% + 4px);
+                left: 0;
+                right: 0;
+                z-index: 5;
+                max-height: 240px;
+                overflow-y: auto;
+                margin: 0;
+                padding: 4px;
+                list-style: none;
+                background: #fff;
+                border: 1.5px solid #e2e8f0;
+                border-radius: 13px;
+                box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+            }
+
+            .workshop-suggestions.hidden {
+                display: none;
+            }
+
+            .workshop-option {
+                padding: 9px 12px;
+                border-radius: 9px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                color: #1e293b;
+            }
+
+            .workshop-option small {
+                display: block;
+                color: #64748b;
+                font-size: 0.75rem;
+            }
+
+            .workshop-option[aria-selected="true"],
+            .workshop-option:hover {
+                background: #eff6ff;
+            }
+
+            .workshop-change-btn {
+                background: none;
+                border: none;
+                padding: 0;
+                color: var(--brand-accent-dark);
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-decoration: underline;
+                cursor: pointer;
             }
 
             .enquiry-submit-btn {
@@ -3386,37 +3459,19 @@ Also, add Date and Time Slot selection options to the form.-->
                         ></div>
                         <input type="hidden" id="enquiry-qty-value" />
                     </div>
+                    <!-- Workshop, phone, date and time slot fields are rendered by customerFieldsHtml() -->
+                    <div id="enquiry-customer-fields"></div>
                     <div class="enquiry-field-wrap mb-4">
                         <label class="block text-sm font-semibold text-gray-700 mb-1" for="enquiry-details"
-                            >Workshop Name &amp; Address</label
+                            >Address &amp; Requirements</label
                         >
                         <textarea
                             id="enquiry-details"
                             class="enquiry-textarea"
                             rows="2"
                             maxlength="300"
-                            placeholder="Any specific requirements..."
+                            placeholder="Delivery address, any specific requirements..."
                         ></textarea>
-                    </div>
-                    <div class="enquiry-field-wrap mb-4">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1" for="enquiry-phone"
-                            >Phone Number <span class="text-red-500">*</span></label
-                        >
-                        <div class="enquiry-phone-group">
-                            <input
-                                type="tel"
-                                id="enquiry-phone"
-                                class="enquiry-input"
-                                maxlength="10"
-                                inputmode="numeric"
-                                autocomplete="tel-national"
-                                placeholder="10-digit mobile number"
-                                aria-describedby="phone-error"
-                            />
-                        </div>
-                        <p id="phone-error" class="enquiry-error text-red-500 text-xs mt-1 hidden" role="alert">
-                            Enter a valid 10-digit mobile number
-                        </p>
                     </div>
                     <button class="enquiry-submit-btn" data-action="submit-enquiry">
                         <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry via WhatsApp
@@ -3506,6 +3561,17 @@ Also, add Date and Time Slot selection options to the form.-->
                 CART_STORAGE_KEY: "sc_cart_auto",
                 CURRENCY: "INR",
                 COUNTRY_CODE: "+91",
+                // Server-side search over the imported Khatabook customer list (see khatabook/import.php).
+                WORKSHOP_LOOKUP_URL: "workshop-lookup.php",
+                BOOKING_DAYS_AHEAD: 30,
+                // A slot can be booked for today only until its start hour.
+                TIME_SLOTS: Object.freeze([
+                    { startHour: 10, label: "10:00 AM – 12:00 PM" },
+                    { startHour: 12, label: "12:00 PM – 2:00 PM" },
+                    { startHour: 14, label: "2:00 PM – 4:00 PM" },
+                    { startHour: 16, label: "4:00 PM – 6:00 PM" },
+                    { startHour: 18, label: "6:00 PM – 8:00 PM" },
+                ]),
             });
 
             function isValidIndianMobile(value) {
@@ -4070,22 +4136,17 @@ Also, add Date and Time Slot selection options to the form.-->
               ${itemsHtml}
               <div class="flex justify-between items-center pt-3 font-bold text-gray-800"><span>Grand Total</span><span class="text-blue-600">${formatCurrency(grandTotal)}</span></div>
           </div>
+          ${customerFieldsHtml("cart-enquiry")}
           <div class="enquiry-field-wrap mb-4">
-              <label class="block text-sm font-semibold text-gray-700 mb-1" for="cart-enquiry-details">Workshop Name &amp; Address</label>
-              <textarea id="cart-enquiry-details" class="enquiry-textarea" rows="2" maxlength="300" placeholder="Workshop name, address, any specific requirements..."></textarea>
-          </div>
-          <div class="enquiry-field-wrap mb-4">
-              <label class="block text-sm font-semibold text-gray-700 mb-1" for="cart-enquiry-phone">Phone Number <span class="text-red-500">*</span></label>
-              <div class="enquiry-phone-group">
-                  <input type="tel" id="cart-enquiry-phone" class="enquiry-input" maxlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile number" aria-describedby="cart-phone-error">
-              </div>
-              <p id="cart-phone-error" class="enquiry-error text-red-500 text-xs mt-1 hidden" role="alert">Enter a valid 10-digit mobile number</p>
+              <label class="block text-sm font-semibold text-gray-700 mb-1" for="cart-enquiry-details">Address &amp; Requirements</label>
+              <textarea id="cart-enquiry-details" class="enquiry-textarea" rows="2" maxlength="300" placeholder="Delivery address, any specific requirements..."></textarea>
           </div>
           <button class="enquiry-submit-btn" data-action="submit-cart-enquiry">
               <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry via WhatsApp
           </button>
           <p class="text-center text-xs text-gray-400 mt-3">Your enquiry will be sent directly to <b>Swapnil Chemicals</b> on WhatsApp</p>
       `;
+                initCustomerFields("cart-enquiry");
                 const totalItems = keys.reduce((s, k) => s + cart[k].qty, 0);
                 setEnquiryHeader(
                     "Cart Enquiry",
@@ -4103,15 +4164,9 @@ Also, add Date and Time Slot selection options to the form.-->
             }
 
             function submitCartEnquiry() {
-                const phoneEl = document.getElementById("cart-enquiry-phone");
+                const customer = readCustomerFields("cart-enquiry");
+                if (!customer) return;
                 const detailsEl = document.getElementById("cart-enquiry-details");
-                const phoneErrorEl = document.getElementById("cart-phone-error");
-                const phone = phoneEl ? phoneEl.value.trim() : "";
-                if (!isValidIndianMobile(phone)) {
-                    showPhoneError(phoneErrorEl, phoneEl);
-                    return;
-                }
-                if (phoneErrorEl) phoneErrorEl.classList.add("hidden");
                 const details = detailsEl ? detailsEl.value.trim() : "";
                 let grandTotal = 0;
                 const lines = [`🛒 *Cart Enquiry — Swapnil Chemicals*`, ``];
@@ -4126,9 +4181,9 @@ Also, add Date and Time Slot selection options to the form.-->
                         `📦 ${product.name} - Qty: ${qty} ${label}, Price: ${formatCurrency(product.price)} = Total: ${formatCurrency(lineTotal)}`
                     );
                 });
-                lines.push(``);
+                lines.push(``, ...customerMessageLines(customer));
                 if (details) lines.push(`📝 Details: ${details}`);
-                lines.push(`📱 Phone: ${APP.COUNTRY_CODE} ${phone}`, `💰 Grand Total: ${formatCurrency(grandTotal)}`);
+                lines.push(`💰 Grand Total: ${formatCurrency(grandTotal)}`);
                 safeOpenNewTab(buildWhatsAppUrl(lines.join("\n")));
                 closeEnquiryModal();
             }
@@ -4341,7 +4396,297 @@ Also, add Date and Time Slot selection options to the form.-->
             // markup to restore it the next time a product enquiry is opened.
             const ENQUIRY_BODY_TEMPLATE = document.querySelector(".enquiry-body")?.innerHTML ?? "";
 
-            function showPhoneError(errorEl, inputEl) {
+            // ---------- Customer details: Khatabook workshop lookup, date & time slot ----------
+            function toLocalISODate(date) {
+                const pad = (n) => String(n).padStart(2, "0");
+                return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+            }
+
+            function formatDisplayDate(isoDate) {
+                return new Date(`${isoDate}T00:00:00`).toLocaleDateString("en-IN", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                });
+            }
+
+            function availableSlots(isoDate) {
+                const now = new Date();
+                if (isoDate !== toLocalISODate(now)) return APP.TIME_SLOTS;
+                return APP.TIME_SLOTS.filter((slot) => slot.startHour > now.getHours());
+            }
+
+            function bookingDateRange() {
+                const first = new Date();
+                if (!availableSlots(toLocalISODate(first)).length) first.setDate(first.getDate() + 1);
+                const last = new Date(first);
+                last.setDate(last.getDate() + APP.BOOKING_DAYS_AHEAD);
+                return { min: toLocalISODate(first), max: toLocalISODate(last) };
+            }
+
+            async function fetchWorkshops(params, signal) {
+                try {
+                    const res = await fetch(`${APP.WORKSHOP_LOOKUP_URL}?${new URLSearchParams(params)}`, {
+                        headers: { Accept: "application/json" },
+                        signal,
+                    });
+                    if (!res.ok) return [];
+                    const data = await res.json();
+                    return Array.isArray(data.results) ? data.results : [];
+                } catch {
+                    // Offline, aborted, or no PHP backend - the fields still work as plain manual inputs.
+                    return [];
+                }
+            }
+
+            function customerFieldsHtml(p) {
+                const { min, max } = bookingDateRange();
+                return `
+          <div class="enquiry-field-wrap mb-4">
+              <label class="block text-sm font-semibold text-gray-700 mb-1" for="${p}-workshop">Workshop Name</label>
+              <div class="workshop-combo">
+                  <input type="text" id="${p}-workshop" class="enquiry-input" maxlength="120" autocomplete="off" placeholder="Type your workshop name to find it" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${p}-workshop-list" aria-describedby="${p}-workshop-hint">
+                  <ul id="${p}-workshop-list" class="workshop-suggestions hidden" role="listbox" aria-label="Matching workshops"></ul>
+              </div>
+              <p id="${p}-workshop-hint" class="text-xs text-gray-500 mt-1" aria-live="polite">Already a customer? Pick your workshop and your phone number fills in automatically.</p>
+          </div>
+          <div class="enquiry-field-wrap mb-4">
+              <div class="flex justify-between items-center mb-1">
+                  <label class="block text-sm font-semibold text-gray-700" for="${p}-phone">Phone Number <span class="text-red-500">*</span></label>
+                  <button type="button" id="${p}-phone-change" class="workshop-change-btn hidden">Use a different number</button>
+              </div>
+              <div class="enquiry-phone-group">
+                  <input type="tel" id="${p}-phone" class="enquiry-input" maxlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile number" aria-describedby="${p}-phone-error">
+              </div>
+              <p id="${p}-phone-error" class="enquiry-error text-red-500 text-xs mt-1 hidden" role="alert">Enter a valid 10-digit mobile number</p>
+          </div>
+          <div class="enquiry-row-2 mb-4">
+              <div class="enquiry-field-wrap">
+                  <label class="block text-sm font-semibold text-gray-700 mb-1" for="${p}-date">Preferred Date <span class="text-red-500">*</span></label>
+                  <input type="date" id="${p}-date" class="enquiry-input" min="${min}" max="${max}" value="${min}" required aria-describedby="${p}-date-error">
+                  <p id="${p}-date-error" class="enquiry-error text-red-500 text-xs mt-1 hidden" role="alert">Pick a date from ${formatDisplayDate(min)} to ${formatDisplayDate(max)}</p>
+              </div>
+              <div class="enquiry-field-wrap">
+                  <label class="block text-sm font-semibold text-gray-700 mb-1" for="${p}-slot">Time Slot <span class="text-red-500">*</span></label>
+                  <select id="${p}-slot" class="enquiry-input" required aria-describedby="${p}-slot-error"></select>
+                  <p id="${p}-slot-error" class="enquiry-error text-red-500 text-xs mt-1 hidden" role="alert">Choose an available time slot</p>
+              </div>
+          </div>`;
+            }
+
+            function initCustomerFields(p) {
+                const workshopEl = document.getElementById(`${p}-workshop`);
+                const listEl = document.getElementById(`${p}-workshop-list`);
+                const hintEl = document.getElementById(`${p}-workshop-hint`);
+                const phoneEl = document.getElementById(`${p}-phone`);
+                const phoneErrorEl = document.getElementById(`${p}-phone-error`);
+                const changeBtn = document.getElementById(`${p}-phone-change`);
+                const dateEl = document.getElementById(`${p}-date`);
+                const slotEl = document.getElementById(`${p}-slot`);
+                if (!workshopEl || !listEl || !hintEl || !phoneEl || !changeBtn || !dateEl || !slotEl) return;
+
+                const defaultHint = hintEl.textContent;
+                let results = [];
+                let activeIndex = -1;
+                let controller = null;
+
+                const fillSlots = () => {
+                    const previous = slotEl.value;
+                    const slots = availableSlots(dateEl.value);
+                    slotEl.replaceChildren(
+                        new Option(slots.length ? "Select a slot" : "No slots left", ""),
+                        ...slots.map((slot) => new Option(slot.label, slot.label))
+                    );
+                    if (slots.some((slot) => slot.label === previous)) slotEl.value = previous;
+                };
+                dateEl.addEventListener("change", () => {
+                    fillSlots();
+                    document.getElementById(`${p}-date-error`)?.classList.add("hidden");
+                });
+                slotEl.addEventListener("change", () => document.getElementById(`${p}-slot-error`)?.classList.add("hidden"));
+                fillSlots();
+
+                const closeList = () => {
+                    listEl.classList.add("hidden");
+                    workshopEl.setAttribute("aria-expanded", "false");
+                    workshopEl.removeAttribute("aria-activedescendant");
+                    activeIndex = -1;
+                };
+
+                const highlight = (index) => {
+                    activeIndex = index;
+                    listEl.querySelectorAll(".workshop-option").forEach((li, i) => {
+                        li.setAttribute("aria-selected", String(i === index));
+                        if (i === index) {
+                            workshopEl.setAttribute("aria-activedescendant", li.id);
+                            li.scrollIntoView({ block: "nearest" });
+                        }
+                    });
+                };
+
+                const renderList = (items) => {
+                    results = items;
+                    listEl.replaceChildren(
+                        ...items.map((item, i) => {
+                            const li = document.createElement("li");
+                            li.id = `${p}-workshop-option-${i}`;
+                            li.className = "workshop-option";
+                            li.setAttribute("role", "option");
+                            li.setAttribute("aria-selected", "false");
+                            li.dataset.index = String(i);
+                            li.textContent = item.name;
+                            const small = document.createElement("small");
+                            small.textContent = item.phone ? `${APP.COUNTRY_CODE} ${item.phone}` : "No phone on record";
+                            li.appendChild(small);
+                            return li;
+                        })
+                    );
+                    const open = items.length > 0;
+                    listEl.classList.toggle("hidden", !open);
+                    workshopEl.setAttribute("aria-expanded", String(open));
+                    activeIndex = -1;
+                };
+
+                const unlockPhone = (clearValue) => {
+                    if (phoneEl.dataset.source === "khatabook" && clearValue) phoneEl.value = "";
+                    phoneEl.readOnly = false;
+                    delete phoneEl.dataset.source;
+                    delete phoneEl.dataset.masked;
+                    changeBtn.classList.add("hidden");
+                };
+
+                const choose = (item) => {
+                    workshopEl.value = item.name;
+                    closeList();
+                    if (phoneErrorEl) phoneErrorEl.classList.add("hidden");
+                    if (item.phone) {
+                        phoneEl.value = item.phone;
+                        phoneEl.readOnly = true;
+                        phoneEl.dataset.source = "khatabook";
+                        phoneEl.dataset.masked = String(Boolean(item.phoneMasked));
+                        changeBtn.classList.remove("hidden");
+                        hintEl.textContent = "Phone number filled in from our customer records.";
+                    } else {
+                        unlockPhone(true);
+                        hintEl.textContent = "We don't have a phone number for this workshop - please enter it below.";
+                        phoneEl.focus();
+                    }
+                };
+
+                const search = debounce(async (term) => {
+                    if (controller) controller.abort();
+                    if (term.length < 2) {
+                        renderList([]);
+                        return;
+                    }
+                    controller = new AbortController();
+                    const items = await fetchWorkshops({ q: term }, controller.signal);
+                    if (workshopEl.value.trim() === term) renderList(items);
+                }, 250);
+
+                workshopEl.addEventListener("input", () => {
+                    unlockPhone(true);
+                    hintEl.textContent = defaultHint;
+                    search(workshopEl.value.trim());
+                });
+
+                workshopEl.addEventListener("keydown", (e) => {
+                    const isOpen = !listEl.classList.contains("hidden");
+                    if (!isOpen || !results.length) return;
+                    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                        e.preventDefault();
+                        const step = e.key === "ArrowDown" ? 1 : -1;
+                        highlight((activeIndex + step + results.length) % results.length);
+                    } else if (e.key === "Enter" && activeIndex >= 0) {
+                        e.preventDefault();
+                        choose(results[activeIndex]);
+                    } else if (e.key === "Escape") {
+                        // Close only the suggestions, not the whole enquiry modal.
+                        e.stopPropagation();
+                        closeList();
+                    }
+                });
+
+                workshopEl.addEventListener("blur", closeList);
+                // Keep focus in the input so blur doesn't close the list before the click lands.
+                listEl.addEventListener("mousedown", (e) => e.preventDefault());
+                listEl.addEventListener("click", (e) => {
+                    const li = e.target.closest(".workshop-option");
+                    if (li) choose(results[Number(li.dataset.index)]);
+                });
+
+                changeBtn.addEventListener("click", () => {
+                    unlockPhone(true);
+                    hintEl.textContent = defaultHint;
+                    phoneEl.focus();
+                });
+
+                // Reverse lookup: a registered number typed by hand fills in the workshop name.
+                phoneEl.addEventListener("input", async () => {
+                    const digits = phoneEl.value.replace(/\D/g, "").slice(0, 10);
+                    if (!isValidIndianMobile(digits) || workshopEl.value.trim()) return;
+                    const items = await fetchWorkshops({ phone: digits });
+                    if (workshopEl.value.trim() || phoneEl.value !== digits) return;
+                    if (items.length === 1) {
+                        workshopEl.value = items[0].name;
+                        hintEl.textContent = "Workshop found from your phone number.";
+                    } else if (items.length > 1) {
+                        hintEl.textContent = "This number is registered to more than one workshop - pick yours.";
+                        renderList(items);
+                    }
+                });
+            }
+
+            function readCustomerFields(p) {
+                const workshopEl = document.getElementById(`${p}-workshop`);
+                const phoneEl = document.getElementById(`${p}-phone`);
+                const dateEl = document.getElementById(`${p}-date`);
+                const slotEl = document.getElementById(`${p}-slot`);
+                if (!phoneEl || !dateEl || !slotEl) return null;
+
+                const phone = phoneEl.value.trim();
+                const fromKhatabook = phoneEl.dataset.source === "khatabook";
+                if (!fromKhatabook && !isValidIndianMobile(phone)) {
+                    showFieldError(document.getElementById(`${p}-phone-error`), phoneEl);
+                    return null;
+                }
+
+                const date = dateEl.value;
+                if (!date || date < dateEl.min || date > dateEl.max) {
+                    showFieldError(document.getElementById(`${p}-date-error`), dateEl);
+                    return null;
+                }
+
+                const slot = slotEl.value;
+                if (!slot || !availableSlots(date).some((s) => s.label === slot)) {
+                    // The chosen slot may have passed while the form was open - refresh the list.
+                    dateEl.dispatchEvent(new Event("change"));
+                    showFieldError(document.getElementById(`${p}-slot-error`), slotEl);
+                    return null;
+                }
+
+                return {
+                    workshop: workshopEl ? workshopEl.value.trim() : "",
+                    phone,
+                    phoneMasked: fromKhatabook && phoneEl.dataset.masked === "true",
+                    date,
+                    slot,
+                };
+            }
+
+            function customerMessageLines(customer) {
+                const lines = [];
+                if (customer.workshop) lines.push(`🏪 *Workshop:* ${customer.workshop}`);
+                lines.push(
+                    `📱 *Phone:* ${APP.COUNTRY_CODE} ${customer.phone}${customer.phoneMasked ? " (as registered with us)" : ""}`,
+                    `📅 *Preferred Date:* ${formatDisplayDate(customer.date)}`,
+                    `⏰ *Time Slot:* ${customer.slot}`
+                );
+                return lines;
+            }
+
+            function showFieldError(errorEl, inputEl) {
                 if (errorEl) {
                     errorEl.classList.add("hidden");
                     void errorEl.offsetWidth;
@@ -4420,11 +4765,12 @@ Also, add Date and Time Slot selection options to the form.-->
                 }
 
                 const details = document.getElementById("enquiry-details");
-                const phone = document.getElementById("enquiry-phone");
-                const phoneError = document.getElementById("phone-error");
                 if (details) details.value = "";
-                if (phone) phone.value = "";
-                if (phoneError) phoneError.classList.add("hidden");
+                const customerFields = document.getElementById("enquiry-customer-fields");
+                if (customerFields) {
+                    customerFields.innerHTML = customerFieldsHtml("enquiry");
+                    initCustomerFields("enquiry");
+                }
 
                 const modal = document.getElementById("enquiryModal");
                 if (modal) {
@@ -4454,16 +4800,9 @@ Also, add Date and Time Slot selection options to the form.-->
             }
 
             function submitEnquiry() {
-                const phoneEl = document.getElementById("enquiry-phone");
-                const phoneError = document.getElementById("phone-error");
-                if (!phoneEl || !phoneError || !currentEnquiryProduct) return;
-
-                const phone = phoneEl.value.trim();
-                if (!isValidIndianMobile(phone)) {
-                    showPhoneError(phoneError, phoneEl);
-                    return;
-                }
-                phoneError.classList.add("hidden");
+                if (!currentEnquiryProduct) return;
+                const customer = readCustomerFields("enquiry");
+                if (!customer) return;
 
                 const qtyEl = document.getElementById("enquiry-qty-value");
                 const detailsEl = document.getElementById("enquiry-details");
@@ -4474,7 +4813,7 @@ Also, add Date and Time Slot selection options to the form.-->
                     `🛒 *Enquiry — Swapnil Chemicals*`,
                     `📦 *Product:* ${product.name}`,
                     `📏 *Qty:* ${qty}`,
-                    `📱 *Phone:* ${APP.COUNTRY_CODE} ${phone}`,
+                    ...customerMessageLines(customer),
                 ];
                 if (details) lines.push(`📝 *Details:* ${details}`);
                 lines.push(`_Sent from website_`);
