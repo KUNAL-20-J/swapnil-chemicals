@@ -4401,20 +4401,65 @@ in this code only do not create any other file -->
                 return { min: toLocalISODate(first), max: toLocalISODate(last) };
             }
 
-            async function fetchWorkshops(params, signal) {
-                try {
-                    const res = await fetch(`${APP.WORKSHOP_LOOKUP_URL}?${new URLSearchParams({ workshop_lookup: "1", ...params })}`, {
-                        headers: { Accept: "application/json" },
-                        signal,
-                    });
-                    if (!res.ok) return null;
-                    const data = await res.json();
-                    return Array.isArray(data.results) ? data.results : null;
-                } catch {
-                    // Offline or no PHP backend (e.g. Live Server) - the fields still work as plain manual inputs.
-                    return null;
-                }
-            }
+            // custom commented old code 28-09-26
+
+            // async function fetchWorkshops(params, signal) {
+             //   try {
+               //     const res = await fetch(`${APP.WORKSHOP_LOOKUP_URL}?${new URLSearchParams({ //workshop_lookup: "1", ...params })}`, {
+              //          headers: { Accept: "application/json" },
+             //           signal,
+              //      });
+              //      if (!res.ok) return null;
+              //      const data = await res.json();
+              //      return Array.isArray(data.results) ? data.results : null;
+              //  } catch {
+              //      // Offline or no PHP backend (e.g. Live Server) - the fields still work as plain manual inputs.
+              //      return null;
+               // }
+           // }
+
+
+
+           // custom code 28-09-26 
+           // ================================================================
+// KHATABOOK CUSTOMERS (static table)
+// Har customer ke liye ek line: { name: "Workshop Name", phone: "10 digit number" }
+// Khatabook PDF se Name aur Number yahan copy-paste karein.
+// ================================================================
+const KHATABOOK_CUSTOMERS = [
+    { name: "Sharma Auto Care", phone: "9876543210" },
+    { name: "Jain Car Wash", phone: "9123456780" },
+    { name: "Royal Detailing Studio", phone: "9001234567" },
+    { name: "KUNAL JAIN", phone: "8561049848" },
+    // ... baaki customers yahan add karein (last line ke baad bhi comma chalega)
+];
+
+// Number ko 10 digit me badalta hai (+91, spaces, dashes hata deta hai)
+function normalizePhone(value) {
+    return String(value || "").replace(/\D/g, "").slice(-10);
+}
+
+// phone -> [workshop names] (ek number par 2 workshop ho to dono aayenge)
+const WORKSHOP_BY_PHONE = (() => {
+    const map = new Map();
+    KHATABOOK_CUSTOMERS.forEach(({ name, phone }) => {
+        const key = normalizePhone(phone);
+        if (!key || !name) return;
+        if (!map.has(key)) map.set(key, []);
+        map.get(key).push(String(name).trim());
+    });
+    return map;
+})();
+
+// Purane code ke saath compatible rakha hai, isliye baaki code badalne ki zarurat nahi
+async function fetchWorkshops(params) {
+    const names = WORKSHOP_BY_PHONE.get(normalizePhone(params.phone)) || [];
+    return names.map((name) => ({ name }));
+}
+
+
+
+
 
             function loadSavedCustomer() {
                 try {
