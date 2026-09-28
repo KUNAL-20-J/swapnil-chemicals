@@ -9,8 +9,9 @@ declare(strict_types=1);
  * placeholder is stored as '' (no phone on record).
  *
  * To refresh: replace this list with the rows from a newer Khatabook export.
- * The list stays on the server; the enquiry form queries it through
- * index.php?workshop_lookup=1&q=<name> or &phone=<10 digits>.
+ * The list stays on the server and is never shown on the page. The enquiry form
+ * sends only the customer's own WhatsApp number to index.php?workshop_lookup=1&phone=<10 digits>
+ * and gets back just the workshop name registered to that number.
  */
 const KHATABOOK_CUSTOMERS = [
     ['Shree Patel Motos Chiranji Govindapura', '9214232538'],
@@ -182,62 +183,16 @@ const KHATABOOK_CUSTOMERS = [
     ['Praveen Kota', '9414488656'],
 ];
 
-// Suggestions shown for a name search.
-const WORKSHOP_LOOKUP_LIMIT = 8;
-
-// Hide the middle digits of numbers returned for a *name* search, so the page
-// can't be used to harvest every customer's number. A phone search returns
-// only what the visitor already typed, so it is never masked.
-const WORKSHOP_MASK_PHONES = true;
-
-function workshopSearchKey(string $value): string
+/** @return list<string> Workshop names registered to this exact phone number. */
+function workshopNamesForPhone(string $phone): array
 {
-    return trim((string) preg_replace('/[^a-z0-9]+/', ' ', strtolower($value)));
-}
-
-function workshopMaskPhone(string $phone): string
-{
-    return substr($phone, 0, 2) . 'XXXXXX' . substr($phone, -2);
-}
-
-/** @return list<array{name: string, phone: string, phoneMasked: bool}> */
-function workshopLookup(string $query, string $phone): array
-{
-    $results = [];
-
-    if ($phone !== '') {
-        foreach (KHATABOOK_CUSTOMERS as [$name, $number]) {
-            if ($number === $phone) {
-                $results[] = ['name' => $name, 'phone' => $number, 'phoneMasked' => false];
-            }
+    $names = [];
+    foreach (KHATABOOK_CUSTOMERS as [$name, $number]) {
+        if ($number === $phone) {
+            $names[] = $name;
         }
-        return $results;
     }
-
-    $terms = explode(' ', workshopSearchKey($query));
-    $needle = implode(' ', $terms);
-    $ranked = [];
-    foreach (KHATABOOK_CUSTOMERS as $i => [$name, $number]) {
-        $key = workshopSearchKey($name);
-        foreach ($terms as $term) {
-            if (!str_contains($key, $term)) {
-                continue 2;
-            }
-        }
-        // Names that start with what was typed come first, then file order.
-        $ranked[] = [str_starts_with($key, $needle) ? 0 : 1, $i, $name, $number];
-    }
-    sort($ranked);
-
-    foreach (array_slice($ranked, 0, WORKSHOP_LOOKUP_LIMIT) as [, , $name, $number]) {
-        $mask = WORKSHOP_MASK_PHONES && $number !== '';
-        $results[] = [
-            'name' => $name,
-            'phone' => $mask ? workshopMaskPhone($number) : $number,
-            'phoneMasked' => $mask,
-        ];
-    }
-    return $results;
+    return $names;
 }
 
 if (isset($_GET['workshop_lookup'])) {
@@ -246,23 +201,15 @@ if (isset($_GET['workshop_lookup'])) {
     header('X-Content-Type-Options: nosniff');
     header('X-Robots-Tag: noindex');
 
-    $query = is_string($_GET['q'] ?? null) ? trim($_GET['q']) : '';
     $phone = is_string($_GET['phone'] ?? null) ? trim($_GET['phone']) : '';
-
-    $validPhone = preg_match('/^[6-9]\d{9}$/', $phone) === 1;
-    $queryLength = mb_strlen($query);
-    $validQuery = $queryLength >= 2 && $queryLength <= 60 && workshopSearchKey($query) !== '';
-
-    if (!$validPhone && !$validQuery) {
+    if (preg_match('/^[6-9]\d{9}$/', $phone) !== 1) {
         http_response_code(400);
-        echo json_encode(['results' => [], 'error' => 'Pass q (2-60 characters) or a 10-digit phone.']);
+        echo json_encode(['results' => [], 'error' => 'Pass a 10-digit mobile number.']);
         exit;
     }
 
-    echo json_encode(
-        ['results' => workshopLookup($validQuery && !$validPhone ? $query : '', $validPhone ? $phone : '')],
-        JSON_UNESCAPED_UNICODE
-    );
+    $results = array_map(static fn (string $name) => ['name' => $name], workshopNamesForPhone($phone));
+    echo json_encode(['results' => $results], JSON_UNESCAPED_UNICODE);
     exit;
 }
 ?>
@@ -1145,50 +1092,6 @@ in this code only do not create any other file -->
                 .enquiry-row-2 {
                     grid-template-columns: 1fr;
                 }
-            }
-
-            .workshop-combo {
-                position: relative;
-            }
-
-            .workshop-suggestions {
-                position: absolute;
-                top: calc(100% + 4px);
-                left: 0;
-                right: 0;
-                z-index: 5;
-                max-height: 240px;
-                overflow-y: auto;
-                margin: 0;
-                padding: 4px;
-                list-style: none;
-                background: #fff;
-                border: 1.5px solid #e2e8f0;
-                border-radius: 13px;
-                box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
-            }
-
-            .workshop-suggestions.hidden {
-                display: none;
-            }
-
-            .workshop-option {
-                padding: 9px 12px;
-                border-radius: 9px;
-                cursor: pointer;
-                font-size: 0.85rem;
-                color: #1e293b;
-            }
-
-            .workshop-option small {
-                display: block;
-                color: #64748b;
-                font-size: 0.75rem;
-            }
-
-            .workshop-option[aria-selected="true"],
-            .workshop-option:hover {
-                background: #eff6ff;
             }
 
             .workshop-change-btn {
@@ -3829,9 +3732,11 @@ in this code only do not create any other file -->
             const APP = Object.freeze({
                 WA_NUMBER: "919352470085",
                 CART_STORAGE_KEY: "sc_cart_auto",
+                // This device's last-used WhatsApp number & workshop, so the next enquiry fills itself in.
+                CUSTOMER_STORAGE_KEY: "sc_customer",
                 CURRENCY: "INR",
                 COUNTRY_CODE: "+91",
-                // Server-side search over the Khatabook customer list embedded at the top of this file.
+                // Phone-number lookup against the Khatabook list embedded (server-side) at the top of this file.
                 WORKSHOP_LOOKUP_URL: window.location.pathname,
                 BOOKING_DAYS_AHEAD: 30,
                 // A slot can be booked for today only until its start hour.
@@ -4705,8 +4610,28 @@ in this code only do not create any other file -->
                     const data = await res.json();
                     return Array.isArray(data.results) ? data.results : [];
                 } catch {
-                    // Offline, aborted, or no PHP backend - the fields still work as plain manual inputs.
+                    // Offline or no PHP backend - the fields still work as plain manual inputs.
                     return [];
+                }
+            }
+
+            function loadSavedCustomer() {
+                try {
+                    const saved = safeParseJSON(localStorage.getItem(APP.CUSTOMER_STORAGE_KEY), {});
+                    return {
+                        phone: isValidIndianMobile(saved.phone) ? String(saved.phone) : "",
+                        workshop: typeof saved.workshop === "string" ? saved.workshop.slice(0, 120) : "",
+                    };
+                } catch {
+                    return { phone: "", workshop: "" };
+                }
+            }
+
+            function saveCustomer(phone, workshop) {
+                try {
+                    localStorage.setItem(APP.CUSTOMER_STORAGE_KEY, JSON.stringify({ phone, workshop }));
+                } catch {
+                    // Storage blocked (private mode) - the form still works, it just won't prefill next time.
                 }
             }
 
@@ -4714,22 +4639,20 @@ in this code only do not create any other file -->
                 const { min, max } = bookingDateRange();
                 return `
           <div class="enquiry-field-wrap mb-4">
-              <label class="block text-sm font-semibold text-gray-700 mb-1" for="${p}-workshop">Workshop Name</label>
-              <div class="workshop-combo">
-                  <input type="text" id="${p}-workshop" class="enquiry-input" maxlength="120" autocomplete="off" placeholder="Type your workshop name to find it" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${p}-workshop-list" aria-describedby="${p}-workshop-hint">
-                  <ul id="${p}-workshop-list" class="workshop-suggestions hidden" role="listbox" aria-label="Matching workshops"></ul>
+              <label class="block text-sm font-semibold text-gray-700 mb-1" for="${p}-phone">WhatsApp Number <span class="text-red-500">*</span></label>
+              <div class="enquiry-phone-group">
+                  <input type="tel" id="${p}-phone" class="enquiry-input" maxlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile number" aria-describedby="${p}-phone-error ${p}-customer-hint">
               </div>
-              <p id="${p}-workshop-hint" class="text-xs text-gray-500 mt-1" aria-live="polite">Already a customer? Pick your workshop and your phone number fills in automatically.</p>
+              <p id="${p}-phone-error" class="enquiry-error text-red-500 text-xs mt-1 hidden" role="alert">Enter a valid 10-digit mobile number</p>
+              <p id="${p}-customer-hint" class="text-xs text-gray-500 mt-1" aria-live="polite">Registered with us? Your workshop name fills in automatically.</p>
           </div>
           <div class="enquiry-field-wrap mb-4">
               <div class="flex justify-between items-center mb-1">
-                  <label class="block text-sm font-semibold text-gray-700" for="${p}-phone">Phone Number <span class="text-red-500">*</span></label>
-                  <button type="button" id="${p}-phone-change" class="workshop-change-btn hidden">Use a different number</button>
+                  <label class="block text-sm font-semibold text-gray-700" for="${p}-workshop">Workshop Name</label>
+                  <button type="button" id="${p}-workshop-edit" class="workshop-change-btn hidden">Edit</button>
               </div>
-              <div class="enquiry-phone-group">
-                  <input type="tel" id="${p}-phone" class="enquiry-input" maxlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile number" aria-describedby="${p}-phone-error">
-              </div>
-              <p id="${p}-phone-error" class="enquiry-error text-red-500 text-xs mt-1 hidden" role="alert">Enter a valid 10-digit mobile number</p>
+              <input type="text" id="${p}-workshop" class="enquiry-input" maxlength="120" autocomplete="organization" placeholder="Fills in from your WhatsApp number">
+              <select id="${p}-workshop-choice" class="enquiry-input mt-2 hidden" aria-label="Choose your workshop"></select>
           </div>
           <div class="enquiry-row-2 mb-4">
               <div class="enquiry-field-wrap">
@@ -4746,20 +4669,14 @@ in this code only do not create any other file -->
             }
 
             function initCustomerFields(p) {
-                const workshopEl = document.getElementById(`${p}-workshop`);
-                const listEl = document.getElementById(`${p}-workshop-list`);
-                const hintEl = document.getElementById(`${p}-workshop-hint`);
                 const phoneEl = document.getElementById(`${p}-phone`);
-                const phoneErrorEl = document.getElementById(`${p}-phone-error`);
-                const changeBtn = document.getElementById(`${p}-phone-change`);
+                const hintEl = document.getElementById(`${p}-customer-hint`);
+                const workshopEl = document.getElementById(`${p}-workshop`);
+                const choiceEl = document.getElementById(`${p}-workshop-choice`);
+                const editBtn = document.getElementById(`${p}-workshop-edit`);
                 const dateEl = document.getElementById(`${p}-date`);
                 const slotEl = document.getElementById(`${p}-slot`);
-                if (!workshopEl || !listEl || !hintEl || !phoneEl || !changeBtn || !dateEl || !slotEl) return;
-
-                const defaultHint = hintEl.textContent;
-                let results = [];
-                let activeIndex = -1;
-                let controller = null;
+                if (!phoneEl || !hintEl || !workshopEl || !choiceEl || !editBtn || !dateEl || !slotEl) return;
 
                 const fillSlots = () => {
                     const previous = slotEl.value;
@@ -4777,147 +4694,86 @@ in this code only do not create any other file -->
                 slotEl.addEventListener("change", () => document.getElementById(`${p}-slot-error`)?.classList.add("hidden"));
                 fillSlots();
 
-                const closeList = () => {
-                    listEl.classList.add("hidden");
-                    workshopEl.setAttribute("aria-expanded", "false");
-                    workshopEl.removeAttribute("aria-activedescendant");
-                    activeIndex = -1;
+                const defaultHint = hintEl.textContent;
+                const phoneDigits = () => phoneEl.value.replace(/\D/g, "").slice(0, 10);
+                let lookupId = 0;
+
+                const setWorkshop = (name, fromRecords) => {
+                    workshopEl.value = name;
+                    workshopEl.readOnly = fromRecords;
+                    workshopEl.dataset.source = fromRecords ? "khatabook" : "";
+                    editBtn.classList.toggle("hidden", !fromRecords);
                 };
 
-                const highlight = (index) => {
-                    activeIndex = index;
-                    listEl.querySelectorAll(".workshop-option").forEach((li, i) => {
-                        li.setAttribute("aria-selected", String(i === index));
-                        if (i === index) {
-                            workshopEl.setAttribute("aria-activedescendant", li.id);
-                            li.scrollIntoView({ block: "nearest" });
-                        }
-                    });
+                const hideChoices = () => {
+                    choiceEl.replaceChildren();
+                    choiceEl.classList.add("hidden");
                 };
 
-                const renderList = (items) => {
-                    results = items;
-                    listEl.replaceChildren(
-                        ...items.map((item, i) => {
-                            const li = document.createElement("li");
-                            li.id = `${p}-workshop-option-${i}`;
-                            li.className = "workshop-option";
-                            li.setAttribute("role", "option");
-                            li.setAttribute("aria-selected", "false");
-                            li.dataset.index = String(i);
-                            li.textContent = item.name;
-                            const small = document.createElement("small");
-                            small.textContent = item.phone ? `${APP.COUNTRY_CODE} ${item.phone}` : "No phone on record";
-                            li.appendChild(small);
-                            return li;
-                        })
-                    );
-                    const open = items.length > 0;
-                    listEl.classList.toggle("hidden", !open);
-                    workshopEl.setAttribute("aria-expanded", String(open));
-                    activeIndex = -1;
-                };
-
-                const unlockPhone = (clearValue) => {
-                    if (phoneEl.dataset.source === "khatabook" && clearValue) phoneEl.value = "";
-                    phoneEl.readOnly = false;
-                    delete phoneEl.dataset.source;
-                    delete phoneEl.dataset.masked;
-                    changeBtn.classList.add("hidden");
-                };
-
-                const choose = (item) => {
-                    workshopEl.value = item.name;
-                    closeList();
-                    if (phoneErrorEl) phoneErrorEl.classList.add("hidden");
-                    if (item.phone) {
-                        phoneEl.value = item.phone;
-                        phoneEl.readOnly = true;
-                        phoneEl.dataset.source = "khatabook";
-                        phoneEl.dataset.masked = String(Boolean(item.phoneMasked));
-                        changeBtn.classList.remove("hidden");
-                        hintEl.textContent = "Phone number filled in from our customer records.";
-                    } else {
-                        unlockPhone(true);
-                        hintEl.textContent = "We don't have a phone number for this workshop - please enter it below.";
-                        phoneEl.focus();
-                    }
-                };
-
-                const search = debounce(async (term) => {
-                    if (controller) controller.abort();
-                    if (term.length < 2) {
-                        renderList([]);
+                const lookup = async (digits) => {
+                    const id = ++lookupId;
+                    hintEl.textContent = "Checking our customer records…";
+                    const names = (await fetchWorkshops({ phone: digits })).map((r) => r.name).filter(Boolean);
+                    // Ignore stale answers if the number changed while we were waiting.
+                    if (id !== lookupId || phoneDigits() !== digits) return;
+                    hideChoices();
+                    if (!names.length) {
+                        if (workshopEl.dataset.source === "khatabook") setWorkshop("", false);
+                        hintEl.textContent = "This number isn't in our records - please type your workshop name below.";
                         return;
                     }
-                    controller = new AbortController();
-                    const items = await fetchWorkshops({ q: term }, controller.signal);
-                    if (workshopEl.value.trim() === term) renderList(items);
-                }, 250);
-
-                workshopEl.addEventListener("input", () => {
-                    unlockPhone(true);
-                    hintEl.textContent = defaultHint;
-                    search(workshopEl.value.trim());
-                });
-
-                workshopEl.addEventListener("keydown", (e) => {
-                    const isOpen = !listEl.classList.contains("hidden");
-                    if (!isOpen || !results.length) return;
-                    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-                        e.preventDefault();
-                        const step = e.key === "ArrowDown" ? 1 : -1;
-                        highlight((activeIndex + step + results.length) % results.length);
-                    } else if (e.key === "Enter" && activeIndex >= 0) {
-                        e.preventDefault();
-                        choose(results[activeIndex]);
-                    } else if (e.key === "Escape") {
-                        // Close only the suggestions, not the whole enquiry modal.
-                        e.stopPropagation();
-                        closeList();
+                    setWorkshop(names[0], true);
+                    if (names.length > 1) {
+                        choiceEl.replaceChildren(...names.map((name) => new Option(name, name)));
+                        choiceEl.classList.remove("hidden");
+                        hintEl.textContent = "This number has more than one workshop with us - pick yours below.";
+                    } else {
+                        hintEl.textContent = "Workshop name filled in from our customer records.";
                     }
-                });
+                };
 
-                workshopEl.addEventListener("blur", closeList);
-                // Keep focus in the input so blur doesn't close the list before the click lands.
-                listEl.addEventListener("mousedown", (e) => e.preventDefault());
-                listEl.addEventListener("click", (e) => {
-                    const li = e.target.closest(".workshop-option");
-                    if (li) choose(results[Number(li.dataset.index)]);
-                });
-
-                changeBtn.addEventListener("click", () => {
-                    unlockPhone(true);
-                    hintEl.textContent = defaultHint;
-                    phoneEl.focus();
-                });
-
-                // Reverse lookup: a registered number typed by hand fills in the workshop name.
-                phoneEl.addEventListener("input", async () => {
-                    const digits = phoneEl.value.replace(/\D/g, "").slice(0, 10);
-                    if (!isValidIndianMobile(digits) || workshopEl.value.trim()) return;
-                    const items = await fetchWorkshops({ phone: digits });
-                    if (workshopEl.value.trim() || phoneEl.value !== digits) return;
-                    if (items.length === 1) {
-                        workshopEl.value = items[0].name;
-                        hintEl.textContent = "Workshop found from your phone number.";
-                    } else if (items.length > 1) {
-                        hintEl.textContent = "This number is registered to more than one workshop - pick yours.";
-                        renderList(items);
+                phoneEl.addEventListener("input", () => {
+                    const digits = phoneDigits();
+                    if (isValidIndianMobile(digits)) {
+                        lookup(digits);
+                        return;
                     }
+                    lookupId++;
+                    hideChoices();
+                    if (workshopEl.dataset.source === "khatabook") setWorkshop("", false);
+                    hintEl.textContent = defaultHint;
                 });
+
+                choiceEl.addEventListener("change", () => {
+                    workshopEl.value = choiceEl.value;
+                });
+
+                editBtn.addEventListener("click", () => {
+                    hideChoices();
+                    setWorkshop(workshopEl.value, false);
+                    hintEl.textContent = "You can now edit the workshop name.";
+                    workshopEl.focus();
+                });
+
+                // Returning customer on this device: fill both fields straight away,
+                // then re-check the number against the latest Khatabook list.
+                const saved = loadSavedCustomer();
+                if (saved.phone) {
+                    phoneEl.value = saved.phone;
+                    setWorkshop(saved.workshop, false);
+                    lookup(saved.phone);
+                }
             }
 
             function readCustomerFields(p) {
-                const workshopEl = document.getElementById(`${p}-workshop`);
                 const phoneEl = document.getElementById(`${p}-phone`);
+                const workshopEl = document.getElementById(`${p}-workshop`);
                 const dateEl = document.getElementById(`${p}-date`);
                 const slotEl = document.getElementById(`${p}-slot`);
-                if (!phoneEl || !dateEl || !slotEl) return null;
+                if (!phoneEl || !workshopEl || !dateEl || !slotEl) return null;
 
                 const phone = phoneEl.value.trim();
-                const fromKhatabook = phoneEl.dataset.source === "khatabook";
-                if (!fromKhatabook && !isValidIndianMobile(phone)) {
+                if (!isValidIndianMobile(phone)) {
                     showFieldError(document.getElementById(`${p}-phone-error`), phoneEl);
                     return null;
                 }
@@ -4936,10 +4792,12 @@ in this code only do not create any other file -->
                     return null;
                 }
 
+                const workshop = workshopEl.value.trim();
+                saveCustomer(phone, workshop);
                 return {
-                    workshop: workshopEl ? workshopEl.value.trim() : "",
+                    workshop,
                     phone,
-                    phoneMasked: fromKhatabook && phoneEl.dataset.masked === "true",
+                    registered: workshopEl.dataset.source === "khatabook",
                     date,
                     slot,
                 };
@@ -4947,9 +4805,11 @@ in this code only do not create any other file -->
 
             function customerMessageLines(customer) {
                 const lines = [];
-                if (customer.workshop) lines.push(`🏪 *Workshop:* ${customer.workshop}`);
+                if (customer.workshop) {
+                    lines.push(`🏪 *Workshop:* ${customer.workshop}${customer.registered ? " ✅ (Khatabook customer)" : ""}`);
+                }
                 lines.push(
-                    `📱 *Phone:* ${APP.COUNTRY_CODE} ${customer.phone}${customer.phoneMasked ? " (as registered with us)" : ""}`,
+                    `📱 *WhatsApp:* ${APP.COUNTRY_CODE} ${customer.phone}`,
                     `📅 *Preferred Date:* ${formatDisplayDate(customer.date)}`,
                     `⏰ *Time Slot:* ${customer.slot}`
                 );
