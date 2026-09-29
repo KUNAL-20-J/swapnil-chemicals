@@ -906,6 +906,36 @@ in this code only do not create any other file -->
                 margin-top: 8px;
             }
 
+            .cart-upi-pay {
+                margin: 4px 0 12px;
+                padding: 12px;
+                border: 1.5px dashed #c7d2fe;
+                border-radius: 15px;
+                background: #f8fafc;
+            }
+
+            .cart-upi-pay-link {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                padding: 11px 14px;
+                border-radius: 12px;
+                background: #fff;
+                border: 1.5px solid #e2e8f0;
+                color: #1e293b;
+                font-weight: 700;
+                font-size: 0.9rem;
+                text-decoration: none;
+                transition: 0.2s;
+            }
+
+            .cart-upi-pay-link:hover {
+                border-color: #34a853;
+                box-shadow: 0 6px 16px rgba(52, 168, 83, 0.25);
+                transform: translateY(-1px);
+            }
+
             #addedCartModal {
                 display: none;
                 position: fixed;
@@ -3609,8 +3639,11 @@ in this code only do not create any other file -->
             // PhonePe / whichever UPI app is installed (or shows an app chooser). The link
             // carries no amount, so the customer types it in the app. Desktops have no UPI
             // app, so there we keep the page and ask them to scan the QR with their phone.
-            function openUpiApp(e) {
-                const hint = document.getElementById("upiPayHint");
+            // No "am" param: the UPI app asks the customer to enter the amount.
+            const UPI_PAY_URL = "upi://pay?pa=boism-9352470085@boi&pn=Swapnil%20Chemicals&cu=INR";
+
+            function openUpiApp(e, link) {
+                const hint = document.getElementById(link?.dataset.hintId || "upiPayHint");
                 const isMobile =
                     (navigator.userAgentData && navigator.userAgentData.mobile) ||
                     /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -4153,6 +4186,14 @@ in this code only do not create any other file -->
           <div class="enquiry-field-wrap mb-4">
               <label class="block text-sm font-semibold text-gray-700 mb-1" for="cart-enquiry-details">Address &amp; Requirements</label>
               <textarea id="cart-enquiry-details" class="enquiry-textarea" rows="2" maxlength="300" placeholder="Delivery address, any specific requirements..."></textarea>
+          </div>
+          <div class="cart-upi-pay">
+              <a href="${UPI_PAY_URL}" class="cart-upi-pay-link" data-action="upi-pay" data-hint-id="cartUpiPayHint" aria-label="Pay with Google Pay, PhonePe or any UPI app">
+                  <img src="https://www.gstatic.com/instantbuy/svg/dark_gpay.svg" alt="Google Pay" width="56" height="24" decoding="async">
+                  <span>Pay via Google Pay / PhonePe</span>
+                  <i class="fas fa-arrow-up-right-from-square text-xs" aria-hidden="true"></i>
+              </a>
+              <p id="cartUpiPayHint" class="text-xs text-gray-500 mt-2 text-center" aria-live="polite">Tap to open your UPI app &mdash; enter the amount (${formatCurrency(grandTotal)}) there.</p>
           </div>
           <button class="enquiry-submit-btn" data-action="submit-cart-enquiry">
               <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry via WhatsApp
@@ -5487,7 +5528,7 @@ async function fetchWorkshops(params) {
                         copyText(target.dataset.copyText, target);
                         break;
                     case "upi-pay":
-                        openUpiApp(e);
+                        openUpiApp(e, target);
                         break;
                     case "open-cart-enquiry":
                         openCartEnquiry();
