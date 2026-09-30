@@ -2721,7 +2721,7 @@
                         "image": "Dashboard Polish.jpeg",
                         "description": "Premium dashboard polish for long-lasting shine",
                         "brand": { "@type": "Brand", "name": "Swapnil Chemicals" },
-                        "offers": { "@type": "Offer", "price": "1", "priceCurrency": "INR", "url": "#products" }
+                        "offers": { "@type": "Offer", "price": "200", "priceCurrency": "INR", "url": "#products" }
                     },
                     {
                         "@type": "Product",
@@ -3701,9 +3701,14 @@
             }
 
             // Tapping the QR hands the upi:// link to the phone, which opens Google Pay /
-            // PhonePe / whichever UPI app is installed (or shows an app chooser). The link
-            // carries the cart total ("am"), so the amount is pre-filled in the app. Desktops
+            // PhonePe / whichever UPI app is installed (or shows an app chooser). Desktops
             // have no UPI app, so there we keep the page and ask them to scan the QR.
+            // The link deliberately carries NO amount ("am") or note ("tn"): UPI_ID is a
+            // personal (non-merchant) VPA, and Google Pay / NPCI risk checks decline a
+            // pre-filled-amount collect to a personal VPA after the PIN is entered
+            // ("Your money will be refunded"). The customer types the amount in the app,
+            // which is the same link the Contact-section QR uses and which goes through.
+            // To pre-fill the amount safely, switch UPI_ID to a merchant / business VPA.
             // The website can only open the app; the payment itself (and any failure such as
             // "not debited") is decided by the customer's bank / UPI, not by this page.
             const UPI_ID = "boism-9352470085@boi";
@@ -3711,15 +3716,26 @@
             const UPI_ALT_ID = "gajendra25feb68-1@oksbi";
             const UPI_PAYEE_NAME = "Swapnil Chemicals";
 
-            // amount > 0 adds "am" (pre-filled, 2 decimals); without it the app asks for the amount.
+            // Set to true only after UPI_ID is changed to a merchant / business VPA.
+            const UPI_PREFILL_AMOUNT = false;
+
             // "pa" is left unencoded on purpose: some UPI apps reject "%40" in the VPA.
             function buildUpiUrl(amount, note) {
                 const params = [`pa=${UPI_ID}`, `pn=${encodeURIComponent(UPI_PAYEE_NAME)}`];
-                const amt = Number(amount);
-                if (Number.isFinite(amt) && amt > 0) params.push(`am=${amt.toFixed(2)}`);
-                if (note) params.push(`tn=${encodeURIComponent(String(note).slice(0, 50))}`);
+                if (UPI_PREFILL_AMOUNT) {
+                    const amt = Number(amount);
+                    if (Number.isFinite(amt) && amt > 0) params.push(`am=${amt.toFixed(2)}`);
+                    if (note) params.push(`tn=${encodeURIComponent(String(note).slice(0, 50))}`);
+                }
                 params.push("cu=INR");
                 return `upi://pay?${params.join("&")}`;
+            }
+
+            function upiPayHintText(amount) {
+                const amt = formatCurrency(amount);
+                return UPI_PREFILL_AMOUNT
+                    ? `📷 Scan or tap the QR to pay ${amt} (amount auto-filled) via Google Pay / PhonePe / any UPI app`
+                    : `📷 Scan or tap the QR, then enter ${amt} in Google Pay / PhonePe / any UPI app`;
             }
 
             function upiQrSrc(upiUrl) {
@@ -3779,7 +3795,7 @@
                     id: 1,
                     name: "Dashboard Polish",
                     image: "Dashboard Polish.jpg",
-                    price: 1,
+                    price: 200,
                     unit: "Lt",
                     hasLtOptions: true,
                     qtyOptions: [5, 10, 35, 50],
@@ -4052,7 +4068,7 @@
                     gpayBtn.innerHTML = `<i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry &bull; ${formatCurrency(Math.round(grandTotal))}`;
                 }
 
-                // Link + QR carry the cart total, so the amount is pre-filled in the UPI app.
+                // Link + QR for the cart (amount only pre-filled when UPI_PREFILL_AMOUNT is on).
                 const payAmount = Math.round(grandTotal);
                 const cartUpiUrl = buildUpiUrl(payAmount, `Swapnil Chemicals order ${itemsLabel}`);
                 const upiLink = document.getElementById("cartPanelUpiLink");
@@ -4064,7 +4080,7 @@
                 }
                 const upiHint = document.getElementById("cartPanelUpiHint");
                 if (upiHint) {
-                    upiHint.textContent = `📷 Scan or tap the QR to pay ${formatCurrency(payAmount)} (amount auto-filled) via Google Pay / PhonePe / any UPI app`;
+                    upiHint.textContent = upiPayHintText(payAmount);
                 }
             }
 
@@ -4318,7 +4334,7 @@
                           <i class="fas fa-copy" aria-hidden="true"></i>
                       </button>
                   </div>
-                  <p id="cartUpiPayHint" class="text-xs text-gray-500 leading-snug" aria-live="polite">📷 Scan or tap the QR to pay ${formatCurrency(Math.round(grandTotal))} (amount auto-filled) via Google Pay / PhonePe / any UPI app</p>
+                  <p id="cartUpiPayHint" class="text-xs text-gray-500 leading-snug" aria-live="polite">${upiPayHintText(Math.round(grandTotal))}</p>
               </div>
           </div>
           <button class="enquiry-submit-btn" data-action="submit-cart-enquiry">
