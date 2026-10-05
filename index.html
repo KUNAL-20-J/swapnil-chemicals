@@ -1,4 +1,10 @@
 <!doctype html>
+<!-- Automobile new code 25-09-26 -->
+<!-- Please add the Khatabook PDF to the code so that the Workshop Name and Phone Number are automatically fetched from the PDF. The customer should not have to enter them manually.
+
+Also, add Date and Time Slot selection options to the form
+
+in this code only do not create any other file -->
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -898,62 +904,6 @@
                 justify-content: center;
                 gap: 10px;
                 margin-top: 8px;
-            }
-
-            .cart-upi-pay {
-                margin: 4px 0 12px;
-                padding: 12px;
-                border: 1.5px dashed #c7d2fe;
-                border-radius: 15px;
-                background: #f8fafc;
-            }
-
-            .cart-upi-pay-link {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                padding: 11px 14px;
-                border-radius: 12px;
-                background: #fff;
-                border: 1.5px solid #e2e8f0;
-                color: #1e293b;
-                font-weight: 700;
-                font-size: 0.9rem;
-                text-decoration: none;
-                transition: 0.2s;
-            }
-
-            .cart-upi-pay-link:hover {
-                border-color: #34a853;
-                box-shadow: 0 6px 16px rgba(52, 168, 83, 0.25);
-                transform: translateY(-1px);
-            }
-
-            .cart-panel-upi {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                margin-bottom: 12px;
-                padding: 10px;
-                border: 1.5px dashed #c7d2fe;
-                border-radius: 14px;
-                background: #fff;
-            }
-
-            .cart-panel-upi-qr {
-                flex-shrink: 0;
-                display: block;
-                padding: 6px;
-                border-radius: 10px;
-                background: #fff;
-                box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
-                transition: 0.2s;
-            }
-
-            .cart-panel-upi-qr:hover {
-                box-shadow: 0 8px 18px rgba(52, 168, 83, 0.3);
-                transform: translateY(-1px);
             }
 
             #addedCartModal {
@@ -3295,7 +3245,7 @@
                                             aria-label="Pay Swapnil Chemicals with Google Pay, PhonePe or any UPI app"
                                         >
                                             <img
-                                                src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&amp;data=upi%3A%2F%2Fpay%3Fpa%3Dboism-9352470085%40boi%26pn%3DSwapnil%2520Chemicals%26cu%3DINR"
+                                                src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&amp;data=upi://pay?pa=boism-9352470085@boi%26pn=Swapnil%20Chemicals%26cu=INR"
                                                 width="75"
                                                 height="75"
                                                 class="rounded-lg"
@@ -3380,51 +3330,6 @@
                 <div class="flex justify-between items-center mb-3">
                     <span class="font-semibold text-gray-700">Total:</span>
                     <span class="font-bold text-lg text-gray-800" id="cartTotal">₹0</span>
-                </div>
-                <!-- Same UPI QR as the Contact section: tap opens Google Pay / PhonePe on mobile, scan on desktop -->
-                <div class="cart-panel-upi">
-                    <a
-                        id="cartPanelUpiLink"
-                        href="upi://pay?pa=boism-9352470085@boi&amp;pn=Swapnil%20Chemicals&amp;cu=INR"
-                        class="cart-panel-upi-qr"
-                        data-action="upi-pay"
-                        data-hint-id="cartPanelUpiHint"
-                        aria-label="Pay Swapnil Chemicals with Google Pay, PhonePe or any UPI app"
-                    >
-                        <img
-                            id="cartPanelUpiQr"
-                            src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&amp;data=upi%3A%2F%2Fpay%3Fpa%3Dboism-9352470085%40boi%26pn%3DSwapnil%2520Chemicals%26cu%3DINR"
-                            width="72"
-                            height="72"
-                            class="rounded-md"
-                            alt="UPI QR"
-                            loading="lazy"
-                            decoding="async"
-                        />
-                    </a>
-                    <div class="min-w-0">
-                        <div class="flex items-center gap-2 mb-1">
-                            <img
-                                src="https://www.gstatic.com/instantbuy/svg/dark_gpay.svg"
-                                width="40"
-                                height="17"
-                                alt="Google Pay"
-                                decoding="async"
-                            />
-                            <button
-                                type="button"
-                                class="text-gray-400 hover:text-blue-600 text-xs"
-                                data-action="copy"
-                                data-copy-text="boism-9352470085@boi"
-                                aria-label="Copy UPI ID"
-                            >
-                                <i class="fas fa-copy" aria-hidden="true"></i>
-                            </button>
-                        </div>
-                        <p id="cartPanelUpiHint" class="text-xs text-gray-500 leading-snug" aria-live="polite">
-                            📷 Scan or tap the QR to pay via Google Pay / PhonePe / any UPI app
-                        </p>
-                    </div>
                 </div>
                 <button id="cartGpayBtn" class="gpay-btn" data-action="open-cart-enquiry">Send Enquiry</button>
                 <button
@@ -3701,51 +3606,11 @@
             }
 
             // Tapping the QR hands the upi:// link to the phone, which opens Google Pay /
-            // PhonePe / whichever UPI app is installed (or shows an app chooser). Desktops
-            // have no UPI app, so there we keep the page and ask them to scan the QR.
-            // The link deliberately carries NO amount ("am") or note ("tn"): UPI_ID is a
-            // personal (non-merchant) VPA, and Google Pay / NPCI risk checks decline a
-            // pre-filled-amount collect to a personal VPA after the PIN is entered
-            // ("Your money will be refunded"). The customer types the amount in the app,
-            // which is the same link the Contact-section QR uses and which goes through.
-            // To pre-fill the amount safely, switch UPI_ID to a merchant / business VPA.
-            // The website can only open the app; the payment itself (and any failure such as
-            // "not debited") is decided by the customer's bank / UPI, not by this page.
-            const UPI_ID = "boism-9352470085@boi";
-            // Shown as a fallback when a payment to UPI_ID fails.
-            const UPI_ALT_ID = "gajendra25feb68-1@oksbi";
-            const UPI_PAYEE_NAME = "Swapnil Chemicals";
-
-            // Set to true only after UPI_ID is changed to a merchant / business VPA.
-            const UPI_PREFILL_AMOUNT = false;
-
-            // "pa" is left unencoded on purpose: some UPI apps reject "%40" in the VPA.
-            function buildUpiUrl(amount, note) {
-                const params = [`pa=${UPI_ID}`, `pn=${encodeURIComponent(UPI_PAYEE_NAME)}`];
-                if (UPI_PREFILL_AMOUNT) {
-                    const amt = Number(amount);
-                    if (Number.isFinite(amt) && amt > 0) params.push(`am=${amt.toFixed(2)}`);
-                    if (note) params.push(`tn=${encodeURIComponent(String(note).slice(0, 50))}`);
-                }
-                params.push("cu=INR");
-                return `upi://pay?${params.join("&")}`;
-            }
-
-            function upiPayHintText(amount) {
-                const amt = formatCurrency(amount);
-                return UPI_PREFILL_AMOUNT
-                    ? `📷 Scan or tap the QR to pay ${amt} (amount auto-filled) via Google Pay / PhonePe / any UPI app`
-                    : `📷 Scan or tap the QR, then enter ${amt} in Google Pay / PhonePe / any UPI app`;
-            }
-
-            function upiQrSrc(upiUrl) {
-                return `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(upiUrl)}`;
-            }
-
-            const UPI_PAY_URL = buildUpiUrl();
-
-            function openUpiApp(e, link) {
-                const hint = document.getElementById(link?.dataset.hintId || "upiPayHint");
+            // PhonePe / whichever UPI app is installed (or shows an app chooser). The link
+            // carries no amount, so the customer types it in the app. Desktops have no UPI
+            // app, so there we keep the page and ask them to scan the QR with their phone.
+            function openUpiApp(e) {
+                const hint = document.getElementById("upiPayHint");
                 const isMobile =
                     (navigator.userAgentData && navigator.userAgentData.mobile) ||
                     /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -3755,28 +3620,16 @@
                     return;
                 }
                 // If no UPI app picks up the link, the page stays visible — tell the customer.
-                // If it did open, the customer comes back later; the browser gets no payment
-                // status from the UPI app, so ask them to confirm with the screenshot / UTR.
                 let appOpened = false;
-                const onVisibility = () => {
-                    if (document.hidden) {
-                        appOpened = true;
-                        return;
-                    }
-                    if (!appOpened) return;
-                    document.removeEventListener("visibilitychange", onVisibility);
-                    if (hint) {
-                        hint.textContent =
-                            `✅ Paid? Please send the payment screenshot / UTR with your WhatsApp enquiry. ` +
-                            `❌ Failed or "not debited"? Try another bank account, or pay to UPI ID ${UPI_ALT_ID}.`;
-                    }
+                const onHide = () => {
+                    if (document.hidden) appOpened = true;
                 };
-                document.addEventListener("visibilitychange", onVisibility);
+                document.addEventListener("visibilitychange", onHide);
                 setTimeout(() => {
-                    if (appOpened) return;
-                    document.removeEventListener("visibilitychange", onVisibility);
-                    if (hint) {
-                        hint.textContent = `No UPI app opened? Install Google Pay / PhonePe, or pay to UPI ID ${UPI_ID}.`;
+                    document.removeEventListener("visibilitychange", onHide);
+                    if (!appOpened && hint) {
+                        hint.textContent =
+                            "No UPI app opened? Install Google Pay / PhonePe, or pay to UPI ID boism-9352470085@boi.";
                     }
                 }, 2500);
             }
@@ -4067,21 +3920,6 @@
                 if (gpayBtn) {
                     gpayBtn.innerHTML = `<i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry &bull; ${formatCurrency(Math.round(grandTotal))}`;
                 }
-
-                // Link + QR for the cart (amount only pre-filled when UPI_PREFILL_AMOUNT is on).
-                const payAmount = Math.round(grandTotal);
-                const cartUpiUrl = buildUpiUrl(payAmount, `Swapnil Chemicals order ${itemsLabel}`);
-                const upiLink = document.getElementById("cartPanelUpiLink");
-                if (upiLink) upiLink.href = cartUpiUrl;
-                const upiQr = document.getElementById("cartPanelUpiQr");
-                if (upiQr) {
-                    const qrSrc = upiQrSrc(cartUpiUrl);
-                    if (upiQr.src !== qrSrc) upiQr.src = qrSrc;
-                }
-                const upiHint = document.getElementById("cartPanelUpiHint");
-                if (upiHint) {
-                    upiHint.textContent = upiPayHintText(payAmount);
-                }
             }
 
             function changeCartQty(key, delta, e) {
@@ -4304,12 +4142,6 @@
                     })
                     .join("");
 
-                const packCount = keys.reduce((s, k) => s + cart[k].qty, 0);
-                const cartUpiUrl = buildUpiUrl(
-                    Math.round(grandTotal),
-                    `Swapnil Chemicals order ${packCount} item${packCount === 1 ? "" : "s"}`,
-                );
-
                 const body = document.querySelector(".enquiry-body");
                 if (!body) return;
                 body.innerHTML = `
@@ -4321,21 +4153,6 @@
           <div class="enquiry-field-wrap mb-4">
               <label class="block text-sm font-semibold text-gray-700 mb-1" for="cart-enquiry-details">Address &amp; Requirements</label>
               <textarea id="cart-enquiry-details" class="enquiry-textarea" rows="2" maxlength="300" placeholder="Delivery address, any specific requirements..."></textarea>
-          </div>
-          <!-- Same UPI QR block as the "Your Cart" panel -->
-          <div class="cart-panel-upi">
-              <a href="${escapeHtml(cartUpiUrl)}" class="cart-panel-upi-qr" data-action="upi-pay" data-hint-id="cartUpiPayHint" aria-label="Pay Swapnil Chemicals with Google Pay, PhonePe or any UPI app">
-                  <img src="${escapeHtml(upiQrSrc(cartUpiUrl))}" width="72" height="72" class="rounded-md" alt="UPI QR" loading="lazy" decoding="async">
-              </a>
-              <div class="min-w-0">
-                  <div class="flex items-center gap-2 mb-1">
-                      <img src="https://www.gstatic.com/instantbuy/svg/dark_gpay.svg" width="40" height="17" alt="Google Pay" decoding="async">
-                      <button type="button" class="text-gray-400 hover:text-blue-600 text-xs" data-action="copy" data-copy-text="boism-9352470085@boi" aria-label="Copy UPI ID">
-                          <i class="fas fa-copy" aria-hidden="true"></i>
-                      </button>
-                  </div>
-                  <p id="cartUpiPayHint" class="text-xs text-gray-500 leading-snug" aria-live="polite">${upiPayHintText(Math.round(grandTotal))}</p>
-              </div>
           </div>
           <button class="enquiry-submit-btn" data-action="submit-cart-enquiry">
               <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry via WhatsApp
@@ -5670,7 +5487,7 @@ async function fetchWorkshops(params) {
                         copyText(target.dataset.copyText, target);
                         break;
                     case "upi-pay":
-                        openUpiApp(e, target);
+                        openUpiApp(e);
                         break;
                     case "open-cart-enquiry":
                         openCartEnquiry();
