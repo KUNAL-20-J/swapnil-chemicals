@@ -4545,12 +4545,14 @@
                     }
                     font("bold", 18, COLOR.white);
                     doc.text(INVOICE_SELLER.name, textX, 15);
+                    // Tagline in white so it reads clearly on the dark band; contact lines stay lavender.
+                    font("bold", 9, COLOR.white);
+                    doc.text(INVOICE_SELLER.tagline, textX, 20.5);
                     font("normal", 8.5, COLOR.lavenderText);
                     [
-                        INVOICE_SELLER.tagline,
                         `${INVOICE_SELLER.address}  |  ${INVOICE_SELLER.email}`,
                         `Ph: ${INVOICE_SELLER.phones}`,
-                    ].forEach((line, i) => doc.text(line, textX, 20.5 + i * 4.3));
+                    ].forEach((line, i) => doc.text(line, textX, 24.8 + i * 4.3));
                     // GSTIN chip
                     font("bold", 8, COLOR.white);
                     const gstLabel = `GSTIN: ${INVOICE_SELLER.gstin}`;
