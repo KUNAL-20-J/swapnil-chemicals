@@ -4546,8 +4546,12 @@
                     font("bold", 18, COLOR.white);
                     doc.text(INVOICE_SELLER.name, textX, 15);
                     // Tagline in white so it reads clearly on the dark band; contact lines stay lavender.
+                    // Fill + thin white stroke makes the glyphs heavier, so the white reads brighter.
                     font("bold", 9, COLOR.white);
-                    doc.text(INVOICE_SELLER.tagline, textX, 20.5);
+                    doc.setDrawColor(...COLOR.white);
+                    doc.setLineWidth(0.15);
+                    doc.text(INVOICE_SELLER.tagline, textX, 20.5, { renderingMode: "fillThenStroke" });
+                    doc.setLineWidth(0.2);
                     font("normal", 8.5, COLOR.lavenderText);
                     [
                         `${INVOICE_SELLER.address}  |  ${INVOICE_SELLER.email}`,
