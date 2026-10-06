@@ -4410,7 +4410,7 @@
                     doc.text(`GSTIN: ${INVOICE_SELLER.gstin}`, textX, y + 27);
 
                     font("bold", 16, COLOR.dark);
-                    doc.text("PROFORMA INVOICE", right, y + 6, { align: "right" });
+                    doc.text("INVOICE", right, y + 6, { align: "right" });
                     font("normal", 9, COLOR.muted);
                     doc.text("Invoice No:", right - 52, y + 13);
                     doc.text("Date:", right - 52, y + 18);
@@ -4568,7 +4568,7 @@
                     font("normal", 8, COLOR.muted);
                     doc.text(
                         doc.splitTextToSize(
-                            "1. This is a proforma invoice generated from the online cart and is not a tax invoice.\n" +
+                            "1. This is a invoice generated from the online cart and is not a tax invoice.\n" +
                                 "2. Prices and availability will be confirmed by Swapnil Chemicals on WhatsApp.",
                             contentW - 70
                         ),
