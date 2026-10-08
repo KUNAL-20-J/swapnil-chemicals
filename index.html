@@ -4398,7 +4398,7 @@
             let invoiceSignPromise = null;
             function loadInvoiceSign() {
                 if (!invoiceSignPromise) {
-                    invoiceSignPromise = fetch("sign.png")
+                    invoiceSignPromise = fetch("sign.jpg")
                         .then((res) => (res.ok ? res.blob() : null))
                         .then(
                             (blob) =>
