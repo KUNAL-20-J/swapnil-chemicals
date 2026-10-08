@@ -1545,9 +1545,7 @@
                 --indigo: #4f46e5;
                 --cyan: #22d3ee;
                 --font-display: "Sora", "Inter", system-ui, sans-serif;
-                --glow-violet:
-                    0 0 0 1px rgba(124, 58, 237, 0.18),
-                    0 24px 50px -16px rgba(76, 29, 149, 0.35);
+                --glow-violet: 0 0 0 1px rgba(124, 58, 237, 0.18), 0 24px 50px -16px rgba(76, 29, 149, 0.35);
                 interpolate-size: allow-keywords;
             }
 
@@ -1574,8 +1572,7 @@
                 inset: 0;
                 z-index: -1;
                 pointer-events: none;
-                background:
-                    radial-gradient(40vw 40vw at 0% 30%, rgba(124, 58, 237, 0.08), transparent 70%),
+                background: radial-gradient(40vw 40vw at 0% 30%, rgba(124, 58, 237, 0.08), transparent 70%),
                     radial-gradient(35vw 35vw at 100% 60%, rgba(34, 211, 238, 0.08), transparent 70%),
                     radial-gradient(30vw 30vw at 50% 100%, rgba(234, 88, 12, 0.05), transparent 70%);
             }
@@ -1666,8 +1663,7 @@
             /* ---------- Hero ---------- */
             .hero-gradient {
                 isolation: isolate;
-                background:
-                    radial-gradient(1100px 600px at 8% -10%, rgba(124, 58, 237, 0.9), transparent 60%),
+                background: radial-gradient(1100px 600px at 8% -10%, rgba(124, 58, 237, 0.9), transparent 60%),
                     radial-gradient(900px 520px at 105% 15%, rgba(14, 165, 233, 0.55), transparent 55%),
                     radial-gradient(700px 400px at 50% 110%, rgba(234, 88, 12, 0.35), transparent 60%),
                     linear-gradient(160deg, var(--violet-deep) 0%, #2e1065 45%, #4c1d95 80%, #312e81 100%);
@@ -1742,8 +1738,7 @@
                 inset: 0;
                 z-index: 0;
                 pointer-events: none;
-                background-image:
-                    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+                background-image: linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
                     linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
                 background-size: 56px 56px;
                 mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
@@ -1956,7 +1951,14 @@
                 font-weight: 700;
                 letter-spacing: -0.01em;
                 white-space: nowrap;
-                background: linear-gradient(90deg, #4c1d95, var(--violet-bright) 25%, #2563eb 50%, #0891b2 75%, #4c1d95);
+                background: linear-gradient(
+                    90deg,
+                    #4c1d95,
+                    var(--violet-bright) 25%,
+                    #2563eb 50%,
+                    #0891b2 75%,
+                    #4c1d95
+                );
                 background-size: 300% 100%;
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
@@ -2091,7 +2093,12 @@
                 z-index: 3;
                 padding: 1.5px;
                 border-radius: inherit;
-                background: linear-gradient(135deg, rgba(124, 58, 237, 0.7), rgba(34, 211, 238, 0.6) 50%, rgba(249, 115, 22, 0.5));
+                background: linear-gradient(
+                    135deg,
+                    rgba(124, 58, 237, 0.7),
+                    rgba(34, 211, 238, 0.6) 50%,
+                    rgba(249, 115, 22, 0.5)
+                );
                 -webkit-mask:
                     linear-gradient(#000 0 0) content-box,
                     linear-gradient(#000 0 0);
@@ -2256,8 +2263,7 @@
                 position: relative;
                 overflow: hidden;
                 isolation: isolate;
-                background:
-                    radial-gradient(600px 300px at 90% 0%, rgba(34, 211, 238, 0.18), transparent 60%),
+                background: radial-gradient(600px 300px at 90% 0%, rgba(34, 211, 238, 0.18), transparent 60%),
                     radial-gradient(600px 300px at 0% 100%, rgba(124, 58, 237, 0.35), transparent 60%),
                     linear-gradient(160deg, var(--violet-deep), #2e1065 55%, #312e81);
             }
@@ -2398,10 +2404,8 @@
 
             /* ---------- Added-to-cart & remove-confirm dialogs ---------- */
             #removeConfirmModal::backdrop {
-                background:
-                    radial-gradient(circle at 20% 10%, rgba(124, 58, 237, 0.3), transparent 50%),
-                    radial-gradient(circle at 80% 90%, rgba(34, 211, 238, 0.2), transparent 50%),
-                    rgba(15, 8, 40, 0.6);
+                background: radial-gradient(circle at 20% 10%, rgba(124, 58, 237, 0.3), transparent 50%),
+                    radial-gradient(circle at 80% 90%, rgba(34, 211, 238, 0.2), transparent 50%), rgba(15, 8, 40, 0.6);
                 backdrop-filter: blur(8px);
             }
 
@@ -2898,7 +2902,8 @@
                     <div class="flex items-center gap-3">
                         <div class="glass-card px-4 py-2 rounded-lg">
                             <p class="text-gray-700 font-medium">
-                                <i class="fas fa-map-marker-alt text-blue-600 mr-2" aria-hidden="true"></i>Jaipur • Bulk & Retail
+                                <i class="fas fa-map-marker-alt text-blue-600 mr-2" aria-hidden="true"></i>Jaipur • Bulk
+                                & Retail
                             </p>
                         </div>
                         <button
@@ -2935,11 +2940,11 @@
                             Premium Automobile <br /><span class="hero-shine-text">Cleaning Solutions</span>
                         </h2>
                         <p class="text-lg md:text-xl mb-10 opacity-90 max-w-3xl mx-auto leading-relaxed hero-lead">
-                            Swapnil Chemicals is a Jaipur-based manufacturer of Premium Automobile Cleaning
-                            Products, trusted by bulk and retail customers since 2020. We produce our own
-                            Dashboard Polish, Tyre Polish, Car Foaming Wash, Glass Cleaner and more, ensuring
-                            consistent quality. As a GST registered, MSME and Udyam certified business, we supply
-                            orders across India. Call us at 9352470085 or 9024598298 for bulk orders or pricing.
+                            Swapnil Chemicals is a Jaipur-based manufacturer of Premium Automobile Cleaning Products,
+                            trusted by bulk and retail customers since 2020. We produce our own Dashboard Polish, Tyre
+                            Polish, Car Foaming Wash, Glass Cleaner and more, ensuring consistent quality. As a GST
+                            registered, MSME and Udyam certified business, we supply orders across India. Call us at
+                            9352470085 or 9024598298 for bulk orders or pricing.
                         </p>
                         <div class="flex flex-wrap justify-center gap-4 md:gap-6">
                             <a
@@ -2949,7 +2954,8 @@
                             ><a
                                 href="#contact"
                                 class="btn-secondary btn-shine magnetic text-white px-10 py-4 rounded-xl font-semibold text-lg"
-                                ><i class="fas fa-phone-alt fa-flip-horizontal mr-3" aria-hidden="true"></i>Contact Now</a
+                                ><i class="fas fa-phone-alt fa-flip-horizontal mr-3" aria-hidden="true"></i>Contact
+                                Now</a
                             >
                         </div>
                         <ul class="hero-trust" aria-label="Business credentials">
@@ -2965,10 +2971,7 @@
                     <span class="hero-scroll-mouse" aria-hidden="true"><span></span></span>
                 </a>
                 <svg class="hero-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-                    <path
-                        d="M0,40 C240,90 480,0 720,30 C960,60 1200,10 1440,45 L1440,90 L0,90 Z"
-                        fill="currentColor"
-                    />
+                    <path d="M0,40 C240,90 480,0 720,30 C960,60 1200,10 1440,45 L1440,90 L0,90 Z" fill="currentColor" />
                 </svg>
             </section>
 
@@ -2978,12 +2981,12 @@
                     ><i class="fas fa-droplet"></i><span>Car Foaming Wash</span><i class="fas fa-star"></i
                     ><span>Glass Cleaner</span><i class="fas fa-droplet"></i><span>Interior Cleaner</span
                     ><i class="fas fa-star"></i><span>Foaming Gun</span><i class="fas fa-droplet"></i
-                    ><span>Micro Towel</span><i class="fas fa-star"></i>
-                    <span>Dashboard Polish</span><i class="fas fa-star"></i><span>Tyre Polish</span
-                    ><i class="fas fa-droplet"></i><span>Car Foaming Wash</span><i class="fas fa-star"></i
-                    ><span>Glass Cleaner</span><i class="fas fa-droplet"></i><span>Interior Cleaner</span
-                    ><i class="fas fa-star"></i><span>Foaming Gun</span><i class="fas fa-droplet"></i
-                    ><span>Micro Towel</span><i class="fas fa-star"></i>
+                    ><span>Micro Towel</span><i class="fas fa-star"></i> <span>Dashboard Polish</span
+                    ><i class="fas fa-star"></i><span>Tyre Polish</span><i class="fas fa-droplet"></i
+                    ><span>Car Foaming Wash</span><i class="fas fa-star"></i><span>Glass Cleaner</span
+                    ><i class="fas fa-droplet"></i><span>Interior Cleaner</span><i class="fas fa-star"></i
+                    ><span>Foaming Gun</span><i class="fas fa-droplet"></i><span>Micro Towel</span
+                    ><i class="fas fa-star"></i>
                 </div>
             </div>
 
@@ -3358,7 +3361,11 @@
                                                 decoding="async"
                                             />
                                         </a>
-                                        <p id="upiPayHint" class="mt-3 text-sm text-gray-500 text-center" aria-live="polite">
+                                        <p
+                                            id="upiPayHint"
+                                            class="mt-3 text-sm text-gray-500 text-center"
+                                            aria-live="polite"
+                                        >
                                             📷 Scan or tap the QR to pay via Google Pay / PhonePe / any UPI app
                                         </p>
                                     </div>
@@ -3420,7 +3427,12 @@
                     <i class="fas fa-shopping-cart" aria-hidden="true"></i>
                     <span class="font-bold text-base">Your Cart</span>
                 </div>
-                <button type="button" class="cart-close-btn panel-close-btn" data-action="toggle-cart" aria-label="Close cart">
+                <button
+                    type="button"
+                    class="cart-close-btn panel-close-btn"
+                    data-action="toggle-cart"
+                    aria-label="Close cart"
+                >
                     <i class="fas fa-xmark" aria-hidden="true"></i>
                 </button>
             </div>
@@ -3465,7 +3477,12 @@
                         <p class="text-xs opacity-70">Products, pricing & orders</p>
                     </div>
                 </div>
-                <button type="button" class="panel-close-btn" data-action="toggle-assistant" aria-label="Close assistant">
+                <button
+                    type="button"
+                    class="panel-close-btn"
+                    data-action="toggle-assistant"
+                    aria-label="Close assistant"
+                >
                     <i class="fas fa-xmark" aria-hidden="true"></i>
                 </button>
             </div>
@@ -3495,9 +3512,16 @@
                 <div class="enquiry-modal-header">
                     <div>
                         <h2 id="enquiryModalTitle" class="text-white text-xl font-bold">Enquiry Form</h2>
-                        <p id="enquiryModalSubtitle" class="text-blue-100 text-xs mt-1">Tell us about your requirements</p>
+                        <p id="enquiryModalSubtitle" class="text-blue-100 text-xs mt-1">
+                            Tell us about your requirements
+                        </p>
                     </div>
-                    <button type="button" class="enquiry-close-btn" data-action="close-enquiry" aria-label="Close enquiry form">
+                    <button
+                        type="button"
+                        class="enquiry-close-btn"
+                        data-action="close-enquiry"
+                        aria-label="Close enquiry form"
+                    >
                         <i class="fas fa-xmark" aria-hidden="true"></i>
                     </button>
                 </div>
@@ -3511,7 +3535,9 @@
                         </div>
                     </div>
                     <div class="enquiry-field-wrap mb-4">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1" id="enquiry-qty-label">Quantity</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1" id="enquiry-qty-label"
+                            >Quantity</label
+                        >
                         <div
                             id="enquiry-qty-buttons"
                             class="enquiry-qty-buttons"
@@ -3580,8 +3606,8 @@
                     There <span id="addedCartItemsVerb">are</span>
                     <button type="button" class="link-btn" data-action="view-cart-from-added" id="addedCartItemsCount">
                         0 items
-                    </button> in your
-                    cart.
+                    </button>
+                    in your cart.
                 </p>
                 <p class="added-cart-subtotal">Cart Subtotal: <b id="addedCartSubtotal">₹0</b></p>
                 <div class="added-cart-actions">
@@ -4298,7 +4324,8 @@
 
             // jsPDF is loaded only when a cart PDF is requested, pinned by SRI hash.
             const JSPDF_SRC = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js";
-            const JSPDF_SRI = "sha512-plOdviVmws4Y3JAvbnpfKb2hVxKM1lCwsi3vmElYRj+tiDLffZ4FVUj5a8vyKJ9pIgl8JCAHEJ4D1iUKBecswg==";
+            const JSPDF_SRI =
+                "sha512-plOdviVmws4Y3JAvbnpfKb2hVxKM1lCwsi3vmElYRj+tiDLffZ4FVUj5a8vyKJ9pIgl8JCAHEJ4D1iUKBecswg==";
             let jsPdfPromise = null;
 
             function loadJsPdf() {
@@ -4323,7 +4350,10 @@
             }
 
             // The PDF's built-in Helvetica font has no ₹ glyph or non-Latin characters.
-            const pdfAmountFormatter = new Intl.NumberFormat("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const pdfAmountFormatter = new Intl.NumberFormat("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            });
             const pdfAmount = (amount) => `Rs. ${pdfAmountFormatter.format(amount)}`;
             const pdfText = (str) =>
                 String(str ?? "")
@@ -4344,8 +4374,28 @@
 
             // Indian numbering (lakh / crore) amount in words, e.g. "Rupees One Thousand Two Hundred Only".
             function amountInWords(amount) {
-                const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
-                    "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+                const ones = [
+                    "",
+                    "One",
+                    "Two",
+                    "Three",
+                    "Four",
+                    "Five",
+                    "Six",
+                    "Seven",
+                    "Eight",
+                    "Nine",
+                    "Ten",
+                    "Eleven",
+                    "Twelve",
+                    "Thirteen",
+                    "Fourteen",
+                    "Fifteen",
+                    "Sixteen",
+                    "Seventeen",
+                    "Eighteen",
+                    "Nineteen",
+                ];
                 const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
                 const twoDigits = (n) => (n < 20 ? ones[n] : `${tens[Math.floor(n / 10)]} ${ones[n % 10]}`.trim());
                 const threeDigits = (n) => {
@@ -4425,7 +4475,10 @@
                                             const ctx = canvas.getContext("2d");
                                             ctx.drawImage(img, 0, 0);
                                             const px = ctx.getImageData(0, 0, w, h).data;
-                                            let minX = w, minY = h, maxX = -1, maxY = -1;
+                                            let minX = w,
+                                                minY = h,
+                                                maxX = -1,
+                                                maxY = -1;
                                             for (let yy = 0; yy < h; yy++) {
                                                 for (let xx = 0; xx < w; xx++) {
                                                     const i = (yy * w + xx) * 4;
@@ -4606,7 +4659,11 @@
                     const now = new Date();
                     const pad = (n) => String(n).padStart(2, "0");
                     const invoiceNo = `SC-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
-                    const invoiceDate = now.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+                    const invoiceDate = now.toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                    });
 
                     // Continuation pages get a slim branded header instead of the full one.
                     const newPage = () => {
@@ -4655,10 +4712,9 @@
                     doc.text(INVOICE_SELLER.tagline, textX, 20.5, { renderingMode: "fillThenStroke" });
                     doc.setLineWidth(0.2);
                     font("normal", 8.5, COLOR.lavenderText);
-                    [
-                        `${INVOICE_SELLER.address}  |  ${INVOICE_SELLER.email}`,
-                        `Ph: ${INVOICE_SELLER.phones}`,
-                    ].forEach((line, i) => doc.text(line, textX, 24.8 + i * 4.3));
+                    [`${INVOICE_SELLER.address}  |  ${INVOICE_SELLER.email}`, `Ph: ${INVOICE_SELLER.phones}`].forEach(
+                        (line, i) => doc.text(line, textX, 24.8 + i * 4.3)
+                    );
                     // GSTIN chip
                     font("bold", 8, COLOR.white);
                     const gstLabel = `GSTIN: ${INVOICE_SELLER.gstin}`;
@@ -4690,7 +4746,9 @@
                     font("normal", 9);
                     const billLines = [
                         ...(customer.phone ? [`Phone: ${customer.phone}`] : []),
-                        ...(customer.address ? doc.splitTextToSize(`Address: ${customer.address}`, boxW - inset - 4) : []),
+                        ...(customer.address
+                            ? doc.splitTextToSize(`Address: ${customer.address}`, boxW - inset - 4)
+                            : []),
                     ];
                     const deliveryRows = [
                         ["Preferred Date", customer.date ? formatDisplayDate(customer.date) : "-"],
@@ -4711,7 +4769,11 @@
                     };
                     drawCard(margin, "BILL TO", COLOR.violet);
                     font("bold", 10.5, COLOR.dark);
-                    doc.text(doc.splitTextToSize(customer.workshop || "Customer", boxW - inset - 4)[0], margin + inset, y + 12.5);
+                    doc.text(
+                        doc.splitTextToSize(customer.workshop || "Customer", boxW - inset - 4)[0],
+                        margin + inset,
+                        y + 12.5
+                    );
                     font("normal", 9, COLOR.text);
                     billLines.forEach((line, i) => doc.text(line, margin + inset, y + 17.5 + i * 5));
 
@@ -5234,7 +5296,10 @@
                 { name: "Radhe2 Motors Harinarayan Benar", phone: "8560973756" },
                 { name: "Piyush Auto Jeetu Dryclean Benar", phone: "9529832888" },
                 { name: "RJ Car Wash Dhawas Jeetu", phone: "9929954088" },
-                { name: "NM Motors & Services Near Pinjrapol Gaushala Sanaganer HDFC ke Samne Wali Gali", phone: "9351139855" },
+                {
+                    name: "NM Motors & Services Near Pinjrapol Gaushala Sanaganer HDFC ke Samne Wali Gali",
+                    phone: "9351139855",
+                },
                 { name: "Shree Barbarik Motors Shubham Lalchandpura", phone: "9783468966" },
                 { name: "Aslam Khan Kalwar Rd", phone: "8824366561" },
                 { name: "GajKesari Wheels VKI Rd1 Paliwal", phone: "9001090375" },
@@ -5255,15 +5320,24 @@
                 { name: "Siddhi Vinayak Motors Harmada Kanaram", phone: "7357477480" },
                 { name: "TNT Four Wheel Motors Manoj Pvt Ltd", phone: "9530205111" },
                 { name: "Mahesh Honda Ram Ratan/Rajender Iscon Temple", phone: "9649042197" },
-                { name: "Automobile Car Repair Rakesh Mahapura Ref Suresh Machnic Om Automobile 200 Ft Rd", phone: "7792939657" },
-                { name: "Final Car Shine Detailing Abhishek Goliyawas Near Baba Paradise Iscon Temple", phone: "8890093474" },
+                {
+                    name: "Automobile Car Repair Rakesh Mahapura Ref Suresh Machnic Om Automobile 200 Ft Rd",
+                    phone: "7792939657",
+                },
+                {
+                    name: "Final Car Shine Detailing Abhishek Goliyawas Near Baba Paradise Iscon Temple",
+                    phone: "8890093474",
+                },
                 { name: "Balaji Motors Kirni Palace Vaish", phone: "7891816363" },
                 { name: "Akar Fourwheel Jharkhand Narender", phone: "7791873332" },
                 { name: "Kunal Goods A/C", phone: "8561049848" },
                 { name: "KishanShivMotorSarasDairyWaliGal", phone: "7733872425" },
                 { name: "JK Motors Hiralal Hatoj", phone: "9929368421" },
                 { name: "Shree Shyam Honda Care Near Aaditya Wheel Sirsi Rd", phone: "8955322050" },
-                { name: "Shree Yade Motors Narendra Sirsi Link Rd To Kalwar Rd Hatoj Ref Sagar Lalchandpura", phone: "7023234939" },
+                {
+                    name: "Shree Yade Motors Narendra Sirsi Link Rd To Kalwar Rd Hatoj Ref Sagar Lalchandpura",
+                    phone: "7023234939",
+                },
                 { name: "Pooja Service Center Swarn Garden", phone: "9799176600" },
                 { name: "RK Motor Kapoor BenarRd Ref Jetu", phone: "9829534317" },
                 { name: "Vinayak Car Zone Amit Dousa Ref Anil A/C Vipul", phone: "8441820357" },
@@ -5282,14 +5356,20 @@
                 { name: "Saini Motors Lalit Gokulpura Kalwar Rd Ref Tarachand", phone: "8560946507" },
                 { name: "Krishna Car Care Sonu Heera Path Ke Samne", phone: "9950830237" },
                 { name: "United Automobile Pawan Sumer Nagar Ref Kapil Kadwa", phone: "9610327744" },
-                { name: "Detailing Studio Rahul Near Tejaji Mandir Patrakar Rd Ref Madan Detailing", phone: "8561859659" },
+                {
+                    name: "Detailing Studio Rahul Near Tejaji Mandir Patrakar Rd Ref Madan Detailing",
+                    phone: "8561859659",
+                },
                 { name: "Resolve Auto Prashant Kotpulti Ref Final Shine Detailing", phone: "9828546444" },
                 { name: "Kalu Manyawas Ref SS Motors Manyawas", phone: "8107344766" },
                 { name: "Vishwakarma Motors Rajesh Deoli", phone: "9950451084" },
                 { name: "Ramashish Automotive Surgeon Dadudayal Nagar Ref Chiranji", phone: "8233773228" },
                 { name: "Shyam Maharani Gard Amit Laxman", phone: "9057070999" },
                 { name: "Veer Tejaji Motor Narender Niwaru Rd", phone: "8619231060" },
-                { name: "Shree Shyam Motors Shiv Prasad Kanakpura Vaishali Marg Saras Dairy Wali Gali", phone: "8387877077" },
+                {
+                    name: "Shree Shyam Motors Shiv Prasad Kanakpura Vaishali Marg Saras Dairy Wali Gali",
+                    phone: "8387877077",
+                },
                 { name: "Sawariya Service Motors Hansraj Todi Harmada", phone: "8209227899" },
                 { name: "Shree Shyam Motors Ramlal Murlipura", phone: "9314930051" },
                 { name: "Kaal Bhairav Service Center Nemichand Gandhi Path West", phone: "7073265290" },
@@ -5316,9 +5396,15 @@
                 { name: "Lal Jain Mandir", phone: "9214629409" },
                 { name: "Bajrang Motors Chiranji Kalwar Rd", phone: "9314232538" },
                 { name: "Shree Om Automobile 200 Ft Rani Sati Nagar", phone: "9928486236" },
-                { name: "Jagdamba Motors & Car Care Shankar Jobner Rd Kalwar Rd Ref Sohan Bajrang", phone: "9672396394" },
+                {
+                    name: "Jagdamba Motors & Car Care Shankar Jobner Rd Kalwar Rd Ref Sohan Bajrang",
+                    phone: "9672396394",
+                },
                 { name: "Car Clinic rajendrChetan Iscon T", phone: "7878355926" },
-                { name: "Aaditya Wheel Care Shreekant Sirsi Rd Near Bharat Motor Ref Sagar Motors", phone: "9887459591" },
+                {
+                    name: "Aaditya Wheel Care Shreekant Sirsi Rd Near Bharat Motor Ref Sagar Motors",
+                    phone: "9887459591",
+                },
                 { name: "Vinayak Motors Kalwar Rd Tarachand", phone: "9782220445" },
                 { name: "Om Shiv Motors Sharu Harmada", phone: "7340159191" },
                 { name: "Krishna Car Clinic Raju Harmada", phone: "7073656666" },
@@ -5334,14 +5420,23 @@
                 { name: "Preeti Jain Rajat Path New Sanganer Rd", phone: "9413114763" },
                 { name: "NemiChand KS Ser Cnter Newta Rd", phone: "8385863171" },
                 { name: "Shree Govind Motors Govind Ji Narayan Vihar Ref Rahul Swarn Garden", phone: "9929788875" },
-                { name: "Shree Shyam JP Motors Mukesh Mukundpura Bhankrota Ref Aaditya Wheel Sirsi Rd", phone: "9610935250" },
+                {
+                    name: "Shree Shyam JP Motors Mukesh Mukundpura Bhankrota Ref Aaditya Wheel Sirsi Rd",
+                    phone: "9610935250",
+                },
                 { name: "Siya Plywood Muhana Mandi Rd d.s", phone: "8740822607" },
                 { name: "Shree Vinayak Car Benar Surender/Rajender/Mansingh", phone: "9782661097" },
-                { name: "Rajshree Motors Ramkaran Kalwar Rd Near Parth Motors Ke Aage Wali Gali Ref Hiralal", phone: "9314664155" },
+                {
+                    name: "Rajshree Motors Ramkaran Kalwar Rd Near Parth Motors Ke Aage Wali Gali Ref Hiralal",
+                    phone: "9314664155",
+                },
                 { name: "Ambica Motors Haldighati Marg Near Shopping Arcade", phone: "9887722022" },
                 { name: "Mahalaxmi Mt Rispal Sarna du ref", phone: "8890259562" },
                 { name: "Mugal Motors Mustkim DuduSavarda", phone: "9462012301" },
-                { name: "Jai Maalaxmi Service Dayaram Nanu Puri Kalwar Rd Kanta Chouraya Transformer Wali Gali", phone: "9610846997" },
+                {
+                    name: "Jai Maalaxmi Service Dayaram Nanu Puri Kalwar Rd Kanta Chouraya Transformer Wali Gali",
+                    phone: "9610846997",
+                },
                 { name: "Dashrath Auric New Sanganer Rd Ref Vipul Pradeep", phone: "9057322281" },
                 { name: "Randhir Ji Hotel Bagru Rajat Path", phone: "9828480555" },
                 { name: "Pawan Kumar Dudu Ref Krishna Kalu", phone: "7062553840" },
@@ -5349,7 +5444,10 @@
                 { name: "MD Motors Jawahar Circle Ref Raja Ram Neha Motor Washing Boy", phone: "" },
                 { name: "Sabir Bhai Ref Yashwant", phone: "9828932844" },
                 { name: "Mukund Mittal Kota", phone: "" },
-                { name: "New Prem Motors Madan Hightension Wali Puliya Service Lane Pr Benad Se Aage", phone: "9929239052" },
+                {
+                    name: "New Prem Motors Madan Hightension Wali Puliya Service Lane Pr Benad Se Aage",
+                    phone: "9929239052",
+                },
                 { name: "K.P. Automative Mansarovar", phone: "" },
                 { name: "Jyoti Automobile Jitendra Sirsi Rd Ref Aaditya Wheel", phone: "8696800493" },
                 { name: "Chamak Automobile Near Parth Motors Kalwar Rd", phone: "9001690369" },
@@ -5369,7 +5467,10 @@
                 { name: "Krishna Auto Naveen Maharani Grd", phone: "9529610405" },
                 { name: "TVS Service Center Sanjay Near Veeru Bike Jhotwara", phone: "9351390561" },
                 { name: "Dead A/C's", phone: "" },
-                { name: "Jai Mahalaxmi Automobile Kanaram Kata Chouraya Kalwar Rd Kirni Fatak Ganesh Mandir", phone: "9602185083" },
+                {
+                    name: "Jai Mahalaxmi Automobile Kanaram Kata Chouraya Kalwar Rd Kirni Fatak Ganesh Mandir",
+                    phone: "9602185083",
+                },
                 { name: "Sunil Kumawat Vipul Jhotwara", phone: "7427855416" },
                 { name: "Boy Neha Motor", phone: "" },
                 { name: "RJ13 Automobile Manpreet 200 Ft", phone: "9982986180" },
@@ -5394,7 +5495,9 @@
 
             // Reduce any input (+91, spaces, dashes) to the last 10 digits.
             function normalizePhone(value) {
-                return String(value || "").replace(/\D/g, "").slice(-10);
+                return String(value || "")
+                    .replace(/\D/g, "")
+                    .slice(-10);
             }
 
             // phone -> [workshop names]; one number can belong to more than one workshop.
@@ -5484,7 +5587,9 @@
                     fillSlots();
                     document.getElementById(`${p}-date-error`)?.classList.add("hidden");
                 });
-                slotEl.addEventListener("change", () => document.getElementById(`${p}-slot-error`)?.classList.add("hidden"));
+                slotEl.addEventListener("change", () =>
+                    document.getElementById(`${p}-slot-error`)?.classList.add("hidden")
+                );
                 fillSlots();
 
                 const defaultHint = hintEl.textContent;
@@ -5511,7 +5616,8 @@
                     if (id !== lookupId || phoneDigits() !== digits) return;
                     hideChoices();
                     if (results === null) {
-                        hintEl.textContent = "Couldn't check our customer records right now - please type your workshop name below.";
+                        hintEl.textContent =
+                            "Couldn't check our customer records right now - please type your workshop name below.";
                         return;
                     }
                     const names = results.map((r) => r.name).filter(Boolean);
@@ -5604,7 +5710,9 @@
             function customerMessageLines(customer) {
                 const lines = [];
                 if (customer.workshop) {
-                    lines.push(`🏪 *Workshop:* ${customer.workshop}${customer.registered ? " ✅ (Khatabook customer)" : ""}`);
+                    lines.push(
+                        `🏪 *Workshop:* ${customer.workshop}${customer.registered ? " ✅ (Khatabook customer)" : ""}`
+                    );
                 }
                 lines.push(
                     `📱 *WhatsApp:* ${APP.COUNTRY_CODE} ${customer.phone}`,
@@ -6072,7 +6180,8 @@
                     // Animate `translate` (not `transform`) so hover lift/tilt transforms still apply.
                     c.style.opacity = "0";
                     c.style.translate = "0 30px";
-                    c.style.transition = "opacity 0.6s ease, translate 0.6s ease, transform 0.35s ease, box-shadow 0.35s ease";
+                    c.style.transition =
+                        "opacity 0.6s ease, translate 0.6s ease, transform 0.35s ease, box-shadow 0.35s ease";
                     obs.observe(c);
                 });
             }
