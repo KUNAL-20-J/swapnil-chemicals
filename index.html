@@ -4438,78 +4438,6 @@
                 return invoiceLogoPromise;
             }
 
-            // Signature is optional too. The source PNG has large empty margins, so it is trimmed to the
-            // inked area on a canvas; resolves to { data, ratio } (ratio = width / height) or null.
-            let invoiceSignPromise = null;
-            function loadInvoiceSign() {
-                if (!invoiceSignPromise) {
-                    invoiceSignPromise = fetch("sign.jpg")
-                        .then((res) => (res.ok ? res.blob() : null))
-                        .then(
-                            (blob) =>
-                                blob &&
-                                new Promise((resolve) => {
-                                    const reader = new FileReader();
-                                    reader.onload = () => resolve(reader.result);
-                                    reader.onerror = () => resolve(null);
-                                    reader.readAsDataURL(blob);
-                                })
-                        )
-                        .then(
-                            (dataUrl) =>
-                                dataUrl &&
-                                new Promise((resolve) => {
-                                    const img = new Image();
-                                    img.onload = () => {
-                                        try {
-                                            const w = img.naturalWidth;
-                                            const h = img.naturalHeight;
-                                            const canvas = document.createElement("canvas");
-                                            canvas.width = w;
-                                            canvas.height = h;
-                                            const ctx = canvas.getContext("2d");
-                                            ctx.drawImage(img, 0, 0);
-                                            const px = ctx.getImageData(0, 0, w, h).data;
-                                            let minX = w,
-                                                minY = h,
-                                                maxX = -1,
-                                                maxY = -1;
-                                            for (let yy = 0; yy < h; yy++) {
-                                                for (let xx = 0; xx < w; xx++) {
-                                                    const i = (yy * w + xx) * 4;
-                                                    // Ink = visible and not near-white (handles transparent or white backgrounds).
-                                                    if (px[i + 3] > 40 && px[i] + px[i + 1] + px[i + 2] < 690) {
-                                                        if (xx < minX) minX = xx;
-                                                        if (xx > maxX) maxX = xx;
-                                                        if (yy < minY) minY = yy;
-                                                        if (yy > maxY) maxY = yy;
-                                                    }
-                                                }
-                                            }
-                                            if (maxX < 0) return resolve(null); // blank image
-                                            const pad = 8;
-                                            minX = Math.max(0, minX - pad);
-                                            minY = Math.max(0, minY - pad);
-                                            const cw = Math.min(w, maxX + pad + 1) - minX;
-                                            const ch = Math.min(h, maxY + pad + 1) - minY;
-                                            const out = document.createElement("canvas");
-                                            out.width = cw;
-                                            out.height = ch;
-                                            out.getContext("2d").drawImage(canvas, minX, minY, cw, ch, 0, 0, cw, ch);
-                                            resolve({ data: out.toDataURL("image/png"), ratio: cw / ch });
-                                        } catch {
-                                            resolve(null);
-                                        }
-                                    };
-                                    img.onerror = () => resolve(null);
-                                    img.src = dataUrl;
-                                })
-                        )
-                        .catch(() => null);
-                }
-                return invoiceSignPromise;
-            }
-
             // Google Pay / UPI QR for the invoice - same UPI link as the QR in the Contact section (no amount,
             // the customer enters it in the app). Loaded as an <img> (allowed by img-src; the service sends
             // CORS headers) and copied to a canvas so jsPDF gets a PNG. Resolves to a data URL or null.
@@ -4561,10 +4489,9 @@
                     btn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Preparing PDF...';
                 }
                 try {
-                    const [JsPDF, logo, sign, upiQr] = await Promise.all([
+                    const [JsPDF, logo, upiQr] = await Promise.all([
                         loadJsPdf(),
                         loadInvoiceLogo(),
-                        loadInvoiceSign(),
                         loadInvoiceQr(),
                     ]);
                     const doc = new JsPDF({ unit: "mm", format: "a4" });
@@ -4880,7 +4807,7 @@
                     doc.text(pdfAmount(grandTotal), right - 5, y + totalsH - 4.6, { align: "right" });
                     y += totalsH + 9;
 
-                    // ---- Payment details, signature and terms ----
+                    // ---- Payment details and terms ----
                     const payH = 32;
                     const closingH = payH + 26;
                     if (y + closingH > bottomLimit) newPage();
@@ -4919,26 +4846,6 @@
 
                     font("bold", 9, COLOR.dark);
                     doc.text(`For ${INVOICE_SELLER.name}`, right, y + 4, { align: "right" });
-                    if (sign) {
-                        // Fit the trimmed signature into the 52 x 12 mm box above the line, right-aligned.
-                        let signW = 52;
-                        let signH = signW / sign.ratio;
-                        if (signH > 12) {
-                            signH = 12;
-                            signW = signH * sign.ratio;
-                        }
-                        try {
-                            doc.addImage(sign.data, "PNG", right - signW, y + 17.5 - signH, signW, signH);
-                        } catch {
-                            // A bad image must not block the invoice; the blank line stays for a manual signature.
-                        }
-                    }
-                    doc.setDrawColor(...COLOR.violet);
-                    doc.setLineWidth(0.4);
-                    doc.line(right - 52, y + 18, right, y + 18);
-                    doc.setLineWidth(0.2);
-                    font("normal", 8.5, COLOR.muted);
-                    doc.text("Authorised Signatory", right, y + 22.5, { align: "right" });
 
                     y += payH + 8;
                     font("bold", 8, COLOR.violet);
