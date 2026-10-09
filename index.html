@@ -1,3 +1,249 @@
+<?php
+declare(strict_types=1);
+
+/*
+ * Khatabook customer list - SERVER SIDE ONLY.
+ * This array is never sent to the browser. The enquiry form POSTs one phone number to this
+ * same file and gets back only the workshop name(s) registered to that number.
+ * Format: [workshop name, 10-digit mobile]. Add one line per customer.
+ */
+const KHATABOOK_CUSTOMERS = [
+    ['Shree Patel Motos Chiranji Govindapura', '9214232538'],
+    ['Detailing Street Madan Maharani Garden', '9828149095'],
+    ['Suresh Dousa', '8947966415'],
+    ['Shree Shyam Motors Anil Muhana Mandi House Gujar Ki Thadi', '8003470247'],
+    ['Aashi Motors Goliyawas Ref Aarthav Varun Path', '9509840866'],
+    ['Mangalam Motors Mangyawas', ''],
+    ['JSS Autoword Rakesh Bharat Mata Circle', '8952859279'],
+    ['Shree Khatushyam Motors Bansi Bhankrota Ref JSS Boy Kaka', '9828150934'],
+    ['Neha Motors Swarn Garden Dinesh', '8058999997'],
+    ['Radhe2 Motors Harinarayan Benar', '8560973756'],
+    ['Piyush Auto Jeetu Dryclean Benar', '9529832888'],
+    ['RJ Car Wash Dhawas Jeetu', '9929954088'],
+    ['NM Motors & Services Near Pinjrapol Gaushala Sanaganer HDFC ke Samne Wali Gali', '9351139855'],
+    ['Shree Barbarik Motors Shubham Lalchandpura', '9783468966'],
+    ['Aslam Khan Kalwar Rd', '8824366561'],
+    ['GajKesari Wheels VKI Rd1 Paliwal', '9001090375'],
+    ['Mahalaxmi Motors Amarchand Sirsi Rd', '9636667961'],
+    ['Indra Car Care Puran Niwaru Rd', '8955687407'],
+    ['Sawariya Motors Kishan Lalchandp', '7737264201'],
+    ['ShreeBalajiMotorsPappuLalchandpu', '9950489148'],
+    ['Sagar Motors Lalchandpura Rd', '9782970565'],
+    ['Shree Balaji Motors Raju Hatoj Ref Sohan Bajrang', '8769403078'],
+    ['Vishwakarma Motors Suraj Maharani Garden Wali Gali', '9887754432'],
+    ['Rohit Car Satnarayan Niwaru Rd', '9829413339'],
+    ['S.P. Jain Goods A/C', '9314210630'],
+    ['Arthav Motors Jagdish Saini Near Panchi Peta Wali Gali', '9785915067'],
+    ['Auto Elevate Anshul Bharat Mata Circle', '7737733777'],
+    ['Manesh Dhawas Puliya Ref Vipul Satnaryan Bharat Motors', '9983972227'],
+    ['Shree IG Automobile Suraj Dhawas', '9799296553'],
+    ['CS Motors Kamani Circle Jhotwara', '9610102025'],
+    ['Siddhi Vinayak Motors Harmada Kanaram', '7357477480'],
+    ['TNT Four Wheel Motors Manoj Pvt Ltd', '9530205111'],
+    ['Mahesh Honda Ram Ratan/Rajender Iscon Temple', '9649042197'],
+    ['Automobile Car Repair Rakesh Mahapura Ref Suresh Machnic Om Automobile 200 Ft Rd', '7792939657'],
+    ['Final Car Shine Detailing Abhishek Goliyawas Near Baba Paradise Iscon Temple', '8890093474'],
+    ['Balaji Motors Kirni Palace Vaish', '7891816363'],
+    ['Akar Fourwheel Jharkhand Narender', '7791873332'],
+    ['Kunal Goods A/C', '8561049848'],
+    ['KishanShivMotorSarasDairyWaliGal', '7733872425'],
+    ['JK Motors Hiralal Hatoj', '9929368421'],
+    ['Shree Shyam Honda Care Near Aaditya Wheel Sirsi Rd', '8955322050'],
+    ['Shree Yade Motors Narendra Sirsi Link Rd To Kalwar Rd Hatoj Ref Sagar Lalchandpura', '7023234939'],
+    ['Pooja Service Center Swarn Garden', '9799176600'],
+    ['RK Motor Kapoor BenarRd Ref Jetu', '9829534317'],
+    ['Vinayak Car Zone Amit Dousa Ref Anil A/C Vipul', '8441820357'],
+    ['RasoAutoStudioSwarnGrdRefLaxman', '9001623413'],
+    ['Krishna Motors Manoj Himalaya Nirman Nagar Nale Pr', '9829018915'],
+    ['Shree Balaji Motors Vinod 5 No. Road Benar Ke Aage', '9549407979'],
+    ['Shree Shyam Motors Govind Nagar', '7792863139'],
+    ['Singodiya Car Service Vinod Nagal Jaisa Bora Ref Pramod', '9887171117'],
+    ['Balaji Motors Khora Bisal', '9602185083'],
+    ['Lokesh Sen Dryclean Wala Transport Nagar', '9351639102'],
+    ['Shyam Car Expert Champapura Kalwar Rd Ref Nemichand Machanic Balaji Kirni', ''],
+    ['Abhi chitrakoot ref car cl Beta', '7339798280'],
+    ['Tanishka Bike Prakash Todi Harmada', '9660328585'],
+    ['Mansingh Benar', ''],
+    ['Salasar Motors Kalwar Rd Ref Parth Motors', '9829821084'],
+    ['Saini Motors Lalit Gokulpura Kalwar Rd Ref Tarachand', '8560946507'],
+    ['Krishna Car Care Sonu Heera Path Ke Samne', '9950830237'],
+    ['United Automobile Pawan Sumer Nagar Ref Kapil Kadwa', '9610327744'],
+    ['Detailing Studio Rahul Near Tejaji Mandir Patrakar Rd Ref Madan Detailing', '8561859659'],
+    ['Resolve Auto Prashant Kotpulti Ref Final Shine Detailing', '9828546444'],
+    ['Kalu Manyawas Ref SS Motors Manyawas', '8107344766'],
+    ['Vishwakarma Motors Rajesh Deoli', '9950451084'],
+    ['Ramashish Automotive Surgeon Dadudayal Nagar Ref Chiranji', '8233773228'],
+    ['Shyam Maharani Gard Amit Laxman', '9057070999'],
+    ['Veer Tejaji Motor Narender Niwaru Rd', '8619231060'],
+    ['Shree Shyam Motors Shiv Prasad Kanakpura Vaishali Marg Saras Dairy Wali Gali', '8387877077'],
+    ['Sawariya Service Motors Hansraj Todi Harmada', '8209227899'],
+    ['Shree Shyam Motors Ramlal Murlipura', '9314930051'],
+    ['Kaal Bhairav Service Center Nemichand Gandhi Path West', '7073265290'],
+    ['JMD Car Workshop Chetan Kalwar Rd Sirsi Rd Ref Sagar Lalchandpura', '7690816190'],
+    ['Pooja Honda Care Kapil Near Iscon Temple Ref Mahesh Honda', '9785806702'],
+    ['Shree Govindam Motors Sirsi Bindayaka Se Aage Siwaru Mod Par', '9269076232'],
+    ['Shweta Sanganer', '9636353506'],
+    ['Clean Gulaabi Col Jitender Plot 81 Marudhar Nagar DCM', '7086009943'],
+    ['Shree Ram Service Center Arvind Ji Deoli', '9887882529'],
+    ['Apna Service Center Suraj Newta', '8385887307'],
+    ['Salasar Motor Raju Mali Niwaru Rd Ref Rohit Car', '9950755502'],
+    ['Veeru Bike Jhotwara', '8003703229'],
+    ['Raj Motors Rakesh Benar', '9829074904'],
+    ['Raj Motors Raju Sodala', '9351651521'],
+    ['Krazy Computer Agency Area NearBy Jaipur House Deoli', '9829540867'],
+    ['Aryan Choudhary Bagru Ref Prahalad Bagru', '9982001699'],
+    ['Kitara Garages Pvt Ltd Yash Near Modern School', '8696656668'],
+    ['Mahadev Motors Gaurav/Mahender Niwaru Rd', '7014789272'],
+    ['Detailing Singh Akshat Singh Chopra Wali Gali', '6377516060'],
+    ['Shubham Automobiles Shrawan Swarn Garden Rd', '9829403724'],
+    ['Right Wheel Care Nishant Hotl Pa', '7877735887'],
+    ['SS Car Zone Near Pooja Motors Manyawas Ref Rahul Swarn Garden', '9667538144'],
+    ['Jai Shree Shyam Motors Gopi/Ramesh Kalwar Rd', '9024560849'],
+    ['Lal Jain Mandir', '9214629409'],
+    ['Bajrang Motors Chiranji Kalwar Rd', '9314232538'],
+    ['Shree Om Automobile 200 Ft Rani Sati Nagar', '9928486236'],
+    ['Jagdamba Motors & Car Care Shankar Jobner Rd Kalwar Rd Ref Sohan Bajrang', '9672396394'],
+    ['Car Clinic rajendrChetan Iscon T', '7878355926'],
+    ['Aaditya Wheel Care Shreekant Sirsi Rd Near Bharat Motor Ref Sagar Motors', '9887459591'],
+    ['Vinayak Motors Kalwar Rd Tarachand', '9782220445'],
+    ['Om Shiv Motors Sharu Harmada', '7340159191'],
+    ['Krishna Car Clinic Raju Harmada', '7073656666'],
+    ['Shree Sawariya Motors Sunil Kalwar Rd Hatoj Petrol Pump', '8058481002'],
+    ['Parth Motors Khadelwal Dhaba Ke Aage Wali Gali Kalwar Rd', '9549934128'],
+    ['Shree Shyam Motors Deepchand Niwaru Rd Ref Indra Car', '9772971134'],
+    ['Hitanshu Motors Swarn Gar Rahul', '9664274449'],
+    ['Guru Shree Shyam Motors Near Jalmahal Amer Rd', '8058942632'],
+    ['Detailing Shiv Kapil Kadwa Bagru', '7742248689'],
+    ['Ram Gopal Meena Sanjhariya', '8104522311'],
+    ['Jai Shree Shyam Mukesh Hatoj', '8947947640'],
+    ['Buddhi Prakash Boy Neha Motor Swarn Garden 6D', '9680700939'],
+    ['Preeti Jain Rajat Path New Sanganer Rd', '9413114763'],
+    ['NemiChand KS Ser Cnter Newta Rd', '8385863171'],
+    ['Shree Govind Motors Govind Ji Narayan Vihar Ref Rahul Swarn Garden', '9929788875'],
+    ['Shree Shyam JP Motors Mukesh Mukundpura Bhankrota Ref Aaditya Wheel Sirsi Rd', '9610935250'],
+    ['Siya Plywood Muhana Mandi Rd d.s', '8740822607'],
+    ['Shree Vinayak Car Benar Surender/Rajender/Mansingh', '9782661097'],
+    ['Rajshree Motors Ramkaran Kalwar Rd Near Parth Motors Ke Aage Wali Gali Ref Hiralal', '9314664155'],
+    ['Ambica Motors Haldighati Marg Near Shopping Arcade', '9887722022'],
+    ['Mahalaxmi Mt Rispal Sarna du ref', '8890259562'],
+    ['Mugal Motors Mustkim DuduSavarda', '9462012301'],
+    ['Jai Maalaxmi Service Dayaram Nanu Puri Kalwar Rd Kanta Chouraya Transformer Wali Gali', '9610846997'],
+    ['Dashrath Auric New Sanganer Rd Ref Vipul Pradeep', '9057322281'],
+    ['Randhir Ji Hotel Bagru Rajat Path', '9828480555'],
+    ['Pawan Kumar Dudu Ref Krishna Kalu', '7062553840'],
+    ['Shree Bagdawat Motors Ravi Dhawas', '8078688850'],
+    ['MD Motors Jawahar Circle Ref Raja Ram Neha Motor Washing Boy', ''],
+    ['Sabir Bhai Ref Yashwant', '9828932844'],
+    ['Mukund Mittal Kota', ''],
+    ['New Prem Motors Madan Hightension Wali Puliya Service Lane Pr Benad Se Aage', '9929239052'],
+    ['K.P. Automative Mansarovar', ''],
+    ['Jyoti Automobile Jitendra Sirsi Rd Ref Aaditya Wheel', '8696800493'],
+    ['Chamak Automobile Near Parth Motors Kalwar Rd', '9001690369'],
+    ['Tata Motors Roshan Manish Shekha', '8769435615'],
+    ['Khatu Naresh Automobile Satyaveer Benar Ref Sisodiya Motor', '9001520070'],
+    ['Balaji Motors Vikas Choudhary 200 Ft Rd', '8946813546'],
+    ['Bharat Motor Satnarayan Sirsi Rd', '9983982227'],
+    ['Monu Parth Motors Employee Kalwar Rd', '8290458875'],
+    ['Balaji Motors Swarn Garden Jaideep Sharma', '9414092244'],
+    ['Pankaj Sharma Dryclean Maharani Garden', '8094502118'],
+    ['Bhati Transport Jhotwara', '9828012649'],
+    ['Jagdamba Motors Niwaru Rd Chetan Ref Sagar Motors', ''],
+    ['Suman Tyre Zone Mukesh Alignment Wala Benar Rd', '9680106635'],
+    ['Vinayak Motors Mukesh Benar Rd Rico Ind Area', '8947953100'],
+    ['Maa Vaishnav Car Care Mansarovar Ind Area New Sanganer Rd', ''],
+    ['Shree Balaji Motors Navratan Thikariya', '9602197733'],
+    ['Krishna Auto Naveen Maharani Grd', '9529610405'],
+    ['TVS Service Center Sanjay Near Veeru Bike Jhotwara', '9351390561'],
+    ['Dead A/C\'s', ''],
+    ['Jai Mahalaxmi Automobile Kanaram Kata Chouraya Kalwar Rd Kirni Fatak Ganesh Mandir', '9602185083'],
+    ['Sunil Kumawat Vipul Jhotwara', '7427855416'],
+    ['Boy Neha Motor', ''],
+    ['RJ13 Automobile Manpreet 200 Ft', '9982986180'],
+    ['Anil Sunil Kumar Dryc Nirman Ngr', '7232028186'],
+    ['Sharma Motors Mohan Sharma Choki Dhani', '9549555588'],
+    ['Raju Kumawat Sup Vipul Motors', '9509610108'],
+    ['Pink City Honda VKI Rd No 1 Vipul TV Paliwal', ''],
+    ['Triveni Honda Kalwar Rd', ''],
+    ['Shree Krishna Car Rajendra Dousa', ''],
+    ['Sonal Ji Barkat Nagar', '8209704720'],
+    ['Babulal Ji Phulera', '9929399641'],
+    ['Bajaj Auto Near Gopi Kalwar Rd', ''],
+    ['Robin Automobile 200 Ft Rd Ajmer Rd Saras Dairy Wali Gali', '8003040453'],
+    ['Salman Khan 200 Ft Rd Robin Wala', '8740874044'],
+    ['Shree Vinayak Prahalad Dudu', '9928740785'],
+    ['Yogendra F-22 Govind Tower Near Bajrang Motor Kalwar Rd', '9785750572'],
+    ['Anna Auto Parts Mansarovar', ''],
+    ['Soni Auto OLX Car Near Iscon Temple', '8952841168'],
+    ['Riddhi Siddhi Motors Deepak Near Iscon Temple', '9929466019'],
+    ['Praveen Kota', '9414488656'],
+];
+
+const LOOKUP_MAX_REQUESTS = 20; // per visitor IP ...
+const LOOKUP_WINDOW_SECONDS = 600; // ... per 10 minutes, so the endpoint can't be used to scan numbers
+
+// Real response headers: unlike the <meta> CSP below, these are honoured for framing protection.
+header('X-Frame-Options: DENY');
+header("Content-Security-Policy: frame-ancestors 'none'");
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
+function sc_send_json(int $status, array $body): void
+{
+    http_response_code($status);
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store');
+    echo json_encode($body, JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// Sliding-window limit kept in a small temp file per hashed IP (no raw IPs are stored).
+// Fails open if the temp dir is unusable, so a hosting quirk never breaks the enquiry form.
+function sc_is_rate_limited(string $ip): bool
+{
+    $file = sys_get_temp_dir() . '/sc_lookup_' . hash('sha256', $ip) . '.json';
+    $handle = @fopen($file, 'c+');
+    if ($handle === false) {
+        error_log('Swapnil Chemicals: workshop lookup rate-limit file is not writable');
+        return false;
+    }
+    flock($handle, LOCK_EX);
+    $now = time();
+    $hits = json_decode((string) stream_get_contents($handle), true);
+    $hits = array_values(array_filter(
+        is_array($hits) ? $hits : [],
+        static fn ($t): bool => is_int($t) && $t > $now - LOOKUP_WINDOW_SECONDS
+    ));
+    $limited = count($hits) >= LOOKUP_MAX_REQUESTS;
+    if (!$limited) {
+        $hits[] = $now;
+        ftruncate($handle, 0);
+        rewind($handle);
+        fwrite($handle, json_encode($hits));
+    }
+    flock($handle, LOCK_UN);
+    fclose($handle);
+    return $limited;
+}
+
+// POST (not GET) so customers' phone numbers never land in server access logs or browser history.
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && ($_POST['action'] ?? '') === 'workshop_lookup') {
+    $phone = substr(preg_replace('/\D/', '', (string) ($_POST['phone'] ?? '')), -10);
+    if (preg_match('/^[6-9]\d{9}$/', $phone) !== 1) {
+        sc_send_json(400, ['error' => 'invalid_phone']);
+    }
+    if (sc_is_rate_limited((string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown'))) {
+        header('Retry-After: ' . LOOKUP_WINDOW_SECONDS);
+        sc_send_json(429, ['error' => 'too_many_requests']);
+    }
+    $names = [];
+    foreach (KHATABOOK_CUSTOMERS as [$name, $customerPhone]) {
+        if ($customerPhone !== '' && substr(preg_replace('/\D/', '', $customerPhone), -10) === $phone) {
+            $names[] = trim($name);
+        }
+    }
+    sc_send_json(200, ['workshops' => $names]);
+}
+?>
 <!doctype html>
 <!-- Automobile 08-10-26-->
 <html lang="en">
@@ -49,7 +295,7 @@
             http-equiv="Content-Security-Policy"
             content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.gstatic.com https://api.qrserver.com; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
         />
-        <!-- frame-ancestors is ignored by browsers when set via <meta>; real clickjacking protection needs an X-Frame-Options/CSP response header from the server -->
+        <!-- frame-ancestors is ignored in <meta>; the PHP block at the top sends it as a real response header -->
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -697,6 +943,40 @@
                 padding: 14px 20px;
                 border-top: 1px solid #e2e8f0;
                 background: #f8fafc;
+            }
+
+            .cart-item-thumb {
+                width: 40px;
+                height: 40px;
+                flex-shrink: 0;
+                object-fit: contain;
+                border-radius: 8px;
+                background: #f8fafc;
+            }
+
+            .cart-item-remove {
+                background: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            .cart-browse-btn {
+                display: block;
+                margin: 12px auto 0;
+                padding: 6px 16px;
+                border: 1.5px solid #cbd5e1;
+                border-radius: 999px;
+                background: transparent;
+                color: #475569;
+                font-size: 0.8rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+            .cart-browse-btn:hover {
+                border-color: var(--brand-accent);
+                color: var(--brand-accent);
             }
 
             .cart-empty-msg {
@@ -1383,6 +1663,15 @@
             .assistant-chip:hover {
                 border-color: #3b82f6;
                 color: #3b82f6;
+            }
+
+            .assistant-chip-whatsapp,
+            .assistant-chip-whatsapp:hover {
+                align-self: flex-start;
+                margin-top: -4px;
+                border-color: transparent;
+                background: linear-gradient(135deg, #25d366, #128c7e);
+                color: #fff;
             }
 
             .assistant-input-row {
@@ -3019,7 +3308,7 @@
                             >
                                 <img
                                     src="SC Logo.jpg"
-                                    alt="SC Logo"
+                                    alt="Swapnil Chemicals logo"
                                     fetchpriority="high"
                                     class="w-full h-full object-cover"
                                     width="56"
@@ -3044,7 +3333,7 @@
                                 & Retail
                             </p>
                         </div>
-                        <button
+                        <button type="button"
                             class="cart-icon-btn"
                             data-action="toggle-cart"
                             aria-label="Open cart"
@@ -3154,8 +3443,7 @@
                                     class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
                                 >
                                     <i
-                                        class="fas fa-phone-alt text-white text-2xl"
-                                        style="transform: rotate(-270deg)"
+                                        class="fas fa-phone-alt fa-rotate-90 text-white text-2xl"
                                         aria-hidden="true"
                                     ></i>
                                 </div>
@@ -3419,8 +3707,7 @@
                                             class="contact-icon w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg"
                                         >
                                             <i
-                                                class="fas fa-phone-alt text-white text-2xl"
-                                                style="transform: rotate(-270deg)"
+                                                class="fas fa-phone-alt fa-rotate-90 text-white text-2xl"
                                                 aria-hidden="true"
                                             ></i>
                                         </div>
@@ -3494,7 +3781,7 @@
                                                 width="75"
                                                 height="75"
                                                 class="rounded-lg"
-                                                alt="UPI QR"
+                                                alt="UPI QR code to pay Swapnil Chemicals"
                                                 loading="lazy"
                                                 decoding="async"
                                             />
@@ -3515,7 +3802,7 @@
             </section>
         </main>
 
-        <button id="scrollToTop" class="fixed bottom-6 right-6 text-white hidden z-50" aria-label="Scroll to top">
+        <button type="button" id="scrollToTop" class="fixed bottom-6 right-6 text-white hidden z-50" aria-label="Scroll to top">
             <i class="fas fa-arrow-up text-lg" aria-hidden="true"></i>
         </button>
 
@@ -3536,8 +3823,7 @@
                             class="social-icon-link w-12 h-12 rounded-xl flex items-center justify-center transition"
                             aria-label="Call Swapnil Chemicals"
                             ><i
-                                class="fas fa-phone-alt text-lg"
-                                style="transform: rotate(-270deg)"
+                                class="fas fa-phone-alt fa-rotate-90 text-lg"
                                 aria-hidden="true"
                             ></i></a
                         ><a
@@ -3580,8 +3866,8 @@
                     <span class="font-semibold text-gray-700">Total:</span>
                     <span class="font-bold text-lg text-gray-800" id="cartTotal">₹0</span>
                 </div>
-                <button id="cartGpayBtn" class="gpay-btn" data-action="open-cart-enquiry">Send Enquiry</button>
-                <button
+                <button type="button" id="cartGpayBtn" class="gpay-btn" data-action="open-cart-enquiry">Send Enquiry</button>
+                <button type="button"
                     class="w-full mt-2 text-xs text-gray-400 hover:text-red-500 font-semibold py-1"
                     data-action="clear-cart"
                 >
@@ -3590,7 +3876,7 @@
             </div>
         </aside>
 
-        <button
+        <button type="button"
             id="aiAssistantBtn"
             class="ai-assistant-btn"
             data-action="toggle-assistant"
@@ -3698,7 +3984,7 @@
                             placeholder="Delivery address, any specific requirements..."
                         ></textarea>
                     </div>
-                    <button class="enquiry-submit-btn" data-action="submit-enquiry">
+                    <button type="button" class="enquiry-submit-btn" data-action="submit-enquiry">
                         <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry via WhatsApp
                     </button>
                 </div>
@@ -3749,8 +4035,8 @@
                 </p>
                 <p class="added-cart-subtotal">Cart Subtotal: <b id="addedCartSubtotal">₹0</b></p>
                 <div class="added-cart-actions">
-                    <button class="added-cart-continue-btn" data-action="close-added-cart">Continue</button>
-                    <button class="added-cart-viewcart-btn" data-action="view-cart-from-added">View Cart</button>
+                    <button type="button" class="added-cart-continue-btn" data-action="close-added-cart">Continue</button>
+                    <button type="button" class="added-cart-viewcart-btn" data-action="view-cart-from-added">View Cart</button>
                 </div>
             </div>
         </dialog>
@@ -3768,8 +4054,8 @@
                     Are you sure you would like to remove <b id="removeConfirmProductName"></b> from the shopping cart?
                 </p>
                 <div class="added-cart-actions">
-                    <button class="added-cart-continue-btn" data-action="close-remove-confirm">Cancel</button>
-                    <button class="remove-confirm-ok-btn" data-action="confirm-remove">
+                    <button type="button" class="added-cart-continue-btn" data-action="close-remove-confirm">Cancel</button>
+                    <button type="button" class="remove-confirm-ok-btn" data-action="confirm-remove">
                         <i class="fas fa-trash-can" aria-hidden="true"></i> Remove
                     </button>
                 </div>
@@ -3885,7 +4171,7 @@
                             btn.disabled = false;
                         }, 1400);
                     }
-                } catch (err) {
+                } catch {
                     if (btn) btn.title = "Copy failed — please select the text manually";
                 }
             }
@@ -3990,7 +4276,7 @@
                     unit: "per piece",
                     hasLtOptions: true,
                     qtyOptions: [5, 10, 20],
-                    qtyLabel: " pcs",
+                    qtyLabel: "pcs",
                     description: "Ultra soft Micro Towel",
                 },
                 {
@@ -4001,7 +4287,7 @@
                     unit: "per piece",
                     hasLtOptions: true,
                     qtyOptions: [5, 10, 20],
-                    qtyLabel: " pcs",
+                    qtyLabel: "pcs",
                     description: "Ultra soft Micro Towel",
                 },
                 {
@@ -4012,7 +4298,7 @@
                     unit: "per piece",
                     hasLtOptions: true,
                     qtyOptions: [5, 10, 20],
-                    qtyLabel: " pcs",
+                    qtyLabel: "pcs",
                     description: "Ultra soft Micro Towel",
                 },
             ];
@@ -4121,9 +4407,6 @@
                 el.classList.add("bump");
             }
 
-            // Keys already on screen, so only newly added rows play the entrance animation.
-            let renderedCartKeys = new Set();
-
             function updateCartUI() {
                 const keys = Object.keys(cart);
                 const totalItems = keys.reduce((s, k) => s + cart[k].qty, 0);
@@ -4136,16 +4419,15 @@
                 badge.textContent = String(totalItems);
                 if (totalItems !== lastCartBadgeCount && totalItems > 0) bumpElement(badge);
                 lastCartBadgeCount = totalItems;
-
-                const itemsLabel = `${totalItems} item${totalItems === 1 ? "" : "s"}`;
-                const headerCount = document.getElementById("cartHeaderCount");
-                if (headerCount) headerCount.textContent = itemsLabel;
-                const summaryItems = document.getElementById("cartSummaryItems");
-                if (summaryItems) summaryItems.textContent = String(totalItems);
+                // The badge is visual only; screen readers get the count from the button's own name.
+                const cartBtn = document.querySelector(".cart-icon-btn");
+                cartBtn?.setAttribute(
+                    "aria-label",
+                    totalItems ? `Open cart, ${totalItems} item${totalItems === 1 ? "" : "s"}` : "Open cart"
+                );
 
                 if (keys.length === 0) {
-                    renderedCartKeys = new Set();
-                    list.innerHTML = `<div class="cart-empty-msg"><i class="fas fa-shopping-cart text-3xl mb-2 block" aria-hidden="true"></i>Your cart is empty</div>`;
+                    list.innerHTML = `<div class="cart-empty-msg"><i class="fas fa-shopping-cart text-3xl mb-2 block" aria-hidden="true"></i>Your cart is empty<button type="button" class="cart-browse-btn" data-action="browse-products">Browse products</button></div>`;
                     footer.style.display = "none";
                     return;
                 }
@@ -4164,22 +4446,21 @@
                     const safeKey = escapeHtml(key);
 
                     itemsHTML += `<div class="cart-item-row">
-                        <img src="${escapeHtml(product.image)}" alt="" loading="lazy" decoding="async" style="width:40px;height:40px;object-fit:contain;border-radius:8px;background:#f8fafc;flex-shrink:0">
+                        <img src="${escapeHtml(product.image)}" alt="" loading="lazy" decoding="async" width="40" height="40" class="cart-item-thumb">
                         <div class="flex-1 min-w-0">
                             <p class="font-semibold text-gray-800 truncate" title="${name}">${name}</p>
                             <p class="text-xs text-gray-500">${totalQty} ${unit} &bull; ${formatCurrency(lineTotal)}</p>
                         </div>
                         <div class="cart-item-qty-ctrl">
-                            <button class="cart-qty-btn" data-action="cart-qty" data-key="${safeKey}" data-delta="-1" aria-label="Decrease ${name}"${qty <= 1 ? " disabled" : ""}>−</button>
+                            <button type="button" class="cart-qty-btn" data-action="cart-qty" data-key="${safeKey}" data-delta="-1" aria-label="Decrease ${name}"${qty <= 1 ? " disabled" : ""}>−</button>
                             <span class="text-xs font-bold" aria-live="polite">${qty}</span>
-                            <button class="cart-qty-btn" data-action="cart-qty" data-key="${safeKey}" data-delta="1" aria-label="Increase ${name}">+</button>
-                            <button class="cart-item-remove text-red-400 hover:text-red-600 ml-1" data-action="remove-from-cart" data-key="${safeKey}" aria-label="Remove ${name} from cart" style="background:none;border:none;cursor:pointer"><i class="fas fa-trash-can text-xs" aria-hidden="true"></i></button>
+                            <button type="button" class="cart-qty-btn" data-action="cart-qty" data-key="${safeKey}" data-delta="1" aria-label="Increase ${name}">+</button>
+                            <button type="button" class="cart-item-remove text-red-400 hover:text-red-600 ml-1" data-action="remove-from-cart" data-key="${safeKey}" aria-label="Remove ${name} from cart"><i class="fas fa-trash-can text-xs" aria-hidden="true"></i></button>
                         </div>
                     </div>`;
                 });
 
                 list.innerHTML = itemsHTML;
-                renderedCartKeys = new Set(keys);
 
                 const totalEl = document.getElementById("cartTotal");
                 if (totalEl) {
@@ -4299,10 +4580,7 @@
                 const btn = document.querySelector(".cart-icon-btn");
                 if (!panel) return;
                 const willOpen = panel.classList.contains("hidden");
-                if (willOpen) {
-                    renderedCartKeys = new Set();
-                    updateCartUI();
-                }
+                if (willOpen) updateCartUI();
                 panel.classList.toggle("hidden");
                 document.body.classList.toggle("cart-open", willOpen);
                 if (btn) {
@@ -4374,13 +4652,11 @@
                 if (panel && panel.classList.contains("hidden")) toggleCart();
             }
 
-            function setEnquiryHeader(title, subtitle, iconClass) {
+            function setEnquiryHeader(title, subtitle) {
                 const titleEl = document.getElementById("enquiryModalTitle");
                 const subtitleEl = document.getElementById("enquiryModalSubtitle");
-                const iconEl = document.querySelector(".enquiry-header-icon i");
                 if (titleEl) titleEl.textContent = title;
                 if (subtitleEl) subtitleEl.textContent = subtitle;
-                if (iconEl) iconEl.className = iconClass;
             }
 
             function openCartEnquiry() {
@@ -4417,7 +4693,7 @@
               <label class="block text-sm font-semibold text-gray-700 mb-1" for="cart-enquiry-details">Address &amp; Requirements</label>
               <textarea id="cart-enquiry-details" class="enquiry-textarea" rows="2" maxlength="300" placeholder="Delivery address, any specific requirements..."></textarea>
           </div>
-          <button class="enquiry-submit-btn" data-action="submit-cart-enquiry">
+          <button type="button" class="enquiry-submit-btn" data-action="submit-cart-enquiry">
               <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry via WhatsApp
           </button>
           <button type="button" class="enquiry-pdf-btn" data-action="download-cart-pdf">
@@ -4429,8 +4705,7 @@
                 const totalItems = keys.reduce((s, k) => s + cart[k].qty, 0);
                 setEnquiryHeader(
                     "Cart Enquiry",
-                    `${totalItems} item${totalItems === 1 ? "" : "s"} \u2022 ${formatCurrency(grandTotal)}`,
-                    "fas fa-bag-shopping"
+                    `${totalItems} item${totalItems === 1 ? "" : "s"} \u2022 ${formatCurrency(grandTotal)}`
                 );
                 openDialog(document.getElementById("enquiryModal"), ".enquiry-modal-box");
             }
@@ -4446,7 +4721,7 @@
                     const item = cart[key];
                     const product = item.product;
                     const qty = item.selectedQty * item.qty;
-                    const label = product.hasLtOptions && !product.qtyOptions ? "Lt" : product.qtyLabel || "pcs";
+                    const label = cartUnitLabel(product);
                     const lineTotal = product.price * qty;
                     grandTotal += lineTotal;
                     lines.push(
@@ -5270,7 +5545,7 @@
                     let recognizer;
                     try {
                         recognizer = createSpeechRecognizer();
-                    } catch (err) {
+                    } catch {
                         return;
                     }
 
@@ -5292,7 +5567,13 @@
                         buttonEl.classList.remove("listening");
                         buttonEl.setAttribute("aria-label", opts.idleLabel || "Use voice input");
                     };
-                    recognizer.start();
+                    try {
+                        recognizer.start();
+                    } catch {
+                        // start() throws if a session is already running; without this reset the
+                        // button would stay stuck in "listening" because onend never fires.
+                        recognizer.onend();
+                    }
                 });
             }
 
@@ -5363,243 +5644,27 @@
                 return { min: toLocalISODate(first), max: toLocalISODate(last) };
             }
 
-            // ---------- Khatabook customer list ----------
-            // Workshop name + phone, copied from the Khatabook PDF export. Used to auto-fill the
-            // workshop name from the customer's WhatsApp number. Add one line per customer.
-            const KHATABOOK_CUSTOMERS = Object.freeze([
-                { name: "Shree Patel Motos Chiranji Govindapura", phone: "9214232538" },
-                { name: "Detailing Street Madan Maharani Garden", phone: "9828149095" },
-                { name: "Suresh Dousa", phone: "8947966415" },
-                { name: "Shree Shyam Motors Anil Muhana Mandi House Gujar Ki Thadi", phone: "8003470247" },
-                { name: "Aashi Motors Goliyawas Ref Aarthav Varun Path", phone: "9509840866" },
-                { name: "Mangalam Motors Mangyawas", phone: "" },
-                { name: "JSS Autoword Rakesh Bharat Mata Circle", phone: "8952859279" },
-                { name: "Shree Khatushyam Motors Bansi Bhankrota Ref JSS Boy Kaka", phone: "9828150934" },
-                { name: "Neha Motors Swarn Garden Dinesh", phone: "8058999997" },
-                { name: "Radhe2 Motors Harinarayan Benar", phone: "8560973756" },
-                { name: "Piyush Auto Jeetu Dryclean Benar", phone: "9529832888" },
-                { name: "RJ Car Wash Dhawas Jeetu", phone: "9929954088" },
-                {
-                    name: "NM Motors & Services Near Pinjrapol Gaushala Sanaganer HDFC ke Samne Wali Gali",
-                    phone: "9351139855",
-                },
-                { name: "Shree Barbarik Motors Shubham Lalchandpura", phone: "9783468966" },
-                { name: "Aslam Khan Kalwar Rd", phone: "8824366561" },
-                { name: "GajKesari Wheels VKI Rd1 Paliwal", phone: "9001090375" },
-                { name: "Mahalaxmi Motors Amarchand Sirsi Rd", phone: "9636667961" },
-                { name: "Indra Car Care Puran Niwaru Rd", phone: "8955687407" },
-                { name: "Sawariya Motors Kishan Lalchandp", phone: "7737264201" },
-                { name: "ShreeBalajiMotorsPappuLalchandpu", phone: "9950489148" },
-                { name: "Sagar Motors Lalchandpura Rd", phone: "9782970565" },
-                { name: "Shree Balaji Motors Raju Hatoj Ref Sohan Bajrang", phone: "8769403078" },
-                { name: "Vishwakarma Motors Suraj Maharani Garden Wali Gali", phone: "9887754432" },
-                { name: "Rohit Car Satnarayan Niwaru Rd", phone: "9829413339" },
-                { name: "S.P. Jain Goods A/C", phone: "9314210630" },
-                { name: "Arthav Motors Jagdish Saini Near Panchi Peta Wali Gali", phone: "9785915067" },
-                { name: "Auto Elevate Anshul Bharat Mata Circle", phone: "7737733777" },
-                { name: "Manesh Dhawas Puliya Ref Vipul Satnaryan Bharat Motors", phone: "9983972227" },
-                { name: "Shree IG Automobile Suraj Dhawas", phone: "9799296553" },
-                { name: "CS Motors Kamani Circle Jhotwara", phone: "9610102025" },
-                { name: "Siddhi Vinayak Motors Harmada Kanaram", phone: "7357477480" },
-                { name: "TNT Four Wheel Motors Manoj Pvt Ltd", phone: "9530205111" },
-                { name: "Mahesh Honda Ram Ratan/Rajender Iscon Temple", phone: "9649042197" },
-                {
-                    name: "Automobile Car Repair Rakesh Mahapura Ref Suresh Machnic Om Automobile 200 Ft Rd",
-                    phone: "7792939657",
-                },
-                {
-                    name: "Final Car Shine Detailing Abhishek Goliyawas Near Baba Paradise Iscon Temple",
-                    phone: "8890093474",
-                },
-                { name: "Balaji Motors Kirni Palace Vaish", phone: "7891816363" },
-                { name: "Akar Fourwheel Jharkhand Narender", phone: "7791873332" },
-                { name: "Kunal Goods A/C", phone: "8561049848" },
-                { name: "KishanShivMotorSarasDairyWaliGal", phone: "7733872425" },
-                { name: "JK Motors Hiralal Hatoj", phone: "9929368421" },
-                { name: "Shree Shyam Honda Care Near Aaditya Wheel Sirsi Rd", phone: "8955322050" },
-                {
-                    name: "Shree Yade Motors Narendra Sirsi Link Rd To Kalwar Rd Hatoj Ref Sagar Lalchandpura",
-                    phone: "7023234939",
-                },
-                { name: "Pooja Service Center Swarn Garden", phone: "9799176600" },
-                { name: "RK Motor Kapoor BenarRd Ref Jetu", phone: "9829534317" },
-                { name: "Vinayak Car Zone Amit Dousa Ref Anil A/C Vipul", phone: "8441820357" },
-                { name: "RasoAutoStudioSwarnGrdRefLaxman", phone: "9001623413" },
-                { name: "Krishna Motors Manoj Himalaya Nirman Nagar Nale Pr", phone: "9829018915" },
-                { name: "Shree Balaji Motors Vinod 5 No. Road Benar Ke Aage", phone: "9549407979" },
-                { name: "Shree Shyam Motors Govind Nagar", phone: "7792863139" },
-                { name: "Singodiya Car Service Vinod Nagal Jaisa Bora Ref Pramod", phone: "9887171117" },
-                { name: "Balaji Motors Khora Bisal", phone: "9602185083" },
-                { name: "Lokesh Sen Dryclean Wala Transport Nagar", phone: "9351639102" },
-                { name: "Shyam Car Expert Champapura Kalwar Rd Ref Nemichand Machanic Balaji Kirni", phone: "" },
-                { name: "Abhi chitrakoot ref car cl Beta", phone: "7339798280" },
-                { name: "Tanishka Bike Prakash Todi Harmada", phone: "9660328585" },
-                { name: "Mansingh Benar", phone: "" },
-                { name: "Salasar Motors Kalwar Rd Ref Parth Motors", phone: "9829821084" },
-                { name: "Saini Motors Lalit Gokulpura Kalwar Rd Ref Tarachand", phone: "8560946507" },
-                { name: "Krishna Car Care Sonu Heera Path Ke Samne", phone: "9950830237" },
-                { name: "United Automobile Pawan Sumer Nagar Ref Kapil Kadwa", phone: "9610327744" },
-                {
-                    name: "Detailing Studio Rahul Near Tejaji Mandir Patrakar Rd Ref Madan Detailing",
-                    phone: "8561859659",
-                },
-                { name: "Resolve Auto Prashant Kotpulti Ref Final Shine Detailing", phone: "9828546444" },
-                { name: "Kalu Manyawas Ref SS Motors Manyawas", phone: "8107344766" },
-                { name: "Vishwakarma Motors Rajesh Deoli", phone: "9950451084" },
-                { name: "Ramashish Automotive Surgeon Dadudayal Nagar Ref Chiranji", phone: "8233773228" },
-                { name: "Shyam Maharani Gard Amit Laxman", phone: "9057070999" },
-                { name: "Veer Tejaji Motor Narender Niwaru Rd", phone: "8619231060" },
-                {
-                    name: "Shree Shyam Motors Shiv Prasad Kanakpura Vaishali Marg Saras Dairy Wali Gali",
-                    phone: "8387877077",
-                },
-                { name: "Sawariya Service Motors Hansraj Todi Harmada", phone: "8209227899" },
-                { name: "Shree Shyam Motors Ramlal Murlipura", phone: "9314930051" },
-                { name: "Kaal Bhairav Service Center Nemichand Gandhi Path West", phone: "7073265290" },
-                { name: "JMD Car Workshop Chetan Kalwar Rd Sirsi Rd Ref Sagar Lalchandpura", phone: "7690816190" },
-                { name: "Pooja Honda Care Kapil Near Iscon Temple Ref Mahesh Honda", phone: "9785806702" },
-                { name: "Shree Govindam Motors Sirsi Bindayaka Se Aage Siwaru Mod Par", phone: "9269076232" },
-                { name: "Shweta Sanganer", phone: "9636353506" },
-                { name: "Clean Gulaabi Col Jitender Plot 81 Marudhar Nagar DCM", phone: "7086009943" },
-                { name: "Shree Ram Service Center Arvind Ji Deoli", phone: "9887882529" },
-                { name: "Apna Service Center Suraj Newta", phone: "8385887307" },
-                { name: "Salasar Motor Raju Mali Niwaru Rd Ref Rohit Car", phone: "9950755502" },
-                { name: "Veeru Bike Jhotwara", phone: "8003703229" },
-                { name: "Raj Motors Rakesh Benar", phone: "9829074904" },
-                { name: "Raj Motors Raju Sodala", phone: "9351651521" },
-                { name: "Krazy Computer Agency Area NearBy Jaipur House Deoli", phone: "9829540867" },
-                { name: "Aryan Choudhary Bagru Ref Prahalad Bagru", phone: "9982001699" },
-                { name: "Kitara Garages Pvt Ltd Yash Near Modern School", phone: "8696656668" },
-                { name: "Mahadev Motors Gaurav/Mahender Niwaru Rd", phone: "7014789272" },
-                { name: "Detailing Singh Akshat Singh Chopra Wali Gali", phone: "6377516060" },
-                { name: "Shubham Automobiles Shrawan Swarn Garden Rd", phone: "9829403724" },
-                { name: "Right Wheel Care Nishant Hotl Pa", phone: "7877735887" },
-                { name: "SS Car Zone Near Pooja Motors Manyawas Ref Rahul Swarn Garden", phone: "9667538144" },
-                { name: "Jai Shree Shyam Motors Gopi/Ramesh Kalwar Rd", phone: "9024560849" },
-                { name: "Lal Jain Mandir", phone: "9214629409" },
-                { name: "Bajrang Motors Chiranji Kalwar Rd", phone: "9314232538" },
-                { name: "Shree Om Automobile 200 Ft Rani Sati Nagar", phone: "9928486236" },
-                {
-                    name: "Jagdamba Motors & Car Care Shankar Jobner Rd Kalwar Rd Ref Sohan Bajrang",
-                    phone: "9672396394",
-                },
-                { name: "Car Clinic rajendrChetan Iscon T", phone: "7878355926" },
-                {
-                    name: "Aaditya Wheel Care Shreekant Sirsi Rd Near Bharat Motor Ref Sagar Motors",
-                    phone: "9887459591",
-                },
-                { name: "Vinayak Motors Kalwar Rd Tarachand", phone: "9782220445" },
-                { name: "Om Shiv Motors Sharu Harmada", phone: "7340159191" },
-                { name: "Krishna Car Clinic Raju Harmada", phone: "7073656666" },
-                { name: "Shree Sawariya Motors Sunil Kalwar Rd Hatoj Petrol Pump", phone: "8058481002" },
-                { name: "Parth Motors Khadelwal Dhaba Ke Aage Wali Gali Kalwar Rd", phone: "9549934128" },
-                { name: "Shree Shyam Motors Deepchand Niwaru Rd Ref Indra Car", phone: "9772971134" },
-                { name: "Hitanshu Motors Swarn Gar Rahul", phone: "9664274449" },
-                { name: "Guru Shree Shyam Motors Near Jalmahal Amer Rd", phone: "8058942632" },
-                { name: "Detailing Shiv Kapil Kadwa Bagru", phone: "7742248689" },
-                { name: "Ram Gopal Meena Sanjhariya", phone: "8104522311" },
-                { name: "Jai Shree Shyam Mukesh Hatoj", phone: "8947947640" },
-                { name: "Buddhi Prakash Boy Neha Motor Swarn Garden 6D", phone: "9680700939" },
-                { name: "Preeti Jain Rajat Path New Sanganer Rd", phone: "9413114763" },
-                { name: "NemiChand KS Ser Cnter Newta Rd", phone: "8385863171" },
-                { name: "Shree Govind Motors Govind Ji Narayan Vihar Ref Rahul Swarn Garden", phone: "9929788875" },
-                {
-                    name: "Shree Shyam JP Motors Mukesh Mukundpura Bhankrota Ref Aaditya Wheel Sirsi Rd",
-                    phone: "9610935250",
-                },
-                { name: "Siya Plywood Muhana Mandi Rd d.s", phone: "8740822607" },
-                { name: "Shree Vinayak Car Benar Surender/Rajender/Mansingh", phone: "9782661097" },
-                {
-                    name: "Rajshree Motors Ramkaran Kalwar Rd Near Parth Motors Ke Aage Wali Gali Ref Hiralal",
-                    phone: "9314664155",
-                },
-                { name: "Ambica Motors Haldighati Marg Near Shopping Arcade", phone: "9887722022" },
-                { name: "Mahalaxmi Mt Rispal Sarna du ref", phone: "8890259562" },
-                { name: "Mugal Motors Mustkim DuduSavarda", phone: "9462012301" },
-                {
-                    name: "Jai Maalaxmi Service Dayaram Nanu Puri Kalwar Rd Kanta Chouraya Transformer Wali Gali",
-                    phone: "9610846997",
-                },
-                { name: "Dashrath Auric New Sanganer Rd Ref Vipul Pradeep", phone: "9057322281" },
-                { name: "Randhir Ji Hotel Bagru Rajat Path", phone: "9828480555" },
-                { name: "Pawan Kumar Dudu Ref Krishna Kalu", phone: "7062553840" },
-                { name: "Shree Bagdawat Motors Ravi Dhawas", phone: "8078688850" },
-                { name: "MD Motors Jawahar Circle Ref Raja Ram Neha Motor Washing Boy", phone: "" },
-                { name: "Sabir Bhai Ref Yashwant", phone: "9828932844" },
-                { name: "Mukund Mittal Kota", phone: "" },
-                {
-                    name: "New Prem Motors Madan Hightension Wali Puliya Service Lane Pr Benad Se Aage",
-                    phone: "9929239052",
-                },
-                { name: "K.P. Automative Mansarovar", phone: "" },
-                { name: "Jyoti Automobile Jitendra Sirsi Rd Ref Aaditya Wheel", phone: "8696800493" },
-                { name: "Chamak Automobile Near Parth Motors Kalwar Rd", phone: "9001690369" },
-                { name: "Tata Motors Roshan Manish Shekha", phone: "8769435615" },
-                { name: "Khatu Naresh Automobile Satyaveer Benar Ref Sisodiya Motor", phone: "9001520070" },
-                { name: "Balaji Motors Vikas Choudhary 200 Ft Rd", phone: "8946813546" },
-                { name: "Bharat Motor Satnarayan Sirsi Rd", phone: "9983982227" },
-                { name: "Monu Parth Motors Employee Kalwar Rd", phone: "8290458875" },
-                { name: "Balaji Motors Swarn Garden Jaideep Sharma", phone: "9414092244" },
-                { name: "Pankaj Sharma Dryclean Maharani Garden", phone: "8094502118" },
-                { name: "Bhati Transport Jhotwara", phone: "9828012649" },
-                { name: "Jagdamba Motors Niwaru Rd Chetan Ref Sagar Motors", phone: "" },
-                { name: "Suman Tyre Zone Mukesh Alignment Wala Benar Rd", phone: "9680106635" },
-                { name: "Vinayak Motors Mukesh Benar Rd Rico Ind Area", phone: "8947953100" },
-                { name: "Maa Vaishnav Car Care Mansarovar Ind Area New Sanganer Rd", phone: "" },
-                { name: "Shree Balaji Motors Navratan Thikariya", phone: "9602197733" },
-                { name: "Krishna Auto Naveen Maharani Grd", phone: "9529610405" },
-                { name: "TVS Service Center Sanjay Near Veeru Bike Jhotwara", phone: "9351390561" },
-                { name: "Dead A/C's", phone: "" },
-                {
-                    name: "Jai Mahalaxmi Automobile Kanaram Kata Chouraya Kalwar Rd Kirni Fatak Ganesh Mandir",
-                    phone: "9602185083",
-                },
-                { name: "Sunil Kumawat Vipul Jhotwara", phone: "7427855416" },
-                { name: "Boy Neha Motor", phone: "" },
-                { name: "RJ13 Automobile Manpreet 200 Ft", phone: "9982986180" },
-                { name: "Anil Sunil Kumar Dryc Nirman Ngr", phone: "7232028186" },
-                { name: "Sharma Motors Mohan Sharma Choki Dhani", phone: "9549555588" },
-                { name: "Raju Kumawat Sup Vipul Motors", phone: "9509610108" },
-                { name: "Pink City Honda VKI Rd No 1 Vipul TV Paliwal", phone: "" },
-                { name: "Triveni Honda Kalwar Rd", phone: "" },
-                { name: "Shree Krishna Car Rajendra Dousa", phone: "" },
-                { name: "Sonal Ji Barkat Nagar", phone: "8209704720" },
-                { name: "Babulal Ji Phulera", phone: "9929399641" },
-                { name: "Bajaj Auto Near Gopi Kalwar Rd", phone: "" },
-                { name: "Robin Automobile 200 Ft Rd Ajmer Rd Saras Dairy Wali Gali", phone: "8003040453" },
-                { name: "Salman Khan 200 Ft Rd Robin Wala", phone: "8740874044" },
-                { name: "Shree Vinayak Prahalad Dudu", phone: "9928740785" },
-                { name: "Yogendra F-22 Govind Tower Near Bajrang Motor Kalwar Rd", phone: "9785750572" },
-                { name: "Anna Auto Parts Mansarovar", phone: "" },
-                { name: "Soni Auto OLX Car Near Iscon Temple", phone: "8952841168" },
-                { name: "Riddhi Siddhi Motors Deepak Near Iscon Temple", phone: "9929466019" },
-                { name: "Praveen Kota", phone: "9414488656" },
-            ]);
-
-            // Reduce any input (+91, spaces, dashes) to the last 10 digits.
-            function normalizePhone(value) {
-                return String(value || "")
-                    .replace(/\D/g, "")
-                    .slice(-10);
-            }
-
-            // phone -> [workshop names]; one number can belong to more than one workshop.
-            const WORKSHOP_BY_PHONE = (() => {
-                const map = new Map();
-                KHATABOOK_CUSTOMERS.forEach(({ name, phone }) => {
-                    const key = normalizePhone(phone);
-                    if (!key || !name) return;
-                    if (!map.has(key)) map.set(key, []);
-                    map.get(key).push(String(name).trim());
-                });
-                return map;
-            })();
-
-            // Async on purpose: the caller already handles a network-style lookup, so this can be
-            // swapped for a server endpoint later without touching the form code.
+            // Workshop names come from the Khatabook list held server-side in the PHP block at the top
+            // of this file; the browser only ever learns the names for the number the customer typed.
+            // Resolves to [] for an unknown number and null when the lookup itself fails.
             async function fetchWorkshops({ phone }) {
-                const names = WORKSHOP_BY_PHONE.get(normalizePhone(phone)) || [];
-                return names.map((name) => ({ name }));
+                try {
+                    const response = await fetch(window.location.pathname, {
+                        method: "POST",
+                        body: new URLSearchParams({ action: "workshop_lookup", phone }),
+                        headers: { Accept: "application/json" },
+                        cache: "no-store",
+                        signal: AbortSignal.timeout(6000),
+                    });
+                    if (!response.ok) return null;
+                    const data = await response.json();
+                    if (!Array.isArray(data?.workshops)) return null;
+                    return data.workshops
+                        .filter((name) => typeof name === "string" && name.trim())
+                        .map((name) => ({ name: name.trim().slice(0, 120) }));
+                } catch {
+                    return null;
+                }
             }
 
             function loadSavedCustomer() {
@@ -5843,7 +5908,7 @@
                 currentEnquiryProduct = product;
                 const body = document.querySelector(".enquiry-body");
                 if (body && ENQUIRY_BODY_TEMPLATE) body.innerHTML = ENQUIRY_BODY_TEMPLATE;
-                setEnquiryHeader("Product Enquiry", "Tell us about your requirements", "fas fa-clipboard-list");
+                setEnquiryHeader("Product Enquiry", "Tell us about your requirements");
                 const productName = document.getElementById("enquiry-product-name");
                 const productImg = document.getElementById("enquiry-product-img");
                 const productRate = document.getElementById("enquiry-product-rate");
@@ -5851,33 +5916,26 @@
                 const qtyValue = document.getElementById("enquiry-qty-value");
                 if (!productName || !productImg || !productRate || !container || !qtyValue) return;
 
-                productName.innerText = product.name;
+                productName.textContent = product.name;
                 productImg.src = product.image;
                 productImg.alt = product.name;
-                productRate.innerText = `${formatCurrency(product.price)} / ${product.unit}`;
+                productRate.textContent = `${formatCurrency(product.price)} / ${product.unit}`;
                 const qtyOpts = product.qtyOptions || (product.hasLtOptions ? LT_OPTIONS : []);
                 const qtyLabel = product.qtyLabel || (product.hasLtOptions ? "Lt" : "pcs");
-                container.replaceChildren();
                 if (qtyOpts.length) {
-                    qtyOpts.forEach((q, i) => {
-                        const btn = document.createElement("button");
-                        btn.type = "button";
-                        btn.className = `enquiry-qty-btn ${i === 0 ? "active" : ""}`;
-                        btn.innerText = `${q} ${qtyLabel}`;
-                        btn.dataset.val = `${q} ${qtyLabel}`;
-                        btn.setAttribute("aria-pressed", String(i === 0));
-                        btn.onclick = function () {
-                            container.querySelectorAll(".enquiry-qty-btn").forEach((b) => {
-                                b.classList.remove("active");
-                                b.setAttribute("aria-pressed", "false");
-                            });
-                            this.classList.add("active");
-                            this.setAttribute("aria-pressed", "true");
-                            qtyValue.value = this.dataset.val;
-                        };
-                        container.appendChild(btn);
-                        if (i === 0) qtyValue.value = btn.dataset.val;
-                    });
+                    container.replaceChildren(
+                        ...qtyOpts.map((q, i) => {
+                            const btn = document.createElement("button");
+                            btn.type = "button";
+                            btn.className = `enquiry-qty-btn${i === 0 ? " active" : ""}`;
+                            btn.textContent = `${q} ${qtyLabel}`;
+                            btn.dataset.action = "enquiry-qty";
+                            btn.dataset.val = btn.textContent;
+                            btn.setAttribute("aria-pressed", String(i === 0));
+                            return btn;
+                        })
+                    );
+                    qtyValue.value = `${qtyOpts[0]} ${qtyLabel}`;
                 } else {
                     container.innerHTML = '<span class="text-sm text-gray-500">1 piece</span>';
                     qtyValue.value = "1 piece";
@@ -5892,6 +5950,17 @@
                 }
 
                 openDialog(document.getElementById("enquiryModal"), ".enquiry-modal-box");
+            }
+
+            function selectEnquiryQty(btn) {
+                const container = btn.closest(".enquiry-qty-buttons");
+                const qtyValue = document.getElementById("enquiry-qty-value");
+                if (!container || !qtyValue) return;
+                container.querySelectorAll(".enquiry-qty-btn").forEach((b) => {
+                    b.classList.toggle("active", b === btn);
+                    b.setAttribute("aria-pressed", String(b === btn));
+                });
+                qtyValue.value = btn.dataset.val;
             }
 
             function closeEnquiryModal() {
@@ -5936,16 +6005,6 @@
                 if (group) group.classList.toggle("is-valid", isValidIndianMobile(digits));
                 const error = input.closest(".enquiry-field-wrap")?.querySelector(".enquiry-error");
                 if (error && isValidIndianMobile(digits)) error.classList.add("hidden");
-            });
-
-            document.addEventListener("input", (e) => {
-                const field = e.target;
-                if (!field.matches || !field.matches(".enquiry-textarea")) return;
-                const counter = document.getElementById(`${field.id}-count`);
-                if (!counter) return;
-                const max = field.maxLength > 0 ? field.maxLength : 300;
-                counter.textContent = `${field.value.length} / ${max}`;
-                counter.classList.toggle("is-near", field.value.length >= max * 0.9);
             });
 
             const enquiryModal = document.getElementById("enquiryModal");
@@ -6176,9 +6235,7 @@
                     const list = document.getElementById("assistantMessages");
                     const btn = document.createElement("button");
                     btn.type = "button";
-                    btn.className = "assistant-chip";
-                    btn.style.cssText =
-                        "align-self:flex-start;margin-top:-4px;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;";
+                    btn.className = "assistant-chip assistant-chip-whatsapp";
                     btn.innerHTML = '<i class="fab fa-whatsapp" aria-hidden="true"></i> Ask on WhatsApp';
                     btn.addEventListener("click", () => {
                         safeOpenNewTab(buildWhatsAppUrl(`Hi Swapnil Chemicals, I have a question: ${trimmed}`));
@@ -6451,12 +6508,15 @@
                     case "open-enquiry":
                         openEnquiryModal(productId);
                         break;
-                    case "browse-products": {
+                    case "browse-products":
                         toggleCart();
-                        const productsSection = document.getElementById("products");
-                        if (productsSection) productsSection.scrollIntoView({ behavior: "smooth" });
+                        document
+                            .getElementById("products")
+                            ?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth" });
                         break;
-                    }
+                    case "enquiry-qty":
+                        selectEnquiryQty(target);
+                        break;
                     case "add-to-cart":
                         addToCart(productId);
                         break;
