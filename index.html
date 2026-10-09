@@ -4418,6 +4418,10 @@
             }
 
             // Logo is optional on the invoice - if it can't be fetched the header is drawn without it.
+            // It is drawn at 24 mm, so it is downscaled to INVOICE_LOGO_PX and re-encoded as a JPEG
+            // before embedding; the original file would otherwise be copied into the PDF byte for byte
+            // and push it past the 1 MB limit.
+            const INVOICE_LOGO_PX = 320; // ~340 dpi at 24 mm
             let invoiceLogoPromise = null;
             function loadInvoiceLogo() {
                 if (!invoiceLogoPromise) {
@@ -4433,9 +4437,38 @@
                                     reader.readAsDataURL(blob);
                                 })
                         )
+                        .then((dataUrl) => dataUrl && shrinkImageToJpeg(dataUrl, INVOICE_LOGO_PX, 0.85))
                         .catch(() => null);
                 }
                 return invoiceLogoPromise;
+            }
+
+            // Redraws an image (data URL - blob: URLs are blocked by the CSP) onto a white canvas no
+            // larger than maxPx on its longest side and returns it as a compressed JPEG data URL.
+            // Resolves to null if the image can't be decoded, so the invoice is drawn without it
+            // rather than embedding an unknown-size original.
+            function shrinkImageToJpeg(dataUrl, maxPx, quality) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        try {
+                            const scale = Math.min(1, maxPx / Math.max(img.naturalWidth, img.naturalHeight));
+                            const canvas = document.createElement("canvas");
+                            canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+                            canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+                            const ctx = canvas.getContext("2d");
+                            ctx.fillStyle = "#fff";
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                            ctx.imageSmoothingQuality = "high";
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            resolve(canvas.toDataURL("image/jpeg", quality));
+                        } catch {
+                            resolve(null);
+                        }
+                    };
+                    img.onerror = () => resolve(null);
+                    img.src = dataUrl;
+                });
             }
 
             // Google Pay / UPI QR for the invoice - same UPI link as the QR in the Contact section (no amount,
@@ -4494,7 +4527,9 @@
                         loadInvoiceLogo(),
                         loadInvoiceQr(),
                     ]);
-                    const doc = new JsPDF({ unit: "mm", format: "a4" });
+                    // compress: Flate-compress page streams (the gradient strips and text are otherwise
+                    // stored raw) - keeps the download well under 1 MB.
+                    const doc = new JsPDF({ unit: "mm", format: "a4", compress: true });
                     const pageW = doc.internal.pageSize.getWidth();
                     const pageH = doc.internal.pageSize.getHeight();
                     const margin = 15;
@@ -4618,7 +4653,7 @@
                         try {
                             doc.setFillColor(...COLOR.white);
                             doc.roundedRect(margin, 9, 28, 28, 3, 3, "F");
-                            doc.addImage(logo, "JPEG", margin + 2, 11, 24, 24);
+                            doc.addImage(logo, "JPEG", margin + 2, 11, 24, 24, "sc-logo");
                             textX = margin + 33;
                         } catch {
                             textX = margin;
@@ -4836,7 +4871,7 @@
                         try {
                             doc.setFillColor(...COLOR.white);
                             doc.roundedRect(qrX - 1, y + 2, qrSize + 2, qrSize + 2, 1.5, 1.5, "F");
-                            doc.addImage(upiQr, "PNG", qrX, y + 3, qrSize, qrSize);
+                            doc.addImage(upiQr, "PNG", qrX, y + 3, qrSize, qrSize, "upi-qr", "FAST");
                             font("bold", 8.5, COLOR.orange);
                             doc.text("Scan & pay with Google Pay / any UPI app", margin + 6, y + 27);
                         } catch {
