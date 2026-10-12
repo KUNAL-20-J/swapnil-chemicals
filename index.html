@@ -4691,7 +4691,7 @@
                     const margin = 16;
                     const right = pageW - margin;
                     const contentW = right - margin;
-                    const bottomLimit = pageH - 22; // keep clear of the footer
+                    const bottomLimit = pageH - 18; // keep clear of the footer rule at pageH - 14.3
                     // Same palette as the website: deep-violet hero, violet/indigo/cyan accents, slate ink on white.
                     const COLOR = {
                         ink: [15, 23, 42],
@@ -4841,7 +4841,12 @@
                         };
                     });
                     const grandTotal = lineItems.reduce((s, item) => s + item.lineTotal, 0);
-                    const totalUnits = lineItems.reduce((s, item) => s + item.qty, 0);
+                    // Litres and pieces can't be added together, so total quantity is listed per unit.
+                    const unitTotals = lineItems.reduce((acc, item) => {
+                        acc.set(item.unit, (acc.get(item.unit) || 0) + item.qty);
+                        return acc;
+                    }, new Map());
+                    const totalQtyLabel = [...unitTotals].map(([unit, qty]) => `${qty} ${unit}`).join(" + ");
 
                     doc.setProperties({
                         title: `Swapnil Chemicals Invoice ${invoiceNo}`,
@@ -5040,17 +5045,29 @@
                         { text: `Time slot: ${customer.slot || "To be confirmed"}` },
                         { text: "Payment: UPI / Google Pay" },
                     ];
-                    const partyH = 19 + Math.max(fromLines.length, toLines.length) * lineGap;
+                    // Long workshop names wrap onto a second line (ellipsis beyond that) instead of being cut off.
+                    const partyNameGap = 4.6;
+                    const partyNameLines = (name) => {
+                        font("bold", 10.5, COLOR.ink);
+                        const lines = doc.splitTextToSize(name, colW - pad5 * 2);
+                        if (lines.length <= 2) return lines;
+                        const second = doc.splitTextToSize(lines.slice(1).join(" "), colW - pad5 * 2 - 4)[0];
+                        return [lines[0], `${second.replace(/[\s,.-]+$/, "")}...`];
+                    };
+                    const fromName = partyNameLines(INVOICE_SELLER.name);
+                    const toName = partyNameLines(customer.workshop || "Customer");
+                    const nameExtra = (Math.max(fromName.length, toName.length) - 1) * partyNameGap;
+                    const partyH = 17 + nameExtra + Math.max(fromLines.length, toLines.length) * lineGap;
                     if (y + partyH > bottomLimit) newPage();
-                    const drawParty = (x, label, dotRgb, name, lines) => {
+                    const drawParty = (x, label, dotRgb, nameLines, lines) => {
                         card(x, y, colW, partyH, 3.5, COLOR.surface);
                         doc.setFillColor(...dotRgb);
                         doc.circle(x + pad5 + 0.8, y + 6.3, 1, "F");
                         caption(label, x + pad5 + 3.5, y + 7);
                         font("bold", 10.5, COLOR.ink);
-                        doc.text(doc.splitTextToSize(name, colW - pad5 * 2)[0], x + pad5, y + 13);
+                        nameLines.forEach((text, i) => doc.text(text, x + pad5, y + 13 + i * partyNameGap));
                         lines.forEach((line, i) => {
-                            const top = y + 18.5 + i * lineGap;
+                            const top = y + 18.5 + (nameLines.length - 1) * partyNameGap + i * lineGap;
                             if (line.url) {
                                 font("normal", 8.8, COLOR.violet);
                                 doc.textWithLink(line.text, x + pad5, top, { url: line.url });
@@ -5060,9 +5077,9 @@
                             }
                         });
                     };
-                    drawParty(margin, "Billed by", COLOR.violet, INVOICE_SELLER.name, fromLines);
-                    drawParty(toX, "Billed to", COLOR.orange, customer.workshop || "Customer", toLines);
-                    y += partyH + 7;
+                    drawParty(margin, "Billed by", COLOR.violet, fromName, fromLines);
+                    drawParty(toX, "Billed to", COLOR.orange, toName, toLines);
+                    y += partyH + 6;
 
                     // ---- Item table: soft header pill, zebra rows, numbered badges, qty chips ----
                     // Column widths add up to contentW (178mm on A4).
@@ -5086,7 +5103,7 @@
                     lineItems.forEach((item, i) => {
                         font("bold", 9.5, COLOR.ink);
                         const nameLines = doc.splitTextToSize(pdfText(item.product.name) || "-", nameWidth);
-                        const rowH = nameLines.length * lineGap + 10.4;
+                        const rowH = nameLines.length * lineGap + 8.6;
                         if (y + rowH > bottomLimit) {
                             newPage();
                             drawTableHeader();
@@ -5095,7 +5112,7 @@
                             doc.setFillColor(...COLOR.surface);
                             doc.roundedRect(margin, y, contentW, rowH, 2, 2, "F");
                         }
-                        const baseline = y + 6.6;
+                        const baseline = y + 6.2;
                         doc.setFillColor(...COLOR.violetSoft);
                         doc.circle(cell.no + 3.6, baseline - 1.3, 2.9, "F");
                         font("bold", 7, COLOR.violet);
@@ -5119,7 +5136,7 @@
                         font("normal", 9, COLOR.text);
                         doc.text(pdfAmount(item.product.price), cell.rate, baseline, { align: "right" });
                         font("normal", 7.5, COLOR.faint);
-                        doc.text(`per ${item.unit}`, cell.rate, baseline + lineGap, { align: "right" });
+                        doc.text(`per ${item.unit === "pcs" ? "pc" : item.unit}`, cell.rate, baseline + lineGap, { align: "right" });
                         font("bold", 9.5, COLOR.ink);
                         doc.text(pdfAmount(item.lineTotal), cell.amount, baseline, { align: "right" });
                         y += rowH;
@@ -5172,10 +5189,11 @@
 
                     font("normal", 9, COLOR.muted);
                     doc.text("Subtotal", totalsX, y + 4);
-                    doc.text("Items / Qty", totalsX, y + 10);
+                    doc.text("Total qty", totalsX, y + 10);
                     font("bold", 9.5, COLOR.ink);
                     doc.text(pdfAmount(grandTotal), right, y + 4, { align: "right" });
-                    doc.text(`${lineItems.length} / ${totalUnits}`, right, y + 10, { align: "right" });
+                    fitFont(totalQtyLabel, totalsW - 22, "bold", 9.5, COLOR.ink);
+                    doc.text(totalQtyLabel, right, y + 10, { align: "right" });
                     hairline(totalsX, y + 13.5, right);
                     withOpacity(0.2, () => {
                         doc.setFillColor(...COLOR.violet);
@@ -5187,7 +5205,7 @@
                     doc.text(pdfAmount(grandTotal), right - 5, y + 27, { align: "right" });
                     font("italic", 7.8, COLOR.muted);
                     doc.text(wordLines, right, y + 37, { align: "right", lineHeightFactor: 1.3 });
-                    y += totalsH + 8;
+                    y += totalsH + 6;
 
                     // ---- Terms (left) + one-tap WhatsApp confirm and signatory (right) ----
                     const signW = 56;
@@ -5198,7 +5216,7 @@
                             "2. Prices and availability will be confirmed by Swapnil Chemicals on WhatsApp.",
                         termsW
                     );
-                    const closingH = Math.max(30, 6 + termLines.length * 3.6);
+                    const closingH = Math.max(26, 6 + termLines.length * 3.6);
                     if (y + closingH > bottomLimit) newPage();
                     caption("Terms & notes", margin, y + 3);
                     font("normal", 7.8, COLOR.muted);
@@ -5217,9 +5235,9 @@
                     });
                     font("bold", 8.5, COLOR.ink);
                     doc.text(`For ${INVOICE_SELLER.name}`, right, y + 15, { align: "right" });
-                    hairline(right - signW, y + 25, right, COLOR.faint, 0.3);
+                    hairline(right - signW, y + 21.5, right, COLOR.faint, 0.3);
                     font("normal", 7.5, COLOR.muted);
-                    doc.text("Authorised signatory", right, y + 29, { align: "right" });
+                    doc.text("Authorised signatory", right, y + 25.5, { align: "right" });
 
                     // ---- Footer on every page: brand gradient rule + page count ----
                     const pageCount = doc.getNumberOfPages();
