@@ -4692,7 +4692,7 @@
                     const right = pageW - margin;
                     const contentW = right - margin;
                     const bottomLimit = pageH - 22; // keep clear of the footer
-                    // Light, minimal layout: slate ink on white with the website's violet as the one accent.
+                    // Same palette as the website: deep-violet hero, violet/indigo/cyan accents, slate ink on white.
                     const COLOR = {
                         ink: [15, 23, 42],
                         text: [51, 65, 85],
@@ -4701,11 +4701,20 @@
                         hairline: [226, 232, 240],
                         surface: [248, 250, 252],
                         violet: [109, 40, 217],
+                        violetBright: [124, 58, 237],
                         violetSoft: [237, 233, 254],
                         violetDeep: [30, 11, 75],
+                        violetMid: [46, 16, 101],
+                        lavender: [221, 214, 254],
                         lavenderText: [196, 181, 253],
                         indigo: [79, 70, 229],
+                        indigoDeep: [49, 46, 129],
                         cyan: [34, 211, 238],
+                        cyanSoft: [165, 243, 252],
+                        green: [74, 222, 128],
+                        waGreen: [37, 211, 102],
+                        waTeal: [18, 140, 126],
+                        orange: [249, 115, 22],
                         white: [255, 255, 255],
                     };
                     const font = (style, size, rgb = COLOR.text, family = "helvetica") => {
@@ -4713,19 +4722,75 @@
                         doc.setFontSize(size);
                         doc.setTextColor(...rgb);
                     };
+                    // Shrinks the font until the text fits maxW, so long amounts never overflow a card.
+                    const fitFont = (text, maxW, style, size, rgb, minSize = 7) => {
+                        let s = size;
+                        font(style, s, rgb);
+                        while (s > minSize && doc.getTextWidth(text) > maxW) {
+                            s -= 0.5;
+                            font(style, s, rgb);
+                        }
+                    };
                     const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
-                    // jsPDF has no gradients, so blend thin vertical strips.
-                    const gradientRect = (x, top, w, h, from, to, steps = 48) => {
+                    // jsPDF has no gradients, so blend thin vertical strips across any number of colour stops.
+                    const gradientRect = (x, top, w, h, stops, steps = 48) => {
                         const sw = w / steps;
                         for (let i = 0; i < steps; i++) {
-                            doc.setFillColor(...mix(from, to, i / (steps - 1)));
+                            const t = (i / (steps - 1)) * (stops.length - 1);
+                            const seg = Math.min(Math.floor(t), stops.length - 2);
+                            doc.setFillColor(...mix(stops[seg], stops[seg + 1], t - seg));
                             doc.rect(x + i * sw, top, sw + 0.15, h, "F");
                         }
                     };
-                    // Thin brand bar across the top of every page: violet -> indigo -> cyan.
-                    const brandBar = () => {
-                        gradientRect(0, 0, pageW / 2, 2, COLOR.violet, COLOR.indigo, 32);
-                        gradientRect(pageW / 2, 0, pageW / 2, 2, COLOR.indigo, COLOR.cyan, 32);
+                    // Draws only inside the given shape (rounded corners for gradient tiles, hero bounds
+                    // for the decorative orbs). Falls back to drawing unclipped on builds without clip().
+                    const clipTo = (shape, draw) => {
+                        if (typeof doc.clip !== "function") {
+                            draw();
+                            return;
+                        }
+                        doc.saveGraphicsState();
+                        shape();
+                        doc.clip();
+                        doc.discardPath();
+                        draw();
+                        doc.restoreGraphicsState();
+                    };
+                    const roundedGradient = (x, top, w, h, r, stops) =>
+                        clipTo(
+                            () => doc.roundedRect(x, top, w, h, r, r, null),
+                            () => gradientRect(x, top, w, h, stops, 40)
+                        );
+                    // Transparency needs GState; without it the purely decorative layers are skipped.
+                    const canFade = typeof doc.GState === "function" && typeof doc.setGState === "function";
+                    const withOpacity = (opacity, draw) => {
+                        if (!canFade) return false;
+                        doc.saveGraphicsState();
+                        doc.setGState(new doc.GState({ opacity, "stroke-opacity": opacity }));
+                        draw();
+                        doc.restoreGraphicsState();
+                        return true;
+                    };
+                    // Soft "aurora" orb: stacked translucent discs read as a radial glow.
+                    const glowOrb = (cx, cy, r, rgb) => {
+                        for (let k = 0; k < 8; k++) {
+                            withOpacity(0.06, () => {
+                                doc.setFillColor(...rgb);
+                                doc.circle(cx, cy, r * (1 - k / 8), "F");
+                            });
+                        }
+                    };
+                    // Floating card: a faint offset shadow under a white rounded panel.
+                    const card = (x, top, w, h, r = 3.5, fill = COLOR.white) => {
+                        withOpacity(0.05, () => {
+                            doc.setFillColor(...COLOR.violetDeep);
+                            doc.roundedRect(x + 0.4, top + 1.2, w, h, r, r, "F");
+                            doc.roundedRect(x + 0.2, top + 0.6, w, h, r, r, "F");
+                        });
+                        doc.setDrawColor(...COLOR.hairline);
+                        doc.setLineWidth(0.25);
+                        doc.setFillColor(...fill);
+                        doc.roundedRect(x, top, w, h, r, r, "FD");
                     };
                     // Small uppercase, letter-spaced label used for every section and column heading.
                     // charSpace isn't counted by jsPDF's alignment maths, so right-aligned labels skip it.
@@ -4738,6 +4803,7 @@
                         doc.setLineWidth(width);
                         doc.line(x1, top, x2, top);
                     };
+                    const brandStops = [COLOR.violetBright, COLOR.indigo, COLOR.cyan];
                     let y = margin;
 
                     // Customer details are read straight from the enquiry form; nothing here is required.
@@ -4759,8 +4825,9 @@
                         month: "short",
                         year: "numeric",
                     });
+                    const invoiceTime = `${pad(now.getHours())}:${pad(now.getMinutes())} IST`;
 
-                    // Totals are needed up front for the "Amount due" figure in the header strip.
+                    // Totals are needed up front for the "Amount due" card in the header.
                     const lineItems = keys.map((key) => {
                         const { product, qty: packs, selectedQty } = cart[key];
                         const qty = selectedQty * packs;
@@ -4776,119 +4843,243 @@
                     const grandTotal = lineItems.reduce((s, item) => s + item.lineTotal, 0);
                     const totalUnits = lineItems.reduce((s, item) => s + item.qty, 0);
 
-                    // Continuation pages get a slim header instead of the full one.
+                    doc.setProperties({
+                        title: `Swapnil Chemicals Invoice ${invoiceNo}`,
+                        subject: `Cart invoice - ${pdfAmount(grandTotal)}`,
+                        author: INVOICE_SELLER.name,
+                        keywords: "invoice, challan, automobile cleaning products, Jaipur",
+                        creator: "swapnilchemicals - online cart",
+                    });
+
+                    // Continuation pages get a slim dark band instead of the full hero.
                     const newPage = () => {
                         doc.addPage();
-                        brandBar();
-                        font("bold", 10.5, COLOR.ink);
-                        doc.text(INVOICE_SELLER.name, margin, 13);
-                        font("normal", 8.5, COLOR.muted);
-                        doc.text(`Challan No. ${invoiceNo}  |  continued`, right, 13, { align: "right" });
-                        hairline(margin, 17, right);
-                        y = 25;
+                        gradientRect(0, 0, pageW, 18, [COLOR.violetDeep, COLOR.violetMid, COLOR.indigoDeep], 40);
+                        font("bold", 10.5, COLOR.white);
+                        doc.text(INVOICE_SELLER.name, margin, 11.5);
+                        font("normal", 8.5, COLOR.lavenderText);
+                        doc.text(`Challan No. ${invoiceNo}  |  continued`, right, 11.5, { align: "right" });
+                        y = 26;
                     };
 
-                    // ---- Header: logo + seller (left), title + status pill (right) ----
-                    brandBar();
+                    // ---- Hero band: deep-violet gradient with aurora glow + grid, like the website hero ----
+                    const heroH = 50;
+                    gradientRect(0, 0, pageW, heroH, [COLOR.violetDeep, COLOR.violetMid, COLOR.indigoDeep], 64);
+                    clipTo(
+                        () => doc.rect(0, 0, pageW, heroH, null),
+                        () => {
+                            glowOrb(pageW * 0.08, -4, 38, [168, 85, 247]);
+                            glowOrb(pageW * 0.96, 18, 32, [6, 182, 212]);
+                            glowOrb(pageW * 0.58, heroH + 6, 22, COLOR.orange);
+                            withOpacity(0.06, () => {
+                                doc.setDrawColor(...COLOR.white);
+                                doc.setLineWidth(0.15);
+                                for (let gx = 8; gx < pageW; gx += 9) doc.line(gx, 0, gx, heroH);
+                                for (let gy = 9; gy < heroH; gy += 9) doc.line(0, gy, pageW, gy);
+                            });
+                        }
+                    );
+
                     let textX = margin;
                     if (logo) {
                         try {
-                            doc.setDrawColor(...COLOR.hairline);
-                            doc.setLineWidth(0.25);
                             doc.setFillColor(...COLOR.white);
-                            doc.roundedRect(margin, 12, 22, 22, 4, 4, "FD");
-                            doc.addImage(logo, "JPEG", margin + 2, 14, 18, 18, "sc-logo");
-                            textX = margin + 27;
+                            doc.roundedRect(margin, 11, 24, 24, 5, 5, "F");
+                            doc.addImage(logo, "JPEG", margin + 2.5, 13.5, 19, 19, "sc-logo");
+                            textX = margin + 30;
                         } catch {
                             textX = margin;
                         }
                     }
-                    font("bold", 15, COLOR.ink);
-                    doc.text(INVOICE_SELLER.name, textX, 20);
-                    font("normal", 8.5, COLOR.muted);
-                    doc.text(INVOICE_SELLER.tagline, textX, 25.5);
-                    font("bold", 7.5, COLOR.violet);
-                    doc.text(`GSTIN ${INVOICE_SELLER.gstin}`, textX, 31, { charSpace: 0.2 });
-
-                    font("bold", 26, COLOR.ink);
-                    doc.text("Invoice", right, 22, { align: "right" });
-                    const status = "AWAITING CONFIRMATION";
-                    font("bold", 6.8, COLOR.violet);
-                    const statusW = doc.getTextWidth(status) + 11;
-                    doc.setFillColor(...COLOR.violetSoft);
-                    doc.roundedRect(right - statusW, 26.5, statusW, 6, 3, 3, "F");
-                    doc.setFillColor(...COLOR.violet);
-                    doc.circle(right - statusW + 4, 29.5, 0.9, "F");
-                    doc.text(status, right - 3.5, 30.6, { align: "right" });
-
-                    // ---- Key facts strip ----
-                    y = 42;
-                    const metaH = 17;
-                    doc.setDrawColor(...COLOR.hairline);
-                    doc.setLineWidth(0.25);
-                    doc.setFillColor(...COLOR.surface);
-                    doc.roundedRect(margin, y, contentW, metaH, 3, 3, "FD");
-                    const meta = [
-                        ["Challan No.", invoiceNo, COLOR.ink],
-                        ["Issued", invoiceDate, COLOR.ink],
-                        ["Delivery", customer.date ? formatDisplayDate(customer.date) : "To be confirmed", COLOR.ink],
-                        ["Amount due", pdfAmount(grandTotal), COLOR.violet],
-                    ];
-                    const metaW = contentW / meta.length;
-                    meta.forEach(([label, value, rgb], i) => {
-                        const cellX = margin + i * metaW;
-                        if (i) {
-                            doc.setDrawColor(...COLOR.hairline);
-                            doc.line(cellX, y + 4, cellX, y + metaH - 4);
+                    font("bold", 17, COLOR.white);
+                    doc.text(INVOICE_SELLER.name, textX, 19.5);
+                    font("normal", 8.5, COLOR.lavenderText);
+                    doc.text(INVOICE_SELLER.tagline, textX, 25);
+                    // GSTIN chip (frosted pill)
+                    const gstLabel = `GSTIN ${INVOICE_SELLER.gstin}`;
+                    font("bold", 7, COLOR.cyanSoft);
+                    const gstW = doc.getTextWidth(gstLabel) + gstLabel.length * 0.2 + 7;
+                    const frosted = (x, top, w, h) => {
+                        const faded = withOpacity(0.12, () => {
+                            doc.setFillColor(...COLOR.white);
+                            doc.roundedRect(x, top, w, h, h / 2, h / 2, "F");
+                        });
+                        if (!faded) {
+                            doc.setFillColor(...COLOR.violet);
+                            doc.roundedRect(x, top, w, h, h / 2, h / 2, "F");
                         }
-                        caption(label, cellX + 5, y + 6.5);
-                        font("bold", 9.5, rgb);
-                        doc.text(value, cellX + 5, y + 12.5);
-                    });
-                    y += metaH + 10;
+                    };
+                    frosted(textX, 28.5, gstW, 6);
+                    font("bold", 7, COLOR.cyanSoft);
+                    doc.text(gstLabel, textX + 3.5, 32.5, { charSpace: 0.2 });
 
-                    // ---- Billed by / Billed to ----
-                    const colGap = 10;
+                    caption("Order summary", right, 13, COLOR.lavenderText, "right");
+                    font("bold", 30, COLOR.white);
+                    doc.text("Invoice", right, 25, { align: "right" });
+                    // Live-status pill with a green dot, same as the "Since 2020" chip on the site.
+                    const status = "AWAITING CONFIRMATION";
+                    font("bold", 6.8, COLOR.white);
+                    const statusW = doc.getTextWidth(status) + 12;
+                    frosted(right - statusW, 29, statusW, 6.4);
+                    withOpacity(0.35, () => {
+                        doc.setFillColor(...COLOR.green);
+                        doc.circle(right - statusW + 4.2, 32.2, 1.8, "F");
+                    });
+                    doc.setFillColor(...COLOR.green);
+                    doc.circle(right - statusW + 4.2, 32.2, 1, "F");
+                    font("bold", 6.8, COLOR.white);
+                    doc.text(status, right - 3.5, 33.3, { align: "right" });
+
+                    // ---- Bento cards overlapping the hero edge ----
+                    y = 40;
+                    const bentoH = 24;
+                    const bentoGap = 4;
+                    const bentoW = (contentW - bentoGap * 3) / 4;
+                    const bento = [
+                        ["Challan No.", invoiceNo, "Quote this on WhatsApp"],
+                        ["Issued", invoiceDate, invoiceTime],
+                        [
+                            "Delivery",
+                            customer.date ? pdfText(formatDisplayDate(customer.date)) : "To be confirmed",
+                            customer.slot || "Slot to be confirmed",
+                        ],
+                    ];
+                    bento.forEach(([label, value, sub], i) => {
+                        const x = margin + i * (bentoW + bentoGap);
+                        card(x, y, bentoW, bentoH);
+                        caption(label, x + 4.5, y + 7);
+                        fitFont(value, bentoW - 9, "bold", 10, COLOR.ink);
+                        doc.text(value, x + 4.5, y + 14);
+                        fitFont(sub, bentoW - 9, "normal", 7.5, COLOR.muted, 6);
+                        doc.text(sub, x + 4.5, y + 19.5);
+                    });
+                    // Highlighted "Amount due" tile
+                    const dueX = margin + 3 * (bentoW + bentoGap);
+                    withOpacity(0.18, () => {
+                        doc.setFillColor(...COLOR.violet);
+                        doc.roundedRect(dueX + 0.5, y + 1.6, bentoW, bentoH, 3.5, 3.5, "F");
+                    });
+                    roundedGradient(dueX, y, bentoW, bentoH, 3.5, [COLOR.violetBright, COLOR.indigo]);
+                    caption("Amount due", dueX + 4.5, y + 7, COLOR.lavender);
+                    fitFont(pdfAmount(grandTotal), bentoW - 9, "bold", 11.5, COLOR.white);
+                    doc.text(pdfAmount(grandTotal), dueX + 4.5, y + 14.5);
+                    font("normal", 7.5, COLOR.lavender);
+                    doc.text(
+                        `${lineItems.length} item${lineItems.length === 1 ? "" : "s"} in cart`,
+                        dueX + 4.5,
+                        y + 19.5
+                    );
+                    y += bentoH + 7;
+
+                    // ---- Order progress tracker ----
+                    const steps = ["Cart ready", "Sent on WhatsApp", "Confirmed by us", "Delivered"];
+                    const activeStep = 1; // step 0 is done; the customer sends the enquiry next
+                    const segW = contentW / steps.length;
+                    const nodeY = y + 2.6;
+                    steps.forEach((label, i) => {
+                        const cx = margin + segW * (i + 0.5);
+                        if (i < steps.length - 1) {
+                            const done = i < activeStep;
+                            doc.setDrawColor(...(done ? COLOR.violet : COLOR.hairline));
+                            doc.setLineWidth(done ? 0.8 : 0.6);
+                            doc.line(cx + 3.6, nodeY, cx + segW - 3.6, nodeY);
+                        }
+                        if (i < activeStep) {
+                            doc.setFillColor(...COLOR.violet);
+                            doc.circle(cx, nodeY, 2.6, "F");
+                            doc.setDrawColor(...COLOR.white);
+                            doc.setLineWidth(0.55);
+                            doc.lines(
+                                [
+                                    [0.9, 0.9],
+                                    [1.8, -1.9],
+                                ],
+                                cx - 1.3,
+                                nodeY + 0.05
+                            );
+                        } else if (i === activeStep) {
+                            withOpacity(0.18, () => {
+                                doc.setFillColor(...COLOR.violetBright);
+                                doc.circle(cx, nodeY, 3.8, "F");
+                            });
+                            doc.setFillColor(...COLOR.white);
+                            doc.setDrawColor(...COLOR.violet);
+                            doc.setLineWidth(0.7);
+                            doc.circle(cx, nodeY, 2.6, "FD");
+                            doc.setFillColor(...COLOR.violet);
+                            doc.circle(cx, nodeY, 1.1, "F");
+                        } else {
+                            doc.setFillColor(...COLOR.white);
+                            doc.setDrawColor(...COLOR.faint);
+                            doc.setLineWidth(0.4);
+                            doc.circle(cx, nodeY, 2.6, "FD");
+                        }
+                        font(i <= activeStep ? "bold" : "normal", 7.8, i <= activeStep ? COLOR.ink : COLOR.faint);
+                        doc.text(label, cx, nodeY + 8, { align: "center" });
+                    });
+                    y += 15;
+
+                    // ---- Billed by / Billed to cards ----
+                    const colGap = 6;
                     const colW = (contentW - colGap) / 2;
                     const toX = margin + colW + colGap;
+                    const pad5 = 5;
                     const lineGap = 4.4;
                     font("normal", 8.8);
+                    const sellerPhones = INVOICE_SELLER.phones.split(/,\s*/);
                     const fromLines = [
-                        INVOICE_SELLER.address,
-                        ...doc.splitTextToSize(INVOICE_SELLER.phones, colW),
-                        INVOICE_SELLER.email,
+                        { text: INVOICE_SELLER.address },
+                        ...sellerPhones.map((p) => ({ text: p, url: `tel:${p.replace(/[^\d+]/g, "")}` })),
+                        { text: INVOICE_SELLER.email, url: `mailto:${INVOICE_SELLER.email}` },
                     ];
                     const toLines = [
-                        ...(customer.phone ? [customer.phone] : []),
-                        ...(customer.address ? doc.splitTextToSize(customer.address, colW) : []),
-                        `Time slot: ${customer.slot || "To be confirmed"}`,
-                        "Payment: UPI / Google Pay",
+                        ...(customer.phone ? [{ text: customer.phone }] : []),
+                        ...(customer.address
+                            ? doc.splitTextToSize(customer.address, colW - pad5 * 2).map((text) => ({ text }))
+                            : []),
+                        { text: `Time slot: ${customer.slot || "To be confirmed"}` },
+                        { text: "Payment: UPI / Google Pay" },
                     ];
-                    caption("Billed by", margin, y);
-                    caption("Billed to", toX, y);
-                    font("bold", 10.5, COLOR.ink);
-                    doc.text(INVOICE_SELLER.name, margin, y + 6);
-                    doc.text(doc.splitTextToSize(customer.workshop || "Customer", colW)[0], toX, y + 6);
-                    font("normal", 8.8, COLOR.text);
-                    fromLines.forEach((line, i) => doc.text(line, margin, y + 11 + i * lineGap));
-                    toLines.forEach((line, i) => doc.text(line, toX, y + 11 + i * lineGap));
-                    y += 11 + Math.max(fromLines.length, toLines.length) * lineGap + 6;
+                    const partyH = 19 + Math.max(fromLines.length, toLines.length) * lineGap;
+                    if (y + partyH > bottomLimit) newPage();
+                    const drawParty = (x, label, dotRgb, name, lines) => {
+                        card(x, y, colW, partyH, 3.5, COLOR.surface);
+                        doc.setFillColor(...dotRgb);
+                        doc.circle(x + pad5 + 0.8, y + 6.3, 1, "F");
+                        caption(label, x + pad5 + 3.5, y + 7);
+                        font("bold", 10.5, COLOR.ink);
+                        doc.text(doc.splitTextToSize(name, colW - pad5 * 2)[0], x + pad5, y + 13);
+                        lines.forEach((line, i) => {
+                            const top = y + 18.5 + i * lineGap;
+                            if (line.url) {
+                                font("normal", 8.8, COLOR.violet);
+                                doc.textWithLink(line.text, x + pad5, top, { url: line.url });
+                            } else {
+                                font("normal", 8.8, COLOR.text);
+                                doc.text(line.text, x + pad5, top);
+                            }
+                        });
+                    };
+                    drawParty(margin, "Billed by", COLOR.violet, INVOICE_SELLER.name, fromLines);
+                    drawParty(toX, "Billed to", COLOR.orange, customer.workshop || "Customer", toLines);
+                    y += partyH + 7;
 
-                    // ---- Item table: no fills, just type and hairlines ----
+                    // ---- Item table: soft header pill, zebra rows, numbered badges, qty chips ----
                     // Column widths add up to contentW (178mm on A4).
                     const widths = [12, 82, 24, 30, 30];
                     const xs = widths.reduce((acc, w, i) => [...acc, acc[i] + w], [margin]);
-                    const cell = { no: xs[0], name: xs[1], qty: xs[3] - 2, rate: xs[4] - 2, amount: xs[5] };
+                    const cell = { no: xs[0], name: xs[1], qty: xs[3] - 2, rate: xs[4] - 2, amount: xs[5] - 3 };
                     const nameWidth = widths[1] - 4;
 
                     const drawTableHeader = () => {
-                        caption("#", cell.no, y + 5);
-                        caption("Item", cell.name, y + 5);
-                        caption("Qty", cell.qty, y + 5, COLOR.faint, "right");
-                        caption("Rate", cell.rate, y + 5, COLOR.faint, "right");
-                        caption("Amount", cell.amount, y + 5, COLOR.faint, "right");
-                        hairline(margin, y + 8, right, COLOR.ink, 0.4);
-                        y += 8;
+                        doc.setFillColor(...COLOR.violetSoft);
+                        doc.roundedRect(margin, y, contentW, 8.5, 2.5, 2.5, "F");
+                        caption("#", cell.no + 2.6, y + 5.5, COLOR.violet);
+                        caption("Item", cell.name, y + 5.5, COLOR.violet);
+                        caption("Qty", cell.qty, y + 5.5, COLOR.violet, "right");
+                        caption("Rate", cell.rate, y + 5.5, COLOR.violet, "right");
+                        caption("Amount", cell.amount, y + 5.5, COLOR.violet, "right");
+                        y += 10;
                     };
 
                     drawTableHeader();
@@ -4900,9 +5091,15 @@
                             newPage();
                             drawTableHeader();
                         }
+                        if (i % 2 === 1) {
+                            doc.setFillColor(...COLOR.surface);
+                            doc.roundedRect(margin, y, contentW, rowH, 2, 2, "F");
+                        }
                         const baseline = y + 6.6;
-                        font("bold", 8.5, COLOR.faint);
-                        doc.text(pad(i + 1), cell.no, baseline);
+                        doc.setFillColor(...COLOR.violetSoft);
+                        doc.circle(cell.no + 3.6, baseline - 1.3, 2.9, "F");
+                        font("bold", 7, COLOR.violet);
+                        doc.text(pad(i + 1), cell.no + 3.6, baseline - 0.3, { align: "center" });
                         font("bold", 9.5, COLOR.ink);
                         doc.text(nameLines, cell.name, baseline);
                         font("normal", 7.8, COLOR.muted);
@@ -4911,30 +5108,67 @@
                             cell.name,
                             baseline + nameLines.length * lineGap
                         );
+                        const qtyLabel = `${item.qty} ${item.unit}`;
+                        font("bold", 8, COLOR.indigo);
+                        const chipW = doc.getTextWidth(qtyLabel) + 5;
+                        doc.setFillColor(...COLOR.white);
+                        doc.setDrawColor(...COLOR.lavender);
+                        doc.setLineWidth(0.3);
+                        doc.roundedRect(cell.qty - chipW + 1, baseline - 3.9, chipW, 5.4, 2.7, 2.7, "FD");
+                        doc.text(qtyLabel, cell.qty - 1.5, baseline, { align: "right" });
                         font("normal", 9, COLOR.text);
-                        doc.text(`${item.qty} ${item.unit}`, cell.qty, baseline, { align: "right" });
                         doc.text(pdfAmount(item.product.price), cell.rate, baseline, { align: "right" });
                         font("normal", 7.5, COLOR.faint);
                         doc.text(`per ${item.unit}`, cell.rate, baseline + lineGap, { align: "right" });
                         font("bold", 9.5, COLOR.ink);
                         doc.text(pdfAmount(item.lineTotal), cell.amount, baseline, { align: "right" });
-                        hairline(margin, y + rowH, right);
                         y += rowH;
                     });
+                    hairline(margin, y + 1, right);
 
-                    // ---- Amount in words (left) + totals with a dark "total due" tile (right) ----
+                    // ---- Scan-to-pay card (left) + totals with a gradient "total due" tile (right) ----
                     const totalsW = 78;
                     const totalsX = right - totalsW;
-                    const wordsW = contentW - totalsW - 12;
-                    font("italic", 9);
-                    const wordLines = doc.splitTextToSize(amountInWords(grandTotal), wordsW);
-                    const totalsH = Math.max(34, 9.5 + wordLines.length * lineGap);
-                    if (y + totalsH + 8 > bottomLimit) newPage();
-                    y += 8;
+                    const payW = contentW - totalsW - 8;
+                    font("italic", 7.8);
+                    const wordLines = doc.splitTextToSize(amountInWords(grandTotal), totalsW);
+                    const payH = 36;
+                    const totalsH = Math.max(payH, 39 + (wordLines.length - 1) * 3.6);
+                    if (y + totalsH + 6 > bottomLimit) newPage();
+                    y += 6;
 
-                    caption("Amount in words", margin, y + 4);
-                    font("italic", 9, COLOR.text);
-                    doc.text(wordLines, margin, y + 9.5);
+                    card(margin, y, payW, payH, 4, COLOR.surface);
+                    let payX = margin + 6;
+                    let qrDrawn = false;
+                    // Google Pay scanner on the left of the card; without it the card just shows the UPI ID.
+                    if (upiQr) {
+                        const qrSize = 28;
+                        try {
+                            doc.setDrawColor(...COLOR.lavender);
+                            doc.setLineWidth(0.4);
+                            doc.setFillColor(...COLOR.white);
+                            doc.roundedRect(margin + 4, y + 4, qrSize, qrSize, 3, 3, "FD");
+                            doc.addImage(upiQr, "PNG", margin + 5.5, y + 5.5, qrSize - 3, qrSize - 3, "upi-qr", "FAST");
+                            payX = margin + qrSize + 9;
+                            qrDrawn = true;
+                        } catch {
+                            // A bad image must not block the invoice; the UPI ID is enough to pay.
+                        }
+                    }
+                    const payTextW = margin + payW - 4 - payX;
+                    caption(qrDrawn ? "Scan to pay" : "Payment", payX, y + 9, COLOR.violet);
+                    font("bold", 11.5, COLOR.ink);
+                    doc.text("Pay via UPI", payX, y + 15.5);
+                    fitFont(INVOICE_SELLER.upi, payTextW, "bold", 9, COLOR.violet, 6.5);
+                    doc.setFont("courier", "bold");
+                    doc.text(INVOICE_SELLER.upi, payX, y + 21.5);
+                    font("normal", 7.8, COLOR.muted);
+                    doc.text(`Payee: ${INVOICE_SELLER.name}`, payX, y + 26.5);
+                    doc.text(
+                        doc.splitTextToSize("Google Pay, PhonePe or any UPI app", payTextW)[0],
+                        payX,
+                        y + 30.5
+                    );
 
                     font("normal", 9, COLOR.muted);
                     doc.text("Subtotal", totalsX, y + 4);
@@ -4943,75 +5177,55 @@
                     doc.text(pdfAmount(grandTotal), right, y + 4, { align: "right" });
                     doc.text(`${lineItems.length} / ${totalUnits}`, right, y + 10, { align: "right" });
                     hairline(totalsX, y + 13.5, right);
-                    doc.setFillColor(...COLOR.violetDeep);
-                    doc.roundedRect(totalsX, y + 17, totalsW, 17, 3.5, 3.5, "F");
-                    caption("Total due", totalsX + 5, y + 23.5, COLOR.lavenderText);
-                    font("bold", 15, COLOR.white);
-                    doc.text(pdfAmount(grandTotal), right - 5, y + 29.5, { align: "right" });
-                    y += totalsH + 10;
+                    withOpacity(0.2, () => {
+                        doc.setFillColor(...COLOR.violet);
+                        doc.roundedRect(totalsX + 0.6, y + 18.3, totalsW, 15.5, 4, 4, "F");
+                    });
+                    roundedGradient(totalsX, y + 16.5, totalsW, 15.5, 4, [COLOR.violetDeep, COLOR.violet, COLOR.indigo]);
+                    caption("Total due", totalsX + 5, y + 25.6, COLOR.lavender);
+                    fitFont(pdfAmount(grandTotal), totalsW - 34, "bold", 15, COLOR.white, 10);
+                    doc.text(pdfAmount(grandTotal), right - 5, y + 27, { align: "right" });
+                    font("italic", 7.8, COLOR.muted);
+                    doc.text(wordLines, right, y + 37, { align: "right", lineHeightFactor: 1.3 });
+                    y += totalsH + 8;
 
-                    // ---- Payment card (QR + UPI) with signatory on the right ----
-                    const payH = 36;
-                    const closingH = payH + 24;
+                    // ---- Terms (left) + one-tap WhatsApp confirm and signatory (right) ----
+                    const signW = 56;
+                    const termsW = contentW - signW - 12;
+                    font("normal", 7.8);
+                    const termLines = doc.splitTextToSize(
+                        "1. This invoice is generated from the online cart and is not a tax invoice.\n" +
+                            "2. Prices and availability will be confirmed by Swapnil Chemicals on WhatsApp.",
+                        termsW
+                    );
+                    const closingH = Math.max(30, 6 + termLines.length * 3.6);
                     if (y + closingH > bottomLimit) newPage();
-                    doc.setDrawColor(...COLOR.hairline);
-                    doc.setLineWidth(0.25);
-                    doc.setFillColor(...COLOR.surface);
-                    doc.roundedRect(margin, y, contentW, payH, 3.5, 3.5, "FD");
-                    let payX = margin + 6;
-                    let qrDrawn = false;
-                    // Google Pay scanner on the left of the card; without it the card just shows the UPI ID.
-                    if (upiQr) {
-                        const qrSize = 28;
-                        try {
-                            doc.setFillColor(...COLOR.white);
-                            doc.roundedRect(margin + 4, y + 4, qrSize, qrSize, 2.5, 2.5, "FD");
-                            doc.addImage(upiQr, "PNG", margin + 5.5, y + 5.5, qrSize - 3, qrSize - 3, "upi-qr", "FAST");
-                            payX = margin + qrSize + 10;
-                            qrDrawn = true;
-                        } catch {
-                            // A bad image must not block the invoice; the UPI ID is enough to pay.
-                        }
-                    }
-                    caption("Payment", payX, y + 8);
-                    font("bold", 11, COLOR.ink);
-                    doc.text("Pay via UPI", payX, y + 14);
-                    font("bold", 9.5, COLOR.violet, "courier");
-                    doc.text(INVOICE_SELLER.upi, payX, y + 20);
-                    font("normal", 8.3, COLOR.muted);
-                    doc.text(`Payee: ${INVOICE_SELLER.name}`, payX, y + 25.5);
-                    doc.text(
-                        qrDrawn
-                            ? "Scan with Google Pay, PhonePe or any UPI app"
-                            : "Google Pay / PhonePe / any UPI app",
-                        payX,
-                        y + 30
-                    );
+                    caption("Terms & notes", margin, y + 3);
+                    font("normal", 7.8, COLOR.muted);
+                    doc.text(termLines, margin, y + 8, { lineHeightFactor: 1.3 });
 
-                    font("bold", 9, COLOR.ink);
-                    doc.text(`For ${INVOICE_SELLER.name}`, right - 6, y + 9, { align: "right" });
-                    hairline(right - 56, y + 25, right - 6, COLOR.faint, 0.3);
-                    font("normal", 7.5, COLOR.muted);
-                    doc.text("Authorised signatory", right - 6, y + 29.5, { align: "right" });
-
-                    y += payH + 9;
-                    caption("Terms & notes", margin, y);
-                    font("normal", 8, COLOR.muted);
-                    doc.text(
-                        doc.splitTextToSize(
-                            "1. This invoice is generated from the online cart and is not a tax invoice.\n" +
-                                "2. Prices and availability will be confirmed by Swapnil Chemicals on WhatsApp.",
-                            contentW
+                    // Clickable button - opens WhatsApp with the challan number pre-filled.
+                    const waH = 8.5;
+                    const waX = right - signW;
+                    roundedGradient(waX, y, signW, waH, waH / 2, [COLOR.waGreen, COLOR.waTeal]);
+                    font("bold", 8.5, COLOR.white);
+                    doc.text("Confirm on WhatsApp  >", waX + signW / 2, y + 5.6, { align: "center" });
+                    doc.link(waX, y, signW, waH, {
+                        url: buildWhatsAppUrl(
+                            `Hi Swapnil Chemicals, I'd like to confirm order ${invoiceNo} for ${pdfAmount(grandTotal)}.`
                         ),
-                        margin,
-                        y + 5
-                    );
+                    });
+                    font("bold", 8.5, COLOR.ink);
+                    doc.text(`For ${INVOICE_SELLER.name}`, right, y + 15, { align: "right" });
+                    hairline(right - signW, y + 25, right, COLOR.faint, 0.3);
+                    font("normal", 7.5, COLOR.muted);
+                    doc.text("Authorised signatory", right, y + 29, { align: "right" });
 
-                    // ---- Footer on every page ----
+                    // ---- Footer on every page: brand gradient rule + page count ----
                     const pageCount = doc.getNumberOfPages();
                     for (let p = 1; p <= pageCount; p++) {
                         doc.setPage(p);
-                        hairline(margin, pageH - 14, right);
+                        gradientRect(margin, pageH - 14.3, contentW, 0.6, brandStops, 48);
                         font("bold", 7.5, COLOR.ink);
                         doc.text("Thank you for your business", margin, pageH - 8.5);
                         font("normal", 7.5, COLOR.faint);
