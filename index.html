@@ -3771,10 +3771,6 @@
                         </button>
                     </div>
                     <p id="upiPayStatus" class="text-xs text-gray-500 mt-3" aria-live="polite"></p>
-                    <p class="text-xs text-gray-500 mt-2">
-                        Payment declined or "money not debited"? Open your UPI app, choose
-                        <b>Pay UPI ID</b>, paste the UPI ID above and type the amount yourself.
-                    </p>
                     <button type="button" class="btn-secondary w-full mt-6 py-3 rounded-xl text-white font-bold" data-action="upi-paid">
                         <i class="fab fa-whatsapp" aria-hidden="true"></i> I've paid — send order details
                     </button>
@@ -4004,7 +4000,7 @@
             // Business, Paytm Business or a bank merchant VPA). Personal IDs such as "...@oksbi"
             // are routinely declined by GPay when opened from a website with a pre-filled amount.
             const UPI_PAYEE = {
-                vpa: "boism-9352470085@boi", // same business ID as the Contact QR and the invoice PDF
+                vpa: "gajendra25feb68-1@oksbi",
                 name: "Swapnil Chemicals",
             };
             const UPI_MAX_AMOUNT = 100000; // UPI per-transaction cap for most P2M payments
