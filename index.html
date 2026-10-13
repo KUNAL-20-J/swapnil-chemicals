@@ -4323,7 +4323,18 @@
                 </div>
                 <div class="enquiry-body text-center">
                     <p class="text-sm text-gray-500">Amount to pay</p>
-                    <p id="upiPayAmount" class="text-3xl font-bold text-gray-800 mb-4"></p>
+                    <div class="flex items-center justify-center gap-2 mb-4">
+                        <p id="upiPayAmount" class="text-3xl font-bold text-gray-800"></p>
+                        <button
+                            type="button"
+                            class="text-gray-400 hover:text-blue-600"
+                            data-action="copy"
+                            id="upiPayAmountCopyBtn"
+                            aria-label="Copy amount"
+                        >
+                            <i class="fas fa-copy text-sm" aria-hidden="true"></i>
+                        </button>
+                    </div>
                     <img
                         id="upiPayQr"
                         src=""
@@ -4597,14 +4608,16 @@
 
             // Built by hand rather than with URLSearchParams: that encodes "@" as %40 and spaces as
             // "+", which several UPI apps don't decode and then reject as an invalid payee.
+            // Google Pay declines website-launched upi:// intents that carry a pre-filled amount
+            // ("You've exceeded the bank limit… money has not been debited") unless the payee is a
+            // verified merchant with a signed intent. So the "Open app" button sends no am/tn and
+            // the customer types the amount shown on screen; the QR (scanned, not launched from
+            // the browser) keeps the amount + order ref.
             function buildUpiLink(amount, ref) {
-                return (
-                    `upi://pay?pa=${UPI_PAYEE.vpa}` +
-                    `&pn=${encodeURIComponent(UPI_PAYEE.name)}` +
-                    `&am=${amount.toFixed(2)}` +
-                    `&cu=INR` +
-                    `&tn=${encodeURIComponent(`Order ${ref}`)}`
-                );
+                let link = `upi://pay?pa=${UPI_PAYEE.vpa}` + `&pn=${encodeURIComponent(UPI_PAYEE.name)}` + `&cu=INR`;
+                if (amount) link += `&am=${amount.toFixed(2)}`;
+                if (ref) link += `&tn=${encodeURIComponent(`Order ${ref}`)}`;
+                return link;
             }
 
             function openUpiPayModal() {
@@ -4619,22 +4632,24 @@
                 }
 
                 upiPayRef = "SC" + Date.now().toString(36).toUpperCase();
-                const link = buildUpiLink(amount, upiPayRef);
+                const link = buildUpiLink(amount, upiPayRef); // for the QR
+                const appIntentLink = buildUpiLink(); // for the "Open app" button - no preset amount
                 const isMobile =
                     (navigator.userAgentData && navigator.userAgentData.mobile) ||
                     /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
                 document.getElementById("upiPayRef").textContent = upiPayRef;
                 document.getElementById("upiPayAmount").textContent = formatCurrency(amount);
+                document.getElementById("upiPayAmountCopyBtn").dataset.copyText = String(amount);
                 document.getElementById("upiPayVpa").textContent = UPI_PAYEE.vpa;
                 document.getElementById("upiPayCopyBtn").dataset.copyText = UPI_PAYEE.vpa;
                 document.getElementById("upiPayQr").src =
                     "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(link);
                 const appLink = document.getElementById("upiPayLink");
-                appLink.href = link;
+                appLink.href = appIntentLink;
                 appLink.classList.toggle("desktop-hidden", !isMobile);
                 document.getElementById("upiPayStatus").textContent = isMobile
-                    ? "Tap the button to open your UPI app, or scan the QR from another phone."
+                    ? `Tap the button, enter ${formatCurrency(amount)} in your UPI app and add the note "${upiPayRef}". Or scan the QR from another phone.`
                     : "📱 Open Google Pay on your phone and scan this QR.";
 
                 if (document.getElementById("cartPanel")?.classList.contains("hidden") === false) toggleCart();
