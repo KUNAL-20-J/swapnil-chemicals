@@ -4995,6 +4995,12 @@
                 stateName: "Rajasthan",
                 stateCode: "08",
                 jurisdiction: "Jaipur",
+                 bank: {
+                    name: "Bank of India",
+                    accountNo: "664430110000084",
+                    branchIfsc: "Mansarovar Jaipur & BKID0006644",
+            },
+                
             };
 
             // The number is time-based and generated in the visitor's browser (not a sequential
@@ -5338,6 +5344,28 @@
                         font("bold", 8);
                         doc.text(value, L + pad + 33, b);
                     });
+
+
+                    // custom K 13-10-26
+                    // Bank details, right-hand side of the same block (aligned with the GSTIN/PAN rows)
+const bx = midX + pad;
+font("bold", 8);
+doc.text("Company's Bank Details", bx, lowTop + 3.8);
+[
+    ["Bank Name", INVOICE_SELLER.bank.name],
+    ["A/c No.", INVOICE_SELLER.bank.accountNo],
+    ["Branch & IFS Code", INVOICE_SELLER.bank.branchIfsc],
+].forEach(([label, value], i) => {
+    const b = lowTop + 7.6 + i * 3.8;
+    font("normal", 8);
+    doc.text(label, bx, b);
+    doc.text(":", bx + 29, b);
+    font("bold", 8);
+    doc.text(fit(value, R - bx - 31 - pad), bx + 31, b);
+});
+
+
+
                     font("normal", 7.5);
                     doc.text("Declaration", L + pad, lowTop + 17);
                     doc.text(
