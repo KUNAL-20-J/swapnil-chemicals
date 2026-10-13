@@ -726,16 +726,6 @@
                 transform: translateY(-1px);
             }
 
-            /* Pay button goes first in the cart, so the enquiry button below it is toned down */
-            #cartGpayBtn {
-                background: #1e293b;
-            }
-
-            /* Desktops have no UPI app to open; they scan the QR instead */
-            .upi-pay-app-link.desktop-hidden {
-                display: none;
-            }
-
             /* Native <dialog> modals. The dialog is a transparent full-viewport layer (so a click
                outside the card lands on the dialog itself); the inner box is the visible card. */
             dialog.sc-modal {
@@ -3603,10 +3593,7 @@
                     <span class="font-semibold text-gray-700">Total:</span>
                     <span class="font-bold text-lg text-gray-800" id="cartTotal">₹0</span>
                 </div>
-                <button id="cartUpiPayBtn" type="button" class="gpay-btn upi-pay-btn" data-action="open-upi-pay">
-                    Pay with Google Pay / UPI
-                </button>
-                <button id="cartGpayBtn" class="gpay-btn mt-2" data-action="open-cart-enquiry">Send Enquiry</button>
+                <button id="cartGpayBtn" class="gpay-btn" data-action="open-cart-enquiry">Send Enquiry</button>
                 <button
                     class="w-full mt-2 text-xs text-gray-400 hover:text-red-500 font-semibold py-1"
                     data-action="clear-cart"
@@ -3727,56 +3714,6 @@
                     <button class="enquiry-submit-btn" data-action="submit-enquiry">
                         <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry via WhatsApp
                     </button>
-                </div>
-            </div>
-        </dialog>
-
-        <dialog id="upiPayModal" class="sc-modal" aria-labelledby="upiPayModalTitle">
-            <div class="enquiry-modal-box" tabindex="-1">
-                <div class="enquiry-modal-header">
-                    <div>
-                        <h2 id="upiPayModalTitle" class="text-white text-xl font-bold">Pay with Google Pay / UPI</h2>
-                        <p class="text-blue-100 text-xs mt-1">Order ref: <span id="upiPayRef" class="font-mono"></span></p>
-                    </div>
-                    <button type="button" class="enquiry-close-btn" data-action="close-upi-pay" aria-label="Close payment">
-                        <i class="fas fa-xmark" aria-hidden="true"></i>
-                    </button>
-                </div>
-                <div class="enquiry-body text-center">
-                    <p class="text-sm text-gray-500">Amount to pay</p>
-                    <p id="upiPayAmount" class="text-3xl font-bold text-gray-800 mb-4"></p>
-                    <img
-                        id="upiPayQr"
-                        src=""
-                        width="220"
-                        height="220"
-                        class="mx-auto rounded-lg bg-white p-3 shadow-md"
-                        alt="UPI QR code for this order"
-                        decoding="async"
-                    />
-                    <p class="text-sm text-gray-500 mt-3">Scan with Google Pay, PhonePe, Paytm or any UPI app</p>
-                    <a id="upiPayLink" href="#" class="gpay-btn upi-pay-app-link mt-4" rel="noopener">
-                        <i class="fas fa-mobile-screen" aria-hidden="true"></i> Open Google Pay / UPI app
-                    </a>
-                    <div class="flex items-center justify-center gap-2 mt-4 text-sm text-gray-700">
-                        <span>UPI ID: <b id="upiPayVpa" class="font-mono"></b></span>
-                        <button
-                            type="button"
-                            class="text-gray-400 hover:text-blue-600"
-                            data-action="copy"
-                            id="upiPayCopyBtn"
-                            aria-label="Copy UPI ID"
-                        >
-                            <i class="fas fa-copy text-sm" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <p id="upiPayStatus" class="text-xs text-gray-500 mt-3" aria-live="polite"></p>
-                    <button type="button" class="btn-secondary w-full mt-6 py-3 rounded-xl text-white font-bold" data-action="upi-paid">
-                        <i class="fab fa-whatsapp" aria-hidden="true"></i> I've paid — send order details
-                    </button>
-                    <p class="text-xs text-gray-400 mt-2">
-                        Your order is confirmed once we see the payment in our account. Please mention the order ref.
-                    </p>
                 </div>
             </div>
         </dialog>
@@ -3993,84 +3930,6 @@
                             "No UPI app opened? Install Google Pay / PhonePe, or pay to UPI ID boism-9352470085@boi.";
                     }
                 }, 2500);
-            }
-
-            // ---------- Cart checkout via UPI (Google Pay / PhonePe / Paytm) ----------
-            // IMPORTANT: use a MERCHANT / business UPI ID here (Google Pay for Business, PhonePe
-            // Business, Paytm Business or a bank merchant VPA). Personal IDs such as "...@oksbi"
-            // are routinely declined by GPay when opened from a website with a pre-filled amount.
-            const UPI_PAYEE = {
-                vpa: "gajendra25feb68-1@oksbi",
-                name: "Swapnil Chemicals",
-            };
-            const UPI_MAX_AMOUNT = 100000; // UPI per-transaction cap for most P2M payments
-
-            let upiPayRef = "";
-            let paidUpiRef = ""; // set only when the cart enquiry was opened from "I've paid"
-
-            function cartGrandTotal() {
-                return Object.values(cart).reduce((s, i) => s + i.product.price * i.selectedQty * i.qty, 0);
-            }
-
-            // Built by hand rather than with URLSearchParams: that encodes "@" as %40 and spaces as
-            // "+", which several UPI apps don't decode and then reject as an invalid payee.
-            function buildUpiLink(amount, ref) {
-                return (
-                    `upi://pay?pa=${UPI_PAYEE.vpa}` +
-                    `&pn=${encodeURIComponent(UPI_PAYEE.name)}` +
-                    `&am=${amount.toFixed(2)}` +
-                    `&cu=INR` +
-                    `&tn=${encodeURIComponent(`Order ${ref}`)}`
-                );
-            }
-
-            function openUpiPayModal() {
-                const modal = document.getElementById("upiPayModal");
-                const amount = Math.round(cartGrandTotal());
-                if (!modal || amount <= 0) return;
-                if (amount > UPI_MAX_AMOUNT) {
-                    alert(
-                        `Orders above ${formatCurrency(UPI_MAX_AMOUNT)} can't be paid in one UPI transaction. Please send an enquiry and we'll share bank transfer details.`
-                    );
-                    return;
-                }
-
-                upiPayRef = "SC" + Date.now().toString(36).toUpperCase();
-                const link = buildUpiLink(amount, upiPayRef);
-                const isMobile =
-                    (navigator.userAgentData && navigator.userAgentData.mobile) ||
-                    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-                document.getElementById("upiPayRef").textContent = upiPayRef;
-                document.getElementById("upiPayAmount").textContent = formatCurrency(amount);
-                document.getElementById("upiPayVpa").textContent = UPI_PAYEE.vpa;
-                document.getElementById("upiPayCopyBtn").dataset.copyText = UPI_PAYEE.vpa;
-                document.getElementById("upiPayQr").src =
-                    "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(link);
-                const appLink = document.getElementById("upiPayLink");
-                appLink.href = link;
-                appLink.classList.toggle("desktop-hidden", !isMobile);
-                document.getElementById("upiPayStatus").textContent = isMobile
-                    ? "Tap the button to open your UPI app, or scan the QR from another phone."
-                    : "📱 Open Google Pay on your phone and scan this QR.";
-
-                if (document.getElementById("cartPanel")?.classList.contains("hidden") === false) toggleCart();
-                openDialog(modal, ".enquiry-modal-box");
-            }
-
-            function closeUpiPayModal() {
-                closeDialog(document.getElementById("upiPayModal"));
-            }
-
-            // The website gets no callback from the UPI app, so payment can't be verified here.
-            // The customer sends the order + ref via the existing enquiry flow and the shop
-            // matches it against the bank/GPay statement before dispatching.
-            function onUpiPaid() {
-                closeUpiPayModal();
-                openCartEnquiry();
-                paidUpiRef = upiPayRef;
-                const subtitle = document.getElementById("enquiryModalSubtitle");
-                if (subtitle && paidUpiRef) subtitle.textContent = `UPI payment ref: ${paidUpiRef} — added to your message`;
             }
 
             const products = [
@@ -4348,10 +4207,6 @@
                 if (gpayBtn) {
                     gpayBtn.innerHTML = `<i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry &bull; ${formatCurrency(Math.round(grandTotal))}`;
                 }
-                const upiPayBtn = document.getElementById("cartUpiPayBtn");
-                if (upiPayBtn) {
-                    upiPayBtn.innerHTML = `<i class="fab fa-google-pay" aria-hidden="true"></i> Pay ${formatCurrency(Math.round(grandTotal))} with Google Pay / UPI`;
-                }
             }
 
             function changeCartQty(key, delta, e) {
@@ -4544,7 +4399,6 @@
             function openCartEnquiry() {
                 const keys = Object.keys(cart);
                 if (!keys.length) return;
-                paidUpiRef = "";
                 let grandTotal = 0;
                 const itemsHtml = keys
                     .map((key) => {
@@ -4615,7 +4469,6 @@
                 lines.push(``, ...customerMessageLines(customer));
                 if (details) lines.push(`📝 Details: ${details}`);
                 lines.push(`💰 Grand Total: ${formatCurrency(grandTotal)}`);
-                if (paidUpiRef) lines.push(`✅ Paid via UPI — Ref: ${paidUpiRef} (please verify)`);
                 safeOpenNewTab(buildWhatsAppUrl(lines.join("\n")));
                 closeEnquiryModal();
             }
@@ -6115,7 +5968,6 @@
             closeOnBackdropClick(enquiryModal, closeEnquiryModal);
             closeOnBackdropClick(addedCartModal, closeAddedCartModal);
             closeOnBackdropClick(removeConfirmModal, closeRemoveConfirmModal);
-            closeOnBackdropClick(document.getElementById("upiPayModal"), closeUpiPayModal);
 
             // "close" fires for every way a dialog can close (buttons, backdrop, Escape).
             addedCartModal?.addEventListener("close", () => {
@@ -6569,15 +6421,6 @@
                         break;
                     case "open-cart-enquiry":
                         openCartEnquiry();
-                        break;
-                    case "open-upi-pay":
-                        openUpiPayModal();
-                        break;
-                    case "close-upi-pay":
-                        closeUpiPayModal();
-                        break;
-                    case "upi-paid":
-                        onUpiPaid();
                         break;
                     case "clear-cart":
                         clearCart();
