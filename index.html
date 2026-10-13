@@ -21,7 +21,7 @@
         />
         <meta name="robots" content="index, follow" />
         <meta name="color-scheme" content="light" />
-        <meta name="theme-color" content="#2a0612" />
+        <meta name="theme-color" content="#1e293b" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -47,7 +47,7 @@
 
         <meta
             http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
+            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.gstatic.com https://api.qrserver.com; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
         />
         <!-- frame-ancestors is ignored by browsers when set via <meta>; real clickjacking protection needs an X-Frame-Options/CSP response header from the server -->
 
@@ -66,7 +66,7 @@
             onload="this.media='all'"
         />
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&family=Yatra+One&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap"
             rel="stylesheet"
             media="print"
             onload="this.media='all'"
@@ -74,7 +74,7 @@
         <noscript>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
             <link
-                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&family=Yatra+One&display=swap"
+                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap"
                 rel="stylesheet"
             />
         </noscript>
@@ -704,6 +704,36 @@
                 padding: 32px 16px;
                 color: #94a3b8;
                 font-size: 14px;
+            }
+
+            .gpay-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                width: 100%;
+                padding: 10px 12px;
+                border-radius: 0.875rem;
+                font-weight: 700;
+                background: linear-gradient(135deg, #34a853, #1a8a3c);
+                color: #fff;
+                text-decoration: none;
+                transition: all 0.25s ease;
+            }
+
+            .gpay-btn:hover {
+                background: linear-gradient(135deg, #2d9142, #0f6e2d);
+                transform: translateY(-1px);
+            }
+
+            /* Pay button goes first in the cart, so the enquiry button below it is toned down */
+            #cartGpayBtn {
+                background: #1e293b;
+            }
+
+            /* Desktops have no UPI app to open; they scan the QR instead */
+            .upi-pay-app-link.desktop-hidden {
+                display: none;
             }
 
             /* Native <dialog> modals. The dialog is a transparent full-viewport layer (so a click
@@ -1502,6 +1532,7 @@
                     .add-to-cart-btn,
                     .enquiry-trigger-btn,
                     .enquiry-submit-btn,
+                    .gpay-btn,
                     .cart-icon-btn,
                     .ai-assistant-btn,
                     .assistant-send-btn
@@ -2818,565 +2849,6 @@
                     }
                 }
             }
-
-            /* ================================================================
-               Diwali theme: maroon night sky, gold & saffron, diyas, toran,
-               rangoli, kandils and canvas fireworks. Layered on top of
-               everything above, so deleting this block restores the old look.
-               ================================================================ */
-            :root {
-                --page-bg: #fff7ed;
-                --violet-deep: #2a0612;
-                --violet: #b91c1c;
-                --violet-bright: #d97706;
-                --indigo: #be123c;
-                --cyan: #fbbf24;
-                --brand-accent: #d97706;
-                --brand-accent-dark: #b45309;
-                --brand-cta: #e11d48;
-                --brand-cta-dark: #be123c;
-                --diwali-gold: #fbbf24;
-                --diwali-gold-deep: #b45309;
-                --diwali-maroon: #7f1d1d;
-                --font-festive: "Yatra One", var(--font-display);
-                --glow-violet: 0 0 0 1px rgba(217, 119, 6, 0.28), 0 24px 50px -16px rgba(180, 83, 9, 0.45);
-            }
-
-            ::selection {
-                background: var(--diwali-gold-deep);
-            }
-
-            ::-webkit-scrollbar-thumb {
-                background: linear-gradient(180deg, #f59e0b, #e11d48);
-            }
-
-            html {
-                scrollbar-color: #d97706 #fde68a;
-            }
-
-            :is(button, a, input, textarea, select, summary):focus-visible {
-                outline-color: #b45309;
-            }
-
-            body::before {
-                background: radial-gradient(40vw 40vw at 0% 30%, rgba(251, 191, 36, 0.12), transparent 70%),
-                    radial-gradient(35vw 35vw at 100% 60%, rgba(225, 29, 72, 0.08), transparent 70%),
-                    radial-gradient(30vw 30vw at 50% 100%, rgba(234, 88, 12, 0.08), transparent 70%);
-            }
-
-            .text-blue-600 {
-                color: #c2410c;
-            }
-
-            .ring-blue-500\/20 {
-                --tw-ring-color: rgba(251, 191, 36, 0.6);
-            }
-
-            /* ---------- Greeting ribbon ---------- */
-            .diwali-ribbon {
-                position: relative;
-                z-index: 51;
-                padding: 8px 16px;
-                text-align: center;
-                font-size: 0.85rem;
-                font-weight: 600;
-                color: #fff7ed;
-                background: linear-gradient(90deg, #7f1d1d, #be123c 30%, #d97706 50%, #be123c 70%, #7f1d1d);
-                background-size: 200% 100%;
-                animation: gradient-pan 10s linear infinite;
-            }
-
-            .diwali-ribbon b {
-                font-family: var(--font-festive);
-                font-weight: 400;
-                font-size: 1.05rem;
-                color: #fde68a;
-            }
-
-            /* ---------- Toran (marigold garland) hanging under the header ---------- */
-            .diwali-toran {
-                position: absolute;
-                left: 0;
-                right: 0;
-                top: 100%;
-                height: 30px;
-                pointer-events: none;
-                background:
-                    radial-gradient(circle at 9px 8px, #fde047 0 3px, #f59e0b 3.5px 7px, transparent 7.5px) 0 0 / 36px 16px repeat-x,
-                    radial-gradient(circle at 9px 8px, #fb923c 0 3px, #ea580c 3.5px 7px, transparent 7.5px) 18px 0 / 36px 16px repeat-x,
-                    radial-gradient(ellipse 5px 10px at 36px 20px, #15803d 0 85%, transparent 100%) 0 0 / 72px 30px repeat-x,
-                    radial-gradient(circle at 36px 27px, #e11d48 0 3px, transparent 3.5px) 0 0 / 72px 30px repeat-x;
-                filter: drop-shadow(0 3px 3px rgba(127, 29, 29, 0.25));
-            }
-
-            .nav-blur {
-                border-bottom: 2px solid #fbbf24;
-                background: rgba(255, 251, 235, 0.97);
-            }
-
-            .nav-blur.scrolled {
-                background: rgba(255, 251, 235, 0.99);
-            }
-
-            /* ---------- Gradient text & headings ---------- */
-            .gradient-text {
-                background: linear-gradient(120deg, #7f1d1d, #be123c 30%, #ea580c 60%, #d97706);
-                -webkit-background-clip: text;
-                background-clip: text;
-            }
-
-            .section-eyebrow {
-                color: #9a3412;
-                background: rgba(251, 191, 36, 0.16);
-                border-color: rgba(217, 119, 6, 0.35);
-            }
-
-            .section-eyebrow::before {
-                content: "🪔";
-                width: auto;
-                height: auto;
-                background: none;
-                box-shadow: none;
-                font-size: 0.95rem;
-                letter-spacing: 0;
-            }
-
-            .section-divider.max-w-xs {
-                background: linear-gradient(90deg, #e11d48, #f59e0b, #fde047, #f59e0b, #e11d48);
-            }
-
-            /* ---------- Hero: Diwali night sky ---------- */
-            .hero-gradient {
-                background: radial-gradient(900px 420px at 50% 115%, rgba(251, 146, 60, 0.55), transparent 65%),
-                    radial-gradient(700px 500px at 10% -10%, rgba(190, 18, 60, 0.45), transparent 60%),
-                    radial-gradient(700px 500px at 95% 5%, rgba(124, 58, 237, 0.35), transparent 60%),
-                    linear-gradient(180deg, #0b0420 0%, #1a0630 45%, #3b0a24 80%, #5b1414 100%);
-            }
-
-            .hero-grid {
-                display: none;
-            }
-
-            .orb-1 {
-                --orb-color: rgba(225, 29, 72, 0.55);
-            }
-
-            .orb-2 {
-                --orb-color: rgba(251, 191, 36, 0.45);
-            }
-
-            .orb-3 {
-                --orb-color: rgba(249, 115, 22, 0.7);
-            }
-
-            /* Rising "bubbles" become golden embers */
-            .bubble {
-                width: calc(var(--s) * 0.25);
-                height: calc(var(--s) * 0.25);
-                border: none;
-                background: radial-gradient(circle, #fff 0 20%, #fde047 40%, rgba(251, 146, 60, 0) 70%);
-                box-shadow: 0 0 10px 2px rgba(251, 191, 36, 0.55);
-            }
-
-            .diwali-fireworks {
-                position: absolute;
-                inset: 0;
-                z-index: 2;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-            }
-
-            .hero-gradient {
-                cursor: crosshair;
-            }
-
-            .hero-gradient :is(a, button) {
-                cursor: pointer;
-            }
-
-            .diwali-greeting {
-                display: block;
-                margin-top: 1.25rem;
-                font-family: var(--font-festive);
-                font-size: clamp(1.6rem, 1.1rem + 2.2vw, 2.75rem);
-                line-height: 1.2;
-                background: linear-gradient(90deg, #fde68a, #fbbf24, #fb923c, #fbbf24, #fde68a);
-                background-size: 200% 100%;
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                animation: gradient-pan 6s linear infinite;
-                text-shadow: 0 0 30px rgba(251, 191, 36, 0.35);
-            }
-
-            .hero-shine-text {
-                background: linear-gradient(90deg, #fde68a, #fbbf24 30%, #fb923c 60%, #f43f5e);
-                -webkit-background-clip: text;
-                background-clip: text;
-            }
-
-            .hero-chip {
-                color: #fef3c7;
-                border-color: rgba(251, 191, 36, 0.45);
-                background: rgba(251, 191, 36, 0.12);
-            }
-
-            .hero-chip-dot,
-            .site-footer .footer-chip-dot {
-                background: #fbbf24;
-            }
-
-            .hero-chip-dot::after,
-            .site-footer .footer-chip-dot::after {
-                border-color: #fbbf24;
-            }
-
-            .hero-lead {
-                color: rgba(254, 243, 199, 0.92);
-            }
-
-            .hero-trust li {
-                color: #fef3c7;
-                background: rgba(251, 191, 36, 0.1);
-                border-color: rgba(251, 191, 36, 0.3);
-            }
-
-            .hero-trust i {
-                color: #fbbf24;
-            }
-
-            .hero-tap-hint {
-                margin-top: 1rem;
-                font-size: 0.8rem;
-                color: rgba(254, 243, 199, 0.65);
-            }
-
-            /* ---------- Akash kandil (hanging lanterns) ---------- */
-            .kandil {
-                position: absolute;
-                top: 0;
-                z-index: 3;
-                left: var(--x);
-                width: 46px;
-                pointer-events: none;
-                transform-origin: 50% 0;
-                animation: kandil-swing var(--swing, 5s) ease-in-out infinite alternate;
-            }
-
-            .kandil-string {
-                display: block;
-                width: 2px;
-                height: var(--len, 60px);
-                margin: 0 auto;
-                background: linear-gradient(#fde68a, #b45309);
-            }
-
-            .kandil-body {
-                position: relative;
-                display: block;
-                width: 46px;
-                height: 56px;
-                background: radial-gradient(circle at 50% 50%, #fff7ed 0 10%, var(--c1) 45%, var(--c2) 100%);
-                clip-path: polygon(50% 0, 100% 30%, 100% 70%, 50% 100%, 0 70%, 0 30%);
-            }
-
-            .kandil-body::before {
-                content: "";
-                position: absolute;
-                inset: 0;
-                background: repeating-linear-gradient(90deg, transparent 0 7px, rgba(255, 255, 255, 0.25) 7px 8px);
-            }
-
-            .kandil-glow {
-                position: absolute;
-                left: 50%;
-                top: calc(var(--len, 60px) + 28px);
-                width: 120px;
-                height: 120px;
-                margin: -60px 0 0 -60px;
-                border-radius: 50%;
-                background: radial-gradient(circle, var(--c1), transparent 65%);
-                opacity: 0.45;
-                z-index: -1;
-            }
-
-            .kandil-tassel {
-                display: block;
-                width: 18px;
-                height: 26px;
-                margin: -2px auto 0;
-                background: repeating-linear-gradient(90deg, var(--c2) 0 2px, transparent 2px 4px);
-                mask-image: linear-gradient(#000, transparent);
-                -webkit-mask-image: linear-gradient(#000, transparent);
-            }
-
-            @keyframes kandil-swing {
-                from {
-                    transform: rotate(-5deg);
-                }
-
-                to {
-                    transform: rotate(5deg);
-                }
-            }
-
-            @media (max-width: 1023px) {
-                .kandil.kandil-wide {
-                    display: none;
-                }
-            }
-
-            @media (max-width: 640px) {
-                .kandil {
-                    display: none;
-                }
-            }
-
-            /* ---------- Diyas ---------- */
-            .diya-row {
-                position: absolute;
-                left: 0;
-                right: 0;
-                bottom: 44px;
-                z-index: 6;
-                display: flex;
-                justify-content: space-around;
-                padding: 0 4%;
-                pointer-events: none;
-            }
-
-            .diya {
-                position: relative;
-                display: block;
-                width: 44px;
-                height: 18px;
-                border-radius: 0 0 50% 50% / 0 0 100% 100%;
-                background: linear-gradient(180deg, #fbbf24 0 14%, #c2410c 15%, #7c2d12 100%);
-                box-shadow: inset 0 -4px 6px rgba(0, 0, 0, 0.35);
-            }
-
-            .diya::before {
-                content: "";
-                position: absolute;
-                left: 50%;
-                bottom: 85%;
-                width: 12px;
-                height: 22px;
-                margin-left: -6px;
-                border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
-                background: radial-gradient(ellipse at 50% 75%, #fff 0 18%, #fde047 35%, #f97316 70%, rgba(249, 115, 22, 0) 74%);
-                transform-origin: 50% 100%;
-                animation: diya-flicker 1.4s ease-in-out infinite alternate;
-                animation-delay: var(--d, 0s);
-            }
-
-            .diya::after {
-                content: "";
-                position: absolute;
-                left: 50%;
-                bottom: 40%;
-                width: 90px;
-                height: 90px;
-                margin-left: -45px;
-                margin-bottom: -20px;
-                border-radius: 50%;
-                background: radial-gradient(circle, rgba(251, 191, 36, 0.45), transparent 65%);
-                pointer-events: none;
-            }
-
-            @keyframes diya-flicker {
-                0% {
-                    transform: scale(1, 1) rotate(-2deg);
-                    opacity: 0.95;
-                }
-
-                50% {
-                    transform: scale(0.92, 1.08) rotate(2deg);
-                    opacity: 1;
-                }
-
-                100% {
-                    transform: scale(1.05, 0.94) rotate(-1deg);
-                    opacity: 0.88;
-                }
-            }
-
-            @media (max-width: 767px) {
-                .diya-row .diya:nth-child(n + 6) {
-                    display: none;
-                }
-            }
-
-            .footer-diyas {
-                display: flex;
-                justify-content: center;
-                gap: 28px;
-                padding-top: 22px;
-                margin-bottom: 18px;
-            }
-
-            .diwali-footer-wish {
-                font-family: var(--font-festive);
-                font-size: 1.35rem;
-                color: #fde68a;
-                text-align: center;
-                margin-bottom: 1.5rem;
-            }
-
-            /* ---------- Rangoli ---------- */
-            .rangoli {
-                position: absolute;
-                z-index: 0;
-                width: 340px;
-                height: 340px;
-                border-radius: 50%;
-                pointer-events: none;
-                opacity: 0.2;
-                background: radial-gradient(circle, #fde047 0 6%, #e11d48 6% 9%, transparent 9.5%),
-                    repeating-conic-gradient(#e11d48 0 7.5deg, #f59e0b 7.5deg 15deg, #7c3aed 15deg 22.5deg, #16a34a 22.5deg 30deg);
-                mask-image: repeating-radial-gradient(circle, #000 0 16px, transparent 16px 22px);
-                -webkit-mask-image: repeating-radial-gradient(circle, #000 0 16px, transparent 16px 22px);
-                animation: rangoli-spin 90s linear infinite;
-            }
-
-            .rangoli-left {
-                left: -140px;
-                top: 40px;
-            }
-
-            .rangoli-right {
-                right: -140px;
-                bottom: 20px;
-            }
-
-            @keyframes rangoli-spin {
-                to {
-                    rotate: 360deg;
-                }
-            }
-
-            #business-details > .container,
-            #faq > .container,
-            #contact > .container {
-                position: relative;
-                z-index: 1;
-            }
-
-            /* ---------- Buttons & cards ---------- */
-            .btn-primary {
-                color: #3b0a0a !important;
-                background: linear-gradient(135deg, #fde68a, #fbbf24 45%, #f59e0b);
-                box-shadow: 0 10px 30px -10px rgba(251, 191, 36, 0.8);
-            }
-
-            .btn-primary:hover {
-                background: linear-gradient(135deg, #fde047, #f59e0b 55%, #d97706);
-                box-shadow: 0 16px 36px -10px rgba(251, 191, 36, 0.9);
-            }
-
-            .btn-secondary,
-            .add-to-cart-btn {
-                background: linear-gradient(135deg, #f97316, #e11d48 60%, #be123c);
-                box-shadow: 0 10px 30px -10px rgba(225, 29, 72, 0.6);
-            }
-
-            .enquiry-trigger-btn {
-                background: linear-gradient(135deg, #d97706, #b45309);
-                box-shadow: 0 6px 16px -6px rgba(217, 119, 6, 0.6);
-            }
-
-            .enquiry-trigger-btn:hover {
-                background: linear-gradient(135deg, #b45309, #92400e);
-            }
-
-            .cart-icon-btn {
-                background: linear-gradient(135deg, #f97316, #e11d48);
-            }
-
-            .bg-blue-600 {
-                background-color: #b45309;
-            }
-
-            .hover\:bg-blue-700:hover {
-                background-color: #92400e;
-            }
-
-            .feature-card::before,
-            .glass-card::before,
-            .product-card::before {
-                background: linear-gradient(135deg, rgba(251, 191, 36, 0.9), rgba(225, 29, 72, 0.7) 50%, rgba(249, 115, 22, 0.8));
-            }
-
-            .feature-card,
-            .glass-card,
-            .product-card {
-                border-color: rgba(251, 191, 36, 0.35);
-            }
-
-            .product-spotlight {
-                background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(251, 191, 36, 0.18), transparent 45%);
-            }
-
-            .product-card .group-hover\:text-blue-600,
-            .group:hover .group-hover\:text-blue-600 {
-                color: #be123c;
-            }
-
-            .product-marquee i {
-                color: #f59e0b;
-            }
-
-            .product-marquee span {
-                background: linear-gradient(90deg, #7f1d1d, #be123c 25%, #ea580c 50%, #d97706 75%, #7f1d1d);
-                -webkit-background-clip: text;
-                background-clip: text;
-            }
-
-            #productSearch:focus {
-                border-color: #d97706;
-                box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.25);
-            }
-
-            .group[open] .group-open\:from-orange-500 {
-                --tw-gradient-from: #be123c var(--tw-gradient-from-position);
-                --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-            }
-
-            .group[open] .group-open\:to-orange-600 {
-                --tw-gradient-to: #d97706 var(--tw-gradient-to-position);
-            }
-
-            /* ---------- Footer ---------- */
-            .site-footer {
-                background: radial-gradient(600px 300px at 90% 0%, rgba(251, 191, 36, 0.18), transparent 60%),
-                    radial-gradient(600px 300px at 0% 100%, rgba(190, 18, 60, 0.35), transparent 60%),
-                    linear-gradient(160deg, #1a0630, #3b0a24 55%, #5b1414);
-            }
-
-            .site-footer .footer-brand-name,
-            .site-footer .footer-credentials {
-                background: linear-gradient(90deg, #fde68a, #fbbf24, #fb923c, #fde68a);
-                -webkit-background-clip: text;
-                background-clip: text;
-            }
-
-            .site-footer .social-icon-link:hover {
-                background: linear-gradient(135deg, #f59e0b, #e11d48);
-            }
-
-            /* ---------- Add-to-cart spark burst ---------- */
-            .diwali-spark {
-                position: fixed;
-                z-index: 10000;
-                width: 7px;
-                height: 7px;
-                margin: -3.5px 0 0 -3.5px;
-                border-radius: 50%;
-                pointer-events: none;
-                background: var(--c, #fbbf24);
-                box-shadow: 0 0 8px 2px var(--c, #fbbf24);
-            }
         </style>
         <script type="application/ld+json">
             {
@@ -3419,7 +2891,7 @@
                         "name": "What payment methods do you accept?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Please call us at 9352470085 or 9024598298, or send an enquiry on WhatsApp, to discuss payment for your order."
+                            "text": "We accept UPI and Google Pay - scan the QR code or pay to the UPI ID shown in the Contact section. Call us to discuss other payment arrangements."
                         }
                     },
                     {
@@ -3560,11 +3032,6 @@
             </div>
         </noscript>
 
-        <div class="diwali-ribbon" role="note">
-            🪔 <b lang="hi">शुभ दीपावली</b> &nbsp;·&nbsp; Happy Diwali from Swapnil Chemicals — wishing you light,
-            prosperity &amp; a sparkling ride ✨
-        </div>
-
         <header class="sticky top-0 z-50 nav-blur">
             <div class="container mx-auto px-4 py-4">
                 <div class="flex flex-col md:flex-row justify-between items-center">
@@ -3612,7 +3079,6 @@
                     </div>
                 </div>
             </div>
-            <div class="diwali-toran" aria-hidden="true"></div>
         </header>
 
         <main id="main-content" tabindex="-1">
@@ -3624,13 +3090,6 @@
                 </div>
                 <div class="hero-grid" aria-hidden="true"></div>
                 <div class="hero-bubbles" id="heroBubbles" aria-hidden="true"></div>
-                <canvas class="diwali-fireworks" id="diwaliFireworks" aria-hidden="true"></canvas>
-                <div aria-hidden="true">
-                    <span class="kandil kandil-wide" style="--x: 3%; --len: 36px; --c1: #f97316; --c2: #b91c1c; --swing: 4.5s"><span class="kandil-string"></span><span class="kandil-glow"></span><span class="kandil-body"></span><span class="kandil-tassel"></span></span>
-                    <span class="kandil" style="--x: 11%; --len: 70px; --c1: #fbbf24; --c2: #c2410c; --swing: 5.5s"><span class="kandil-string"></span><span class="kandil-glow"></span><span class="kandil-body"></span><span class="kandil-tassel"></span></span>
-                    <span class="kandil" style="--x: 82%; --len: 54px; --c1: #ec4899; --c2: #9d174d; --swing: 5s"><span class="kandil-string"></span><span class="kandil-glow"></span><span class="kandil-body"></span><span class="kandil-tassel"></span></span>
-                    <span class="kandil kandil-wide" style="--x: 92%; --len: 28px; --c1: #a855f7; --c2: #6d28d9; --swing: 4s"><span class="kandil-string"></span><span class="kandil-glow"></span><span class="kandil-body"></span><span class="kandil-tassel"></span></span>
-                </div>
 
                 <div class="container mx-auto px-4 relative z-10 py-16 md:py-24">
                     <div class="max-w-5xl mx-auto text-center hero-content-in">
@@ -3638,7 +3097,6 @@
                             <span class="hero-chip-dot" aria-hidden="true"></span>
                             Jaipur-based manufacturer &bull; Since 2020
                         </span>
-                        <p class="diwali-greeting"><span lang="hi">शुभ दीपावली</span> · Happy Diwali</p>
                         <h2 class="font-bold leading-tight mt-6 mb-6">
                             Premium Automobile <br /><span class="hero-shine-text">Cleaning Solutions</span>
                         </h2>
@@ -3667,14 +3125,12 @@
                             <li><i class="fas fa-award" aria-hidden="true"></i> MSME &amp; Udyam certified</li>
                             <li><i class="fas fa-truck-fast" aria-hidden="true"></i> Bulk &amp; retail</li>
                         </ul>
-                        <p class="hero-tap-hint" aria-hidden="true">✨ Tap anywhere in the sky to light a firework</p>
                     </div>
                 </div>
 
                 <a href="#business-details" class="hero-scroll-cue" aria-label="Scroll to business details">
                     <span class="hero-scroll-mouse" aria-hidden="true"><span></span></span>
                 </a>
-                <div class="diya-row" aria-hidden="true"><span class="diya" style="--d: -0.00s"></span><span class="diya" style="--d: -0.17s"></span><span class="diya" style="--d: -0.34s"></span><span class="diya" style="--d: -0.51s"></span><span class="diya" style="--d: -0.68s"></span><span class="diya" style="--d: -0.85s"></span><span class="diya" style="--d: -1.02s"></span><span class="diya" style="--d: -1.19s"></span><span class="diya" style="--d: -1.36s"></span><span class="diya" style="--d: -1.53s"></span></div>
                 <svg class="hero-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
                     <path d="M0,40 C240,90 480,0 720,30 C960,60 1200,10 1440,45 L1440,90 L0,90 Z" fill="currentColor" />
                 </svg>
@@ -3696,7 +3152,6 @@
             </div>
 
             <section id="business-details" class="pt-6 pb-0 relative">
-                <div class="rangoli rangoli-left" aria-hidden="true"></div>
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-6 mt-8">
                         <span class="section-eyebrow">Who we are</span>
@@ -3856,7 +3311,6 @@
             </section>
 
             <section id="faq" class="py-8 relative">
-                <div class="rangoli rangoli-right" aria-hidden="true"></div>
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
                         <span class="section-eyebrow">Good to know</span>
@@ -3897,9 +3351,8 @@
                                 <i class="fas fa-minus flex-shrink-0 hidden group-open:inline" aria-hidden="true"></i>
                             </summary>
                             <p class="text-gray-600 px-6 py-4">
-                                Please call us at <a href="tel:9352470085" class="text-blue-600">9352470085</a> or
-                                <a href="tel:9024598298" class="text-blue-600">9024598298</a>, or send an enquiry on
-                                WhatsApp, to discuss payment for your order.
+                                We accept UPI and Google Pay — scan the QR code or pay to the UPI ID shown in the
+                                Contact section. Call us to discuss other payment arrangements.
                             </p>
                         </details>
                         <details
@@ -4018,6 +3471,66 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="glass-card p-8 rounded-2xl">
+                                    <div class="flex items-center space-x-6">
+                                        <div
+                                            class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg border"
+                                        >
+                                            <img
+                                                src="https://www.gstatic.com/instantbuy/svg/dark_gpay.svg"
+                                                width="48"
+                                                alt="Google Pay"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-xl text-gray-800 mb-2">Google Pay</h3>
+                                            <div class="flex items-center gap-2">
+                                                <a
+                                                    href="upi://pay?pa=boism-9352470085@boi&amp;pn=Swapnil%20Chemicals&amp;cu=INR"
+                                                    class="text-blue-600"
+                                                    >Pay to 9352470085</a
+                                                >
+                                                <button
+                                                    type="button"
+                                                    class="text-gray-400 hover:text-blue-600"
+                                                    data-action="copy"
+                                                    data-copy-text="boism-9352470085@boi"
+                                                    aria-label="Copy UPI ID"
+                                                >
+                                                    <i class="fas fa-copy text-sm" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-6 flex flex-col items-center">
+                                        <!-- No "am" param: the UPI app (GPay / PhonePe / Paytm) asks the customer to enter the amount -->
+                                        <a
+                                            href="upi://pay?pa=boism-9352470085@boi&amp;pn=Swapnil%20Chemicals&amp;cu=INR"
+                                            class="bg-white p-3 rounded-xl shadow-md block transition hover:shadow-lg hover:-translate-y-0.5"
+                                            data-action="upi-pay"
+                                            aria-label="Pay Swapnil Chemicals with Google Pay, PhonePe or any UPI app"
+                                        >
+                                            <img
+                                                src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&amp;data=upi://pay?pa=boism-9352470085@boi%26pn=Swapnil%20Chemicals%26cu=INR"
+                                                width="75"
+                                                height="75"
+                                                class="rounded-lg"
+                                                alt="UPI QR"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        </a>
+                                        <p
+                                            id="upiPayHint"
+                                            class="mt-3 text-sm text-gray-500 text-center"
+                                            aria-live="polite"
+                                        >
+                                            📷 Scan or tap the QR to pay via Google Pay / PhonePe / any UPI app
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -4058,8 +3571,6 @@
                         ></a>
                     </div>
                 </div>
-                <div class="footer-diyas" aria-hidden="true"><span class="diya" style="--d: -0.0s"></span><span class="diya" style="--d: -0.3s"></span><span class="diya" style="--d: -0.6s"></span><span class="diya" style="--d: -0.9s"></span><span class="diya" style="--d: -1.2s"></span></div>
-                <p class="diwali-footer-wish">May this Diwali bring light, joy &amp; prosperity to you and your family 🪔</p>
                 <div class="border-t border-slate-700 mt-8 pt-8 text-center">
                     <p class="text-slate-300">
                         © <span id="copyrightYear">2026</span> Swapnil Chemicals. All rights reserved.
@@ -4092,7 +3603,10 @@
                     <span class="font-semibold text-gray-700">Total:</span>
                     <span class="font-bold text-lg text-gray-800" id="cartTotal">₹0</span>
                 </div>
-                <button id="cartEnquiryBtn" class="enquiry-submit-btn" data-action="open-cart-enquiry">Send Enquiry</button>
+                <button id="cartUpiPayBtn" type="button" class="gpay-btn upi-pay-btn" data-action="open-upi-pay">
+                    Pay with Google Pay / UPI
+                </button>
+                <button id="cartGpayBtn" class="gpay-btn mt-2" data-action="open-cart-enquiry">Send Enquiry</button>
                 <button
                     class="w-full mt-2 text-xs text-gray-400 hover:text-red-500 font-semibold py-1"
                     data-action="clear-cart"
@@ -4213,6 +3727,60 @@
                     <button class="enquiry-submit-btn" data-action="submit-enquiry">
                         <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry via WhatsApp
                     </button>
+                </div>
+            </div>
+        </dialog>
+
+        <dialog id="upiPayModal" class="sc-modal" aria-labelledby="upiPayModalTitle">
+            <div class="enquiry-modal-box" tabindex="-1">
+                <div class="enquiry-modal-header">
+                    <div>
+                        <h2 id="upiPayModalTitle" class="text-white text-xl font-bold">Pay with Google Pay / UPI</h2>
+                        <p class="text-blue-100 text-xs mt-1">Order ref: <span id="upiPayRef" class="font-mono"></span></p>
+                    </div>
+                    <button type="button" class="enquiry-close-btn" data-action="close-upi-pay" aria-label="Close payment">
+                        <i class="fas fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="enquiry-body text-center">
+                    <p class="text-sm text-gray-500">Amount to pay</p>
+                    <p id="upiPayAmount" class="text-3xl font-bold text-gray-800 mb-4"></p>
+                    <img
+                        id="upiPayQr"
+                        src=""
+                        width="220"
+                        height="220"
+                        class="mx-auto rounded-lg bg-white p-3 shadow-md"
+                        alt="UPI QR code for this order"
+                        decoding="async"
+                    />
+                    <p class="text-sm text-gray-500 mt-3">Scan with Google Pay, PhonePe, Paytm or any UPI app</p>
+                    <a id="upiPayLink" href="#" class="gpay-btn upi-pay-app-link mt-4" rel="noopener">
+                        <i class="fas fa-mobile-screen" aria-hidden="true"></i> Open Google Pay / UPI app
+                    </a>
+                    <div class="flex items-center justify-center gap-2 mt-4 text-sm text-gray-700">
+                        <span>UPI ID: <b id="upiPayVpa" class="font-mono"></b></span>
+                        <button
+                            type="button"
+                            class="text-gray-400 hover:text-blue-600"
+                            data-action="copy"
+                            id="upiPayCopyBtn"
+                            aria-label="Copy UPI ID"
+                        >
+                            <i class="fas fa-copy text-sm" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <p id="upiPayStatus" class="text-xs text-gray-500 mt-3" aria-live="polite"></p>
+                    <p class="text-xs text-gray-500 mt-2">
+                        Payment declined or "money not debited"? Open your UPI app, choose
+                        <b>Pay UPI ID</b>, paste the UPI ID above and type the amount yourself.
+                    </p>
+                    <button type="button" class="btn-secondary w-full mt-6 py-3 rounded-xl text-white font-bold" data-action="upi-paid">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i> I've paid — send order details
+                    </button>
+                    <p class="text-xs text-gray-400 mt-2">
+                        Your order is confirmed once we see the payment in our account. Please mention the order ref.
+                    </p>
                 </div>
             </div>
         </dialog>
@@ -4400,6 +3968,113 @@
                 } catch (err) {
                     if (btn) btn.title = "Copy failed — please select the text manually";
                 }
+            }
+
+            // Tapping the QR hands the upi:// link to the phone, which opens Google Pay /
+            // PhonePe / whichever UPI app is installed (or shows an app chooser). The link
+            // carries no amount, so the customer types it in the app. Desktops have no UPI
+            // app, so there we keep the page and ask them to scan the QR with their phone.
+            function openUpiApp(e) {
+                const hint = document.getElementById("upiPayHint");
+                const isMobile =
+                    (navigator.userAgentData && navigator.userAgentData.mobile) ||
+                    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+                if (!isMobile) {
+                    e.preventDefault();
+                    if (hint) hint.textContent = "📱 Please scan this QR with Google Pay / PhonePe on your phone.";
+                    return;
+                }
+                // If no UPI app picks up the link, the page stays visible — tell the customer.
+                let appOpened = false;
+                const onHide = () => {
+                    if (document.hidden) appOpened = true;
+                };
+                document.addEventListener("visibilitychange", onHide);
+                setTimeout(() => {
+                    document.removeEventListener("visibilitychange", onHide);
+                    if (!appOpened && hint) {
+                        hint.textContent =
+                            "No UPI app opened? Install Google Pay / PhonePe, or pay to UPI ID boism-9352470085@boi.";
+                    }
+                }, 2500);
+            }
+
+            // ---------- Cart checkout via UPI (Google Pay / PhonePe / Paytm) ----------
+            // IMPORTANT: use a MERCHANT / business UPI ID here (Google Pay for Business, PhonePe
+            // Business, Paytm Business or a bank merchant VPA). Personal IDs such as "...@oksbi"
+            // are routinely declined by GPay when opened from a website with a pre-filled amount.
+            const UPI_PAYEE = {
+                vpa: "boism-9352470085@boi", // same business ID as the Contact QR and the invoice PDF
+                name: "Swapnil Chemicals",
+            };
+            const UPI_MAX_AMOUNT = 100000; // UPI per-transaction cap for most P2M payments
+
+            let upiPayRef = "";
+            let paidUpiRef = ""; // set only when the cart enquiry was opened from "I've paid"
+
+            function cartGrandTotal() {
+                return Object.values(cart).reduce((s, i) => s + i.product.price * i.selectedQty * i.qty, 0);
+            }
+
+            // Built by hand rather than with URLSearchParams: that encodes "@" as %40 and spaces as
+            // "+", which several UPI apps don't decode and then reject as an invalid payee.
+            function buildUpiLink(amount, ref) {
+                return (
+                    `upi://pay?pa=${UPI_PAYEE.vpa}` +
+                    `&pn=${encodeURIComponent(UPI_PAYEE.name)}` +
+                    `&am=${amount.toFixed(2)}` +
+                    `&cu=INR` +
+                    `&tn=${encodeURIComponent(`Order ${ref}`)}`
+                );
+            }
+
+            function openUpiPayModal() {
+                const modal = document.getElementById("upiPayModal");
+                const amount = Math.round(cartGrandTotal());
+                if (!modal || amount <= 0) return;
+                if (amount > UPI_MAX_AMOUNT) {
+                    alert(
+                        `Orders above ${formatCurrency(UPI_MAX_AMOUNT)} can't be paid in one UPI transaction. Please send an enquiry and we'll share bank transfer details.`
+                    );
+                    return;
+                }
+
+                upiPayRef = "SC" + Date.now().toString(36).toUpperCase();
+                const link = buildUpiLink(amount, upiPayRef);
+                const isMobile =
+                    (navigator.userAgentData && navigator.userAgentData.mobile) ||
+                    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+                document.getElementById("upiPayRef").textContent = upiPayRef;
+                document.getElementById("upiPayAmount").textContent = formatCurrency(amount);
+                document.getElementById("upiPayVpa").textContent = UPI_PAYEE.vpa;
+                document.getElementById("upiPayCopyBtn").dataset.copyText = UPI_PAYEE.vpa;
+                document.getElementById("upiPayQr").src =
+                    "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(link);
+                const appLink = document.getElementById("upiPayLink");
+                appLink.href = link;
+                appLink.classList.toggle("desktop-hidden", !isMobile);
+                document.getElementById("upiPayStatus").textContent = isMobile
+                    ? "Tap the button to open your UPI app, or scan the QR from another phone."
+                    : "📱 Open Google Pay on your phone and scan this QR.";
+
+                if (document.getElementById("cartPanel")?.classList.contains("hidden") === false) toggleCart();
+                openDialog(modal, ".enquiry-modal-box");
+            }
+
+            function closeUpiPayModal() {
+                closeDialog(document.getElementById("upiPayModal"));
+            }
+
+            // The website gets no callback from the UPI app, so payment can't be verified here.
+            // The customer sends the order + ref via the existing enquiry flow and the shop
+            // matches it against the bank/GPay statement before dispatching.
+            function onUpiPaid() {
+                closeUpiPayModal();
+                openCartEnquiry();
+                paidUpiRef = upiPayRef;
+                const subtitle = document.getElementById("enquiryModalSubtitle");
+                if (subtitle && paidUpiRef) subtitle.textContent = `UPI payment ref: ${paidUpiRef} — added to your message`;
             }
 
             const products = [
@@ -4673,9 +4348,13 @@
                     }
                 }
 
-                const enquiryBtn = document.getElementById("cartEnquiryBtn");
-                if (enquiryBtn) {
-                    enquiryBtn.innerHTML = `<i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry &bull; ${formatCurrency(Math.round(grandTotal))}`;
+                const gpayBtn = document.getElementById("cartGpayBtn");
+                if (gpayBtn) {
+                    gpayBtn.innerHTML = `<i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry &bull; ${formatCurrency(Math.round(grandTotal))}`;
+                }
+                const upiPayBtn = document.getElementById("cartUpiPayBtn");
+                if (upiPayBtn) {
+                    upiPayBtn.innerHTML = `<i class="fab fa-google-pay" aria-hidden="true"></i> Pay ${formatCurrency(Math.round(grandTotal))} with Google Pay / UPI`;
                 }
             }
 
@@ -4831,7 +4510,6 @@
                 }
                 refreshAddedCartModalTotals();
                 openDialog(modal, ".added-cart-box");
-                diwaliSparkBurst(document.getElementById("addedCartProductImg"));
             }
 
             function closeAddedCartModal() {
@@ -4870,6 +4548,7 @@
             function openCartEnquiry() {
                 const keys = Object.keys(cart);
                 if (!keys.length) return;
+                paidUpiRef = "";
                 let grandTotal = 0;
                 const itemsHtml = keys
                     .map((key) => {
@@ -4940,6 +4619,7 @@
                 lines.push(``, ...customerMessageLines(customer));
                 if (details) lines.push(`📝 Details: ${details}`);
                 lines.push(`💰 Grand Total: ${formatCurrency(grandTotal)}`);
+                if (paidUpiRef) lines.push(`✅ Paid via UPI — Ref: ${paidUpiRef} (please verify)`);
                 safeOpenNewTab(buildWhatsAppUrl(lines.join("\n")));
                 closeEnquiryModal();
             }
@@ -4995,6 +4675,7 @@
                 stateName: "Rajasthan",
                 stateCode: "08",
                 jurisdiction: "Jaipur",
+                upi: "boism-9352470085@boi",
             };
 
             // The number is time-based and generated in the visitor's browser (not a sequential
@@ -5051,6 +4732,48 @@
                 return `INR ${toWords(rupees)}${paise ? ` and ${twoDigits(paise)} Paise` : ""} Only`;
             }
 
+            // Google Pay / UPI QR for the invoice - same UPI link as the QR in the Contact section (no amount,
+            // the customer enters it in the app). Loaded as an <img> (allowed by img-src; the service sends
+            // CORS headers) and copied to a canvas so jsPDF gets a PNG. Resolves to a data URL or null.
+            const INVOICE_UPI_QR_SRC =
+                "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
+                encodeURIComponent(`upi://pay?pa=${INVOICE_SELLER.upi}&pn=${INVOICE_SELLER.name}&cu=INR`);
+            let invoiceQrPromise = null;
+            function loadInvoiceQr() {
+                if (!invoiceQrPromise) {
+                    invoiceQrPromise = new Promise((resolve) => {
+                        const img = new Image();
+                        // A slow network must not hold up the PDF; it is drawn without the QR instead.
+                        const timer = setTimeout(() => resolve(null), 8000);
+                        img.crossOrigin = "anonymous";
+                        img.onload = () => {
+                            clearTimeout(timer);
+                            try {
+                                const canvas = document.createElement("canvas");
+                                canvas.width = img.naturalWidth;
+                                canvas.height = img.naturalHeight;
+                                const ctx = canvas.getContext("2d");
+                                ctx.fillStyle = "#fff";
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                ctx.drawImage(img, 0, 0);
+                                resolve(canvas.toDataURL("image/png"));
+                            } catch {
+                                resolve(null);
+                            }
+                        };
+                        img.onerror = () => {
+                            clearTimeout(timer);
+                            resolve(null);
+                        };
+                        img.src = INVOICE_UPI_QR_SRC;
+                    }).then((data) => {
+                        if (!data) invoiceQrPromise = null; // allow a retry on the next download
+                        return data;
+                    });
+                }
+                return invoiceQrPromise;
+            }
+
             async function downloadCartPdf(btn) {
                 const keys = Object.keys(cart);
                 if (!keys.length) return;
@@ -5060,7 +4783,7 @@
                     btn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Preparing PDF...';
                 }
                 try {
-                    const JsPDF = await loadJsPdf();
+                    const [JsPDF, upiQr] = await Promise.all([loadJsPdf(), loadInvoiceQr()]);
                     // Plain boxed layout in the style of a Tally tax invoice: black text and ruled cells.
                     const doc = new JsPDF({ unit: "mm", format: "a4", compress: true });
                     const pageW = doc.internal.pageSize.getWidth();
@@ -5181,10 +4904,10 @@
                         ],
                         [
                             ["Delivery Note", ""],
-                            ["Mode/Terms of Payment", ""],
+                            ["Mode/Terms of Payment", paidUpiRef ? "PAID - UPI" : "UPI / Google Pay"],
                         ],
                         [
-                            ["Reference No. & Date", ""],
+                            ["Reference No. & Date", paidUpiRef ? `UPI Ref ${pdfText(paidUpiRef)}` : ""],
                             ["Other References", "Online Cart Enquiry"],
                         ],
                         [
@@ -5324,7 +5047,7 @@
                     fy += wordsH;
                     hLine(L, R, fy);
 
-                    // Company details + declaration
+                    // Company details + declaration (left), payment details + UPI QR (right)
                     const lowTop = fy;
                     [
                         ["Company's GSTIN/UIN", INVOICE_SELLER.gstin],
@@ -5349,6 +5072,32 @@
                         lowTop + 20.5
                     );
 
+                    const payX = midX + pad;
+                    const qrSize = 22;
+                    const payValueW = (upiQr ? R - pad - qrSize - 2 : R - pad) - (payX + 17);
+                    font("normal", 8);
+                    doc.text("Company's Payment Details", payX, lowTop + 3.8);
+                    [
+                        ["UPI ID", INVOICE_SELLER.upi],
+                        ["Payee", INVOICE_SELLER.name],
+                        ["Accepted", "Google Pay / PhonePe / any UPI app"],
+                    ].forEach(([label, value], i) => {
+                        const b = lowTop + 8 + i * 3.8;
+                        font("normal", 8);
+                        doc.text(label, payX, b);
+                        doc.text(":", payX + 15, b);
+                        font("bold", 8);
+                        doc.text(fit(value, payValueW), payX + 17, b);
+                    });
+                    if (upiQr) {
+                        try {
+                            doc.addImage(upiQr, "PNG", R - pad - qrSize, lowTop + 1, qrSize, qrSize, "upi-qr", "FAST");
+                            font("normal", 6.5);
+                            doc.text("Scan & Pay", R - pad - qrSize / 2, lowTop + qrSize + 3.5, { align: "center" });
+                        } catch {
+                            // A bad image must not block the invoice; the UPI ID is enough to pay.
+                        }
+                    }
                     fy = lowTop + lowerH;
 
                     // Signature row
@@ -6279,6 +6028,7 @@
             closeOnBackdropClick(enquiryModal, closeEnquiryModal);
             closeOnBackdropClick(addedCartModal, closeAddedCartModal);
             closeOnBackdropClick(removeConfirmModal, closeRemoveConfirmModal);
+            closeOnBackdropClick(document.getElementById("upiPayModal"), closeUpiPayModal);
 
             // "close" fires for every way a dialog can close (buttons, backdrop, Escape).
             addedCartModal?.addEventListener("close", () => {
@@ -6472,7 +6222,7 @@
 
                 if (/\b(pay|payment|upi|gpay|google pay)\b/.test(text)) {
                     return {
-                        html: `To discuss payment for your order, please call us at <a href="tel:9352470085" class="text-blue-600">9352470085</a> or <a href="tel:9024598298" class="text-blue-600">9024598298</a>, or send an enquiry on WhatsApp.`,
+                        html: `You can pay via Google Pay / UPI to <b>9352470085</b>, or scan the QR code in the Contact section. Call us to discuss other payment arrangements.`,
                         isFallback: false,
                     };
                 }
@@ -6710,237 +6460,6 @@
                 initScrollAnimations();
             }
 
-            // ---------- Diwali fireworks ----------
-            // Rockets launch from the bottom of the hero and burst into sparks; two anaar (flower-pot)
-            // fountains fizz at the corners. A tap/click in the hero fires a rocket at that point.
-            // Runs only while the hero is on screen and the tab is visible; skipped for reduced motion.
-            const DIWALI_COLORS = ["#fbbf24", "#f97316", "#ef4444", "#ec4899", "#a855f7", "#22d3ee", "#4ade80", "#fde68a", "#ffffff"];
-
-            function initDiwaliFireworks() {
-                const hero = document.getElementById("hero");
-                const canvas = document.getElementById("diwaliFireworks");
-                if (!hero || !canvas || prefersReducedMotion()) return;
-                const ctx = canvas.getContext("2d");
-                if (!ctx) return;
-
-                const isSmall = window.innerWidth < 768;
-                const MAX_SPARKS = isSmall ? 450 : 1000;
-                const GRAVITY = 0.05;
-                const rockets = [];
-                const sparks = [];
-                let w = 0;
-                let h = 0;
-                let rafId = 0;
-                let last = 0;
-                let nextLaunch = 0;
-                let onScreen = true;
-
-                const rand = (min, max) => min + Math.random() * (max - min);
-                const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-                const resize = () => {
-                    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-                    w = hero.clientWidth;
-                    h = hero.clientHeight;
-                    canvas.width = Math.round(w * dpr);
-                    canvas.height = Math.round(h * dpr);
-                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                };
-
-                const addSpark = (spark) => {
-                    if (sparks.length < MAX_SPARKS) sparks.push(spark);
-                };
-
-                const launch = (tx, ty) => {
-                    const x = Math.min(w - 20, Math.max(20, tx + rand(-60, 60)));
-                    const y = h;
-                    const vy = -Math.sqrt(2 * GRAVITY * Math.max(60, y - ty));
-                    const frames = -vy / GRAVITY;
-                    rockets.push({ x, y, vx: (tx - x) / frames, vy, color: pick(DIWALI_COLORS) });
-                };
-
-                const explode = (x, y, baseColor) => {
-                    const type = pick(["peony", "peony", "ring", "willow", "multi"]);
-                    const count = Math.round((isSmall ? 0.6 : 1) * (type === "ring" ? 60 : rand(80, 120)));
-                    const speed = rand(2.6, 4.2);
-                    for (let i = 0; i < count; i++) {
-                        const angle = (Math.PI * 2 * i) / count + rand(-0.05, 0.05);
-                        const sp = type === "ring" ? speed : speed * Math.sqrt(Math.random());
-                        addSpark({
-                            x,
-                            y,
-                            vx: Math.cos(angle) * sp,
-                            vy: Math.sin(angle) * sp,
-                            life: 1,
-                            decay: type === "willow" ? rand(0.006, 0.01) : rand(0.012, 0.02),
-                            drag: type === "willow" ? 0.975 : 0.985,
-                            gravity: type === "willow" ? 0.035 : 0.025,
-                            size: rand(1.2, 2.2),
-                            color: type === "willow" ? "#fbbf24" : type === "multi" ? pick(DIWALI_COLORS) : baseColor,
-                            twinkle: Math.random() < 0.3,
-                        });
-                    }
-                };
-
-                const fountain = (x) => {
-                    const perFrame = isSmall ? 1 : 3;
-                    for (let i = 0; i < perFrame; i++) {
-                        addSpark({
-                            x: x + rand(-3, 3),
-                            y: h - 52,
-                            vx: rand(-1.1, 1.1),
-                            vy: rand(-5.2, -2.8),
-                            life: 1,
-                            decay: rand(0.02, 0.035),
-                            drag: 0.99,
-                            gravity: 0.09,
-                            size: rand(0.8, 1.6),
-                            color: Math.random() < 0.3 ? "#ffffff" : "#fde047",
-                            twinkle: true,
-                        });
-                    }
-                };
-
-                const frame = (now) => {
-                    rafId = requestAnimationFrame(frame);
-                    const dt = Math.min((now - (last || now)) / 16.67, 3);
-                    last = now;
-
-                    if (now >= nextLaunch) {
-                        const salvo = Math.random() < 0.2 ? 3 : 1;
-                        for (let i = 0; i < salvo; i++) launch(rand(w * 0.1, w * 0.9), rand(h * 0.1, h * 0.42));
-                        nextLaunch = now + rand(700, 1600);
-                    }
-                    if (w > 640) {
-                        fountain(w * 0.06);
-                        fountain(w * 0.94);
-                    }
-
-                    // Fade the previous frame instead of clearing it, which leaves light trails.
-                    ctx.globalCompositeOperation = "destination-out";
-                    ctx.globalAlpha = 1;
-                    ctx.fillStyle = `rgba(0,0,0,${Math.min(0.5, 0.2 * dt)})`;
-                    ctx.fillRect(0, 0, w, h);
-                    ctx.globalCompositeOperation = "lighter";
-
-                    for (let i = rockets.length - 1; i >= 0; i--) {
-                        const r = rockets[i];
-                        r.x += r.vx * dt;
-                        r.y += r.vy * dt;
-                        r.vy += GRAVITY * dt;
-                        addSpark({
-                            x: r.x,
-                            y: r.y,
-                            vx: rand(-0.3, 0.3),
-                            vy: rand(0.2, 0.8),
-                            life: 0.7,
-                            decay: 0.05,
-                            drag: 0.95,
-                            gravity: 0.02,
-                            size: 1.2,
-                            color: "#fde68a",
-                            twinkle: false,
-                        });
-                        if (r.vy >= -0.4) {
-                            explode(r.x, r.y, r.color);
-                            rockets.splice(i, 1);
-                        }
-                    }
-
-                    for (let i = sparks.length - 1; i >= 0; i--) {
-                        const s = sparks[i];
-                        const drag = Math.pow(s.drag, dt);
-                        s.vx *= drag;
-                        s.vy = s.vy * drag + s.gravity * dt;
-                        s.x += s.vx * dt;
-                        s.y += s.vy * dt;
-                        s.life -= s.decay * dt;
-                        if (s.life <= 0 || s.y > h) {
-                            sparks[i] = sparks[sparks.length - 1];
-                            sparks.pop();
-                            continue;
-                        }
-                        if (s.twinkle && Math.random() < 0.35) continue;
-                        ctx.globalAlpha = Math.max(0, s.life);
-                        ctx.fillStyle = s.color;
-                        ctx.beginPath();
-                        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                };
-
-                const start = () => {
-                    if (rafId || !onScreen || document.hidden) return;
-                    last = 0;
-                    rafId = requestAnimationFrame(frame);
-                };
-                const stop = () => {
-                    cancelAnimationFrame(rafId);
-                    rafId = 0;
-                };
-
-                resize();
-                if ("ResizeObserver" in window) new ResizeObserver(resize).observe(hero);
-                else window.addEventListener("resize", resize, { passive: true });
-
-                if ("IntersectionObserver" in window) {
-                    new IntersectionObserver(([entry]) => {
-                        onScreen = entry.isIntersecting;
-                        if (onScreen) start();
-                        else stop();
-                    }).observe(hero);
-                }
-                document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
-
-                hero.addEventListener("pointerdown", (e) => {
-                    if (e.target.closest("a, button")) return;
-                    const rect = hero.getBoundingClientRect();
-                    launch(e.clientX - rect.left, e.clientY - rect.top);
-                });
-
-                // Opening volley so the sky lights up straight away.
-                [0, 250, 500].forEach((delay, i) =>
-                    setTimeout(() => launch(w * (0.25 + i * 0.25), h * rand(0.15, 0.3)), delay)
-                );
-                nextLaunch = performance.now() + 1400;
-                start();
-            }
-
-            // Small festive spark burst, e.g. around the product image when it lands in the cart.
-            // Sparks go into the open <dialog> (top layer) when there is one, otherwise <body>.
-            function diwaliSparkBurst(anchor) {
-                if (!anchor || prefersReducedMotion() || typeof Element.prototype.animate !== "function") return;
-                const rect = anchor.getBoundingClientRect();
-                if (!rect.width) return;
-                const host = anchor.closest("dialog") || document.body;
-                const cx = rect.left + rect.width / 2;
-                const cy = rect.top + rect.height / 2;
-                const COUNT = 22;
-                for (let i = 0; i < COUNT; i++) {
-                    const spark = document.createElement("span");
-                    spark.className = "diwali-spark";
-                    spark.setAttribute("aria-hidden", "true");
-                    spark.style.left = `${cx}px`;
-                    spark.style.top = `${cy}px`;
-                    spark.style.setProperty("--c", DIWALI_COLORS[i % DIWALI_COLORS.length]);
-                    host.appendChild(spark);
-                    const angle = (Math.PI * 2 * i) / COUNT;
-                    const dist = 70 + Math.random() * 60;
-                    const anim = spark.animate(
-                        [
-                            { transform: "translate(0, 0) scale(1)", opacity: 1 },
-                            {
-                                transform: `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist + 30}px) scale(0.2)`,
-                                opacity: 0,
-                            },
-                        ],
-                        { duration: 800 + Math.random() * 300, easing: "cubic-bezier(0.2, 0.7, 0.3, 1)", fill: "forwards" }
-                    );
-                    anim.onfinish = () => spark.remove();
-                    anim.oncancel = () => spark.remove();
-                }
-            }
-
             // Single delegated listener handles every data-action element, including
             // ones rendered later via innerHTML (product cards, cart rows, qty buttons).
             function handleGlobalClick(e) {
@@ -6958,8 +6477,20 @@
                     case "copy":
                         copyText(target.dataset.copyText, target);
                         break;
+                    case "upi-pay":
+                        openUpiApp(e);
+                        break;
                     case "open-cart-enquiry":
                         openCartEnquiry();
+                        break;
+                    case "open-upi-pay":
+                        openUpiPayModal();
+                        break;
+                    case "close-upi-pay":
+                        closeUpiPayModal();
+                        break;
+                    case "upi-paid":
+                        onUpiPaid();
                         break;
                     case "clear-cart":
                         clearCart();
@@ -7058,7 +6589,6 @@
                 initCardTilt();
                 initMagneticButtons();
                 initRipples();
-                initDiwaliFireworks();
                 const yearEl = document.getElementById("copyrightYear");
                 if (yearEl) yearEl.textContent = String(new Date().getFullYear());
                 cart = restoreCart(storage.get(APP.CART_STORAGE_KEY, {}));
