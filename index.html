@@ -1,3 +1,207 @@
+<?php
+declare(strict_types=1);
+
+// ---------- Online payment (Razorpay: Google Pay / PhonePe / any UPI app, cards, netbanking) ----------
+// Razorpay signs every UPI request, so Google Pay accepts the pre-filled amount, and the server
+// verifies each payment's signature before the site shows "Payment successful".
+//
+// Keys: set RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET as environment variables, or create
+// razorpay-config.php ONE FOLDER ABOVE this file (outside the public web folder):
+//     <?php return ['key_id' => 'rzp_live_xxx', 'key_secret' => 'xxx'];
+// Never put the key secret in this file or in any JavaScript.
+
+// Prices and pack sizes live here so the server - not the browser - decides what is charged.
+// The product list in the page's JavaScript reads its prices from this table.
+const SC_CATALOG = [
+    1 => ['name' => 'Dashboard Polish', 'price' => 200, 'packs' => [5, 10, 35, 50]],
+    2 => ['name' => 'Tyre Polish', 'price' => 150, 'packs' => [5, 10, 35, 50]],
+    3 => ['name' => 'Car Foaming Wash', 'price' => 70, 'packs' => [10, 35, 50]],
+    4 => ['name' => 'Interior Cleaner', 'price' => 130, 'packs' => [5, 10, 35, 50]],
+    5 => ['name' => 'Glass Cleaner', 'price' => 70, 'packs' => [5, 10, 35, 50]],
+    6 => ['name' => 'Foaming Gun', 'price' => 2000, 'packs' => [1]],
+    7 => ['name' => 'Micro Towel', 'price' => 70, 'packs' => [5, 10, 20]],
+    8 => ['name' => 'Micro Towel', 'price' => 110, 'packs' => [5, 10, 20]],
+    9 => ['name' => 'Micro Towel', 'price' => 130, 'packs' => [5, 10, 20]],
+];
+const SC_MAX_PACKS_PER_LINE = 1000;
+
+function sc_price(int $id): int
+{
+    return SC_CATALOG[$id]['price'];
+}
+
+function sc_razorpay_keys(): ?array
+{
+    $id = (string) getenv('RAZORPAY_KEY_ID');
+    $secret = (string) getenv('RAZORPAY_KEY_SECRET');
+    if ($id === '' || $secret === '') {
+        $file = dirname(__DIR__) . '/razorpay-config.php';
+        if (is_file($file)) {
+            $cfg = require $file;
+            $id = (string) ($cfg['key_id'] ?? '');
+            $secret = (string) ($cfg['key_secret'] ?? '');
+        }
+    }
+    return ($id !== '' && $secret !== '') ? ['id' => $id, 'secret' => $secret] : null;
+}
+
+function sc_razorpay_request(array $keys, string $method, string $path, ?array $body = null): array
+{
+    $ch = curl_init('https://api.razorpay.com/v1' . $path);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST => $method,
+        CURLOPT_USERPWD => $keys['id'] . ':' . $keys['secret'],
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+        CURLOPT_CONNECTTIMEOUT => 10,
+        CURLOPT_TIMEOUT => 20,
+    ]);
+    if ($body !== null) {
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+    }
+    $raw = curl_exec($ch);
+    $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+    $error = curl_error($ch);
+    curl_close($ch);
+
+    if ($raw === false) {
+        throw new RuntimeException("Razorpay unreachable: $error");
+    }
+    $data = json_decode((string) $raw, true);
+    if ($status >= 400 || !is_array($data)) {
+        throw new RuntimeException("Razorpay HTTP $status: " . substr((string) $raw, 0, 300));
+    }
+    return $data;
+}
+
+function sc_json(int $status, array $payload): void
+{
+    http_response_code($status);
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store');
+    echo json_encode($payload);
+    exit;
+}
+
+// Builds the order total from SC_CATALOG; the browser only says which items and how many.
+function sc_create_order(array $keys, array $input): array
+{
+    $items = $input['items'] ?? null;
+    if (!is_array($items) || $items === [] || count($items) > 50) {
+        sc_json(400, ['ok' => false, 'error' => 'Your cart is empty or invalid.']);
+    }
+
+    $totalRupees = 0;
+    $summary = [];
+    foreach ($items as $item) {
+        $id = filter_var($item['id'] ?? null, FILTER_VALIDATE_INT);
+        $pack = filter_var($item['pack'] ?? null, FILTER_VALIDATE_INT);
+        $qty = filter_var($item['qty'] ?? null, FILTER_VALIDATE_INT);
+        if (
+            $id === false || !isset(SC_CATALOG[$id]) ||
+            $pack === false || !in_array($pack, SC_CATALOG[$id]['packs'], true) ||
+            $qty === false || $qty < 1 || $qty > SC_MAX_PACKS_PER_LINE
+        ) {
+            sc_json(400, ['ok' => false, 'error' => 'Your cart has an item that is no longer available. Please refresh the page.']);
+        }
+        $totalRupees += SC_CATALOG[$id]['price'] * $pack * $qty;
+        $summary[] = SC_CATALOG[$id]['name'] . " {$pack}x{$qty}";
+    }
+
+    $receipt = 'SC' . strtoupper(bin2hex(random_bytes(5)));
+    $order = sc_razorpay_request($keys, 'POST', '/orders', [
+        'amount' => $totalRupees * 100, // paise
+        'currency' => 'INR',
+        'receipt' => $receipt,
+        'notes' => ['items' => substr(implode(', ', $summary), 0, 250)],
+    ]);
+
+    return [
+        'ok' => true,
+        'key_id' => $keys['id'],
+        'order_id' => $order['id'],
+        'amount' => $order['amount'],
+        'currency' => $order['currency'],
+        'receipt' => $receipt,
+    ];
+}
+
+// A payment counts as successful only if Razorpay's signature matches AND Razorpay itself
+// reports it captured for this order.
+function sc_verify_payment(array $keys, array $input): array
+{
+    $orderId = (string) ($input['razorpay_order_id'] ?? '');
+    $paymentId = (string) ($input['razorpay_payment_id'] ?? '');
+    $signature = (string) ($input['razorpay_signature'] ?? '');
+    if (
+        !preg_match('/^order_[A-Za-z0-9]{6,40}$/', $orderId) ||
+        !preg_match('/^pay_[A-Za-z0-9]{6,40}$/', $paymentId) ||
+        !preg_match('/^[a-f0-9]{64}$/', $signature)
+    ) {
+        sc_json(400, ['ok' => false, 'error' => 'Invalid payment details.']);
+    }
+
+    $expected = hash_hmac('sha256', "$orderId|$paymentId", $keys['secret']);
+    if (!hash_equals($expected, $signature)) {
+        sc_json(400, ['ok' => false, 'error' => 'Payment could not be verified.']);
+    }
+
+    $payment = sc_razorpay_request($keys, 'GET', '/payments/' . $paymentId);
+    if (($payment['order_id'] ?? '') !== $orderId) {
+        sc_json(400, ['ok' => false, 'error' => 'Payment does not belong to this order.']);
+    }
+    // Accounts with auto-capture turned off leave the payment "authorized"; capture it here.
+    if (($payment['status'] ?? '') === 'authorized') {
+        $payment = sc_razorpay_request($keys, 'POST', "/payments/$paymentId/capture", [
+            'amount' => $payment['amount'],
+            'currency' => $payment['currency'],
+        ]);
+    }
+    if (($payment['status'] ?? '') !== 'captured') {
+        sc_json(400, ['ok' => false, 'error' => 'Payment is not complete yet.']);
+    }
+
+    return [
+        'ok' => true,
+        'payment_id' => $paymentId,
+        'amount' => $payment['amount'],
+        'method' => $payment['method'] ?? '',
+    ];
+}
+
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_GET['sc_action'])) {
+    // Only this page may call these endpoints.
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+    $host = explode(':', $_SERVER['HTTP_HOST'] ?? '')[0];
+    if ($origin !== '' && parse_url($origin, PHP_URL_HOST) !== $host) {
+        sc_json(403, ['ok' => false, 'error' => 'Forbidden.']);
+    }
+
+    $keys = sc_razorpay_keys();
+    if ($keys === null) {
+        sc_json(503, ['ok' => false, 'error' => 'Online payment is not set up yet.']);
+    }
+
+    $input = json_decode((string) file_get_contents('php://input', false, null, 0, 20000), true);
+    if (!is_array($input)) {
+        sc_json(400, ['ok' => false, 'error' => 'Bad request.']);
+    }
+
+    try {
+        switch ($_GET['sc_action']) {
+            case 'create_order':
+                sc_json(200, sc_create_order($keys, $input));
+            case 'verify_payment':
+                sc_json(200, sc_verify_payment($keys, $input));
+            default:
+                sc_json(404, ['ok' => false, 'error' => 'Unknown action.']);
+        }
+    } catch (Throwable $e) {
+        error_log('[Swapnil payments] ' . $e->getMessage());
+        sc_json(502, ['ok' => false, 'error' => 'Payment service is busy. Please try again.']);
+    }
+}
+?>
 <!doctype html>
 <!-- Automobile 10-10-26-->
 <html lang="en">
@@ -47,7 +251,7 @@
 
         <meta
             http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.gstatic.com https://api.qrserver.com; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
+            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://www.gstatic.com https://api.qrserver.com https://*.razorpay.com; connect-src 'self' https://api.razorpay.com https://lumberjack.razorpay.com; frame-src https://api.razorpay.com https://checkout.razorpay.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
         />
         <!-- frame-ancestors is ignored by browsers when set via <meta>; real clickjacking protection needs an X-Frame-Options/CSP response header from the server -->
 
@@ -4182,7 +4386,7 @@
                     <span class="font-semibold text-gray-700">Total:</span>
                     <span class="font-bold text-lg text-gray-800" id="cartTotal">₹0</span>
                 </div>
-                <button id="cartUpiPayBtn" type="button" class="gpay-btn upi-pay-btn" data-action="open-upi-pay">
+                <button id="cartUpiPayBtn" type="button" class="gpay-btn upi-pay-btn" data-action="pay-online">
                     Pay with Google Pay / UPI
                 </button>
                 <button id="cartGpayBtn" class="gpay-btn mt-2" data-action="open-cart-enquiry">Send Enquiry</button>
@@ -4345,9 +4549,32 @@
                         decoding="async"
                     />
                     <p class="text-sm text-gray-500 mt-3">Scan with Google Pay, PhonePe, Paytm or any UPI app</p>
-                    <a id="upiPayLink" href="#" class="gpay-btn upi-pay-app-link mt-4" rel="noopener">
-                        <i class="fas fa-mobile-screen" aria-hidden="true"></i> Open Google Pay / UPI app
-                    </a>
+                    <div class="upi-pay-app-link mt-4">
+                        <p class="text-xs text-gray-500 mb-2">Pay on this phone - amount is filled in for you:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <a id="upiPayGpay" href="#" class="gpay-btn" rel="noopener">
+                                <i class="fab fa-google-pay" aria-hidden="true"></i> Google Pay
+                            </a>
+                            <a id="upiPayPhonepe" href="#" class="gpay-btn" rel="noopener" style="background: #5f259f">
+                                PhonePe
+                            </a>
+                            <a id="upiPayPaytm" href="#" class="gpay-btn" rel="noopener" style="background: #00baf2">
+                                Paytm
+                            </a>
+                            <a id="upiPayLink" href="#" class="gpay-btn" rel="noopener" style="background: #1e293b">
+                                <i class="fas fa-mobile-screen" aria-hidden="true"></i> Other UPI app
+                            </a>
+                        </div>
+                        <a
+                            id="upiPayQrSave"
+                            href="#"
+                            target="_blank"
+                            rel="noopener"
+                            class="block text-sm text-blue-600 underline mt-3"
+                        >
+                            Google Pay declined? Save this QR, then in Google Pay tap Scan → upload from gallery
+                        </a>
+                    </div>
                     <div class="flex items-center justify-center gap-2 mt-4 text-sm text-gray-700">
                         <span>UPI ID: <b id="upiPayVpa" class="font-mono"></b></span>
                         <button
@@ -4596,11 +4823,16 @@
             const UPI_PAYEE = {
                 vpa: "boism-9352470085@boi", // same business ID as the Contact QR and the invoice PDF
                 name: "Swapnil Chemicals",
+                // Merchant Category Code issued with this merchant VPA (from Bank of India's merchant
+                // onboarding details, e.g. "5169" for chemicals). Leave "" if unknown - a wrong code
+                // makes GPay decline the payment.
+                mcc: "",
             };
             const UPI_MAX_AMOUNT = 100000; // UPI per-transaction cap for most P2M payments
 
             let upiPayRef = "";
             let paidUpiRef = ""; // set only when the cart enquiry was opened from "I've paid"
+            let paidOnline = false; // true only after the server verified a Razorpay payment
 
             function cartGrandTotal() {
                 return Object.values(cart).reduce((s, i) => s + i.product.price * i.selectedQty * i.qty, 0);
@@ -4608,15 +4840,17 @@
 
             // Built by hand rather than with URLSearchParams: that encodes "@" as %40 and spaces as
             // "+", which several UPI apps don't decode and then reject as an invalid payee.
-            // Google Pay declines website-launched upi:// intents that carry a pre-filled amount
-            // ("You've exceeded the bank limit… money has not been debited") unless the payee is a
-            // verified merchant with a signed intent. So the "Open app" button sends no am/tn and
-            // the customer types the amount shown on screen; the QR (scanned, not launched from
-            // the browser) keeps the amount + order ref.
+            // The amount is pre-filled (am) so the customer doesn't have to type it. Google Pay treats a
+            // website-launched intent with an amount as a merchant (P2M) payment and declines it
+            // ("exceeded the bank limit… money has not been debited") when it can't see merchant
+            // fields, so tr (unique txn ref), mode and - when known - mc are sent with it.
             function buildUpiLink(amount, ref) {
-                let link = `upi://pay?pa=${UPI_PAYEE.vpa}` + `&pn=${encodeURIComponent(UPI_PAYEE.name)}` + `&cu=INR`;
+                let link = `upi://pay?pa=${UPI_PAYEE.vpa}` + `&pn=${encodeURIComponent(UPI_PAYEE.name)}`;
+                if (UPI_PAYEE.mcc) link += `&mc=${UPI_PAYEE.mcc}`;
+                if (ref) link += `&tr=${encodeURIComponent(ref)}&tn=${encodeURIComponent(`Order ${ref}`)}`;
                 if (amount) link += `&am=${amount.toFixed(2)}`;
-                if (ref) link += `&tn=${encodeURIComponent(`Order ${ref}`)}`;
+                link += `&cu=INR`;
+                if (ref) link += `&mode=04`; // 04 = intent
                 return link;
             }
 
@@ -4632,8 +4866,7 @@
                 }
 
                 upiPayRef = "SC" + Date.now().toString(36).toUpperCase();
-                const link = buildUpiLink(amount, upiPayRef); // for the QR
-                const appIntentLink = buildUpiLink(); // for the "Open app" button - no preset amount
+                const link = buildUpiLink(amount, upiPayRef); // QR + "Open app" button, amount pre-filled
                 const isMobile =
                     (navigator.userAgentData && navigator.userAgentData.mobile) ||
                     /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -4643,13 +4876,24 @@
                 document.getElementById("upiPayAmountCopyBtn").dataset.copyText = String(amount);
                 document.getElementById("upiPayVpa").textContent = UPI_PAYEE.vpa;
                 document.getElementById("upiPayCopyBtn").dataset.copyText = UPI_PAYEE.vpa;
-                document.getElementById("upiPayQr").src =
-                    "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(link);
-                const appLink = document.getElementById("upiPayLink");
-                appLink.href = appIntentLink;
-                appLink.classList.toggle("desktop-hidden", !isMobile);
+                const qrSrc = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(link);
+                document.getElementById("upiPayQr").src = qrSrc;
+                // Opens the QR image on its own so the customer can long-press → save it.
+                document.getElementById("upiPayQrSave").href = qrSrc.replace("300x300", "600x600");
+
+                // App-specific links skip the Android app chooser. On Android an intent:// URL pins the
+                // package; on iOS each app registers its own scheme.
+                const query = link.slice("upi://pay?".length);
+                const isIos = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                const appHref = (pkg, iosScheme) =>
+                    isIos ? `${iosScheme}?${query}` : `intent://pay?${query}#Intent;scheme=upi;package=${pkg};end`;
+                document.getElementById("upiPayGpay").href = appHref("com.google.android.apps.nbu.paisa.user", "tez://upi/pay");
+                document.getElementById("upiPayPhonepe").href = appHref("com.phonepe.app", "phonepe://pay");
+                document.getElementById("upiPayPaytm").href = appHref("net.one97.paytm", "paytmmp://pay");
+                document.getElementById("upiPayLink").href = link;
+                document.querySelector("#upiPayModal .upi-pay-app-link").classList.toggle("desktop-hidden", !isMobile);
                 document.getElementById("upiPayStatus").textContent = isMobile
-                    ? `Tap the button, enter ${formatCurrency(amount)} in your UPI app and add the note "${upiPayRef}". Or scan the QR from another phone.`
+                    ? `Pick your app - ${formatCurrency(amount)} and order ref "${upiPayRef}" are filled in for you.`
                     : "📱 Open Google Pay on your phone and scan this QR.";
 
                 if (document.getElementById("cartPanel")?.classList.contains("hidden") === false) toggleCart();
@@ -4671,12 +4915,108 @@
                 if (subtitle && paidUpiRef) subtitle.textContent = `UPI payment ref: ${paidUpiRef} — added to your message`;
             }
 
+            // ---------- Online payment via Razorpay Checkout ----------
+            // Razorpay shows Google Pay / PhonePe / any UPI app, cards and netbanking, and signs the
+            // UPI request so GPay accepts the pre-filled amount. The PHP block at the top of this file
+            // prices the cart, creates the order and verifies the payment. If it isn't configured
+            // (or the page is opened without PHP), the manual UPI QR popup is used instead.
+            const RAZORPAY_SRC = "https://checkout.razorpay.com/v1/checkout.js";
+            let razorpayPromise = null;
+
+            function loadRazorpay() {
+                if (window.Razorpay) return Promise.resolve(window.Razorpay);
+                if (!razorpayPromise) {
+                    razorpayPromise = new Promise((resolve, reject) => {
+                        const script = document.createElement("script");
+                        script.src = RAZORPAY_SRC;
+                        script.onload = () =>
+                            window.Razorpay ? resolve(window.Razorpay) : reject(new Error("Razorpay missing"));
+                        script.onerror = () => reject(new Error("Failed to load Razorpay"));
+                        document.head.appendChild(script);
+                    }).catch((err) => {
+                        razorpayPromise = null; // allow a retry on the next click
+                        throw err;
+                    });
+                }
+                return razorpayPromise;
+            }
+
+            async function postPaymentAction(action, payload) {
+                const res = await fetch(`?sc_action=${action}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json().catch(() => null);
+                if (!data) throw new Error("Payment server not available");
+                if (!res.ok || !data.ok) {
+                    const err = new Error(data.error || "Payment failed");
+                    err.status = res.status;
+                    throw err;
+                }
+                return data;
+            }
+
+            async function startOnlinePayment(btn) {
+                if (!Object.keys(cart).length || btn.disabled) return;
+                const label = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Opening payment…`;
+                try {
+                    const items = Object.values(cart).map((i) => ({ id: i.product.id, pack: i.selectedQty, qty: i.qty }));
+                    const [Razorpay, order] = await Promise.all([loadRazorpay(), postPaymentAction("create_order", { items })]);
+                    const checkout = new Razorpay({
+                        key: order.key_id,
+                        order_id: order.order_id,
+                        amount: order.amount,
+                        currency: order.currency,
+                        name: "Swapnil Chemicals",
+                        description: `Order ${order.receipt}`,
+                        image: new URL("SC Logo.webp", location.href).href,
+                        theme: { color: "#1e40af" },
+                        handler: (response) => onOnlinePaymentDone(response),
+                    });
+                    checkout.on("payment.failed", (resp) => {
+                        alert(`Payment failed: ${resp.error?.description || "please try again"}. No money has been taken.`);
+                    });
+                    if (document.getElementById("cartPanel")?.classList.contains("hidden") === false) toggleCart();
+                    checkout.open();
+                } catch (err) {
+                    console.error(err);
+                    if (err.status === 400) alert(err.message);
+                    else openUpiPayModal(); // gateway not set up / unreachable -> manual UPI QR
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = label;
+                }
+            }
+
+            async function onOnlinePaymentDone(response) {
+                try {
+                    const result = await postPaymentAction("verify_payment", response);
+                    openCartEnquiry();
+                    paidUpiRef = result.payment_id;
+                    paidOnline = true;
+                    setEnquiryHeader(
+                        "Payment successful",
+                        `✅ ${formatCurrency(result.amount / 100)} paid • ID ${result.payment_id}. Add your address and send the order.`,
+                        "fas fa-circle-check"
+                    );
+                } catch (err) {
+                    console.error(err);
+                    alert(
+                        `We couldn't confirm your payment automatically. If money was debited, please send us this payment ID on WhatsApp: ${response.razorpay_payment_id}`
+                    );
+                }
+            }
+
             const products = [
                 {
                     id: 1,
                     name: "Dashboard Polish",
                     image: "Dashboard Polish.webp",
-                    price: 200,
+                    price: <?= sc_price(1) ?>,
                     unit: "Lt",
                     hasLtOptions: true,
                     qtyOptions: [5, 10, 35, 50],
@@ -4687,7 +5027,7 @@
                     id: 2,
                     name: "Tyre Polish",
                     image: "Tyre Polish.webp",
-                    price: 150,
+                    price: <?= sc_price(2) ?>,
                     unit: "Lt",
                     hasLtOptions: true,
                     qtyOptions: [5, 10, 35, 50],
@@ -4698,7 +5038,7 @@
                     id: 3,
                     name: "Car Foaming Wash",
                     image: "Car Foaming Wash.webp",
-                    price: 70,
+                    price: <?= sc_price(3) ?>,
                     unit: "Lt",
                     hasLtOptions: true,
                     description: "Advanced foaming wash for thorough cleaning",
@@ -4707,7 +5047,7 @@
                     id: 4,
                     name: "Interior Cleaner",
                     image: "Interior Cleaner.webp",
-                    price: 130,
+                    price: <?= sc_price(4) ?>,
                     unit: "Lt",
                     hasLtOptions: true,
                     qtyOptions: [5, 10, 35, 50],
@@ -4718,7 +5058,7 @@
                     id: 5,
                     name: "Glass Cleaner",
                     image: "Glass Cleaner.webp",
-                    price: 70,
+                    price: <?= sc_price(5) ?>,
                     unit: "Lt",
                     hasLtOptions: true,
                     qtyOptions: [5, 10, 35, 50],
@@ -4729,7 +5069,7 @@
                     id: 6,
                     name: "Foaming Gun",
                     image: "Foaming Gun.webp",
-                    price: 2000,
+                    price: <?= sc_price(6) ?>,
                     unit: "per piece",
                     hasLtOptions: false,
                     description: "Professional foaming gun for car wash",
@@ -4738,7 +5078,7 @@
                     id: 7,
                     name: "Micro Towel",
                     image: "Micro Towel.webp",
-                    price: 70,
+                    price: <?= sc_price(7) ?>,
                     unit: "per piece",
                     hasLtOptions: true,
                     qtyOptions: [5, 10, 20],
@@ -4749,7 +5089,7 @@
                     id: 8,
                     name: "Micro Towel",
                     image: "Micro Towel 2.webp",
-                    price: 110,
+                    price: <?= sc_price(8) ?>,
                     unit: "per piece",
                     hasLtOptions: true,
                     qtyOptions: [5, 10, 20],
@@ -4760,7 +5100,7 @@
                     id: 9,
                     name: "Micro Towel",
                     image: "Micro Towel 3.webp",
-                    price: 130,
+                    price: <?= sc_price(9) ?>,
                     unit: "per piece",
                     hasLtOptions: true,
                     qtyOptions: [5, 10, 20],
@@ -5144,6 +5484,7 @@
                 const keys = Object.keys(cart);
                 if (!keys.length) return;
                 paidUpiRef = "";
+                paidOnline = false;
                 let grandTotal = 0;
                 const itemsHtml = keys
                     .map((key) => {
@@ -5214,7 +5555,8 @@
                 lines.push(``, ...customerMessageLines(customer));
                 if (details) lines.push(`📝 Details: ${details}`);
                 lines.push(`💰 Grand Total: ${formatCurrency(grandTotal)}`);
-                if (paidUpiRef) lines.push(`✅ Paid via UPI — Ref: ${paidUpiRef} (please verify)`);
+                if (paidUpiRef && paidOnline) lines.push(`✅ PAID ONLINE (verified) — Razorpay payment ID: ${paidUpiRef}`);
+                else if (paidUpiRef) lines.push(`✅ Paid via UPI — Ref: ${paidUpiRef} (please verify)`);
                 safeOpenNewTab(buildWhatsAppUrl(lines.join("\n")));
                 closeEnquiryModal();
             }
@@ -5499,10 +5841,10 @@
                         ],
                         [
                             ["Delivery Note", ""],
-                            ["Mode/Terms of Payment", paidUpiRef ? "PAID - UPI" : "UPI / Google Pay"],
+                            ["Mode/Terms of Payment", paidOnline ? "PAID - Online (Razorpay)" : paidUpiRef ? "PAID - UPI" : "UPI / Google Pay"],
                         ],
                         [
-                            ["Reference No. & Date", paidUpiRef ? `UPI Ref ${pdfText(paidUpiRef)}` : ""],
+                            ["Reference No. & Date", paidOnline ? `Razorpay ${pdfText(paidUpiRef)}` : paidUpiRef ? `UPI Ref ${pdfText(paidUpiRef)}` : ""],
                             ["Other References", "Online Cart Enquiry"],
                         ],
                         [
@@ -7308,6 +7650,9 @@
                         break;
                     case "open-cart-enquiry":
                         openCartEnquiry();
+                        break;
+                    case "pay-online":
+                        startOnlinePayment(target);
                         break;
                     case "open-upi-pay":
                         openUpiPayModal();
