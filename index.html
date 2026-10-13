@@ -4674,11 +4674,6 @@
                 upi: "boism-9352470085@boi",
             };
 
-            // GST shown on the invoice. Website prices are treated as GST-inclusive so the PDF total
-            // matches the cart / UPI amount; the taxable value is worked back from the price.
-            // A product's own `hsn` / `gstRate` fields override these defaults - confirm both with
-            // your accountant. CGST + SGST assumes an intra-state (Rajasthan) sale.
-            const INVOICE_TAX = { gstRate: 18, pricesIncludeGst: true, defaultHsn: "" };
             // The number is time-based and generated in the visitor's browser (not a sequential
             // series), so the document is titled a proforma rather than a GST tax invoice.
             const INVOICE_TITLE = "Proforma Invoice";
@@ -4808,7 +4803,6 @@
                     const fit = (str, width) => doc.splitTextToSize(String(str || ""), width)[0] || "";
                     const round2 = (n) => Math.round((n + Number.EPSILON) * 100) / 100;
                     const money = (n) => pdfAmountFormatter.format(n);
-                    const signedMoney = (n) => (n < 0 ? `(-)${money(-n)}` : money(n));
                     doc.setTextColor(0, 0, 0);
                     doc.setDrawColor(0, 0, 0);
                     doc.setLineWidth(0.25);
@@ -4833,44 +4827,20 @@
                     const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                     const invoiceDate = `${pad2(now.getDate())}-${MONTHS[now.getMonth()]}-${String(year).slice(2)}`;
 
-                    // ---- Line items and GST ----
+                    // ---- Line items (no tax breakup; amounts are the website prices) ----
                     const rows = keys.map((key) => {
                         const { product, qty: packs, selectedQty } = cart[key];
                         const qty = selectedQty * packs;
-                        const rate = Number(product.gstRate ?? INVOICE_TAX.gstRate) || 0;
-                        const gross = product.price * qty;
-                        const taxable = round2(INVOICE_TAX.pricesIncludeGst ? gross / (1 + rate / 100) : gross);
                         return {
                             name: pdfText(product.name) || "-",
-                            hsn: pdfText(product.hsn ?? INVOICE_TAX.defaultHsn),
-                            rate,
                             qty,
                             unit: pdfText(cartUnitLabel(product)),
-                            unitRate: qty ? taxable / qty : 0,
-                            taxable,
-                            gross,
+                            unitRate: product.price,
+                            amount: round2(product.price * qty),
                         };
                     });
-                    const groups = new Map();
-                    rows.forEach((r) => {
-                        const k = `${r.hsn}|${r.rate}`;
-                        const g = groups.get(k) || { hsn: r.hsn, rate: r.rate, taxable: 0 };
-                        g.taxable = round2(g.taxable + r.taxable);
-                        groups.set(k, g);
-                    });
-                    const taxRows = [...groups.values()].map((g) => {
-                        const half = round2((g.taxable * g.rate) / 200);
-                        return { ...g, cgst: half, sgst: half };
-                    });
-                    const sum = (list, field) => round2(list.reduce((s, x) => s + x[field], 0));
-                    const taxableTotal = sum(taxRows, "taxable");
-                    const cgstTotal = sum(taxRows, "cgst");
-                    const sgstTotal = sum(taxRows, "sgst");
-                    const taxTotal = round2(cgstTotal + sgstTotal);
-                    const beforeRound = round2(taxableTotal + taxTotal);
-                    // Inclusive prices: the total is exactly what the customer pays for the cart.
-                    const grandTotal = INVOICE_TAX.pricesIncludeGst ? sum(rows, "gross") : Math.round(beforeRound);
-                    const roundOff = round2(grandTotal - beforeRound);
+                    // The total is exactly what the customer pays for the cart.
+                    const grandTotal = round2(rows.reduce((s, r) => s + r.amount, 0));
                     const units = new Set(rows.map((r) => r.unit));
                     const totalQty = units.size === 1 ? `${rows.reduce((s, r) => s + r.qty, 0)} ${[...units][0]}` : "";
 
@@ -4878,17 +4848,10 @@
                     font("bold", 9);
                     const amountWords = doc.splitTextToSize(amountInWords(grandTotal), W - pad * 2);
                     const wordsH = 5 + amountWords.length * 4 + 1.2;
-                    const taxH = 8 + taxRows.length * 4.5 + 4.5;
-                    font("normal", 7.5);
-                    const taxWordsLabel = "Tax Amount (in words) :";
-                    const taxWordsLabelW = doc.getTextWidth(taxWordsLabel) + 1.5;
-                    font("bold", 8.5);
-                    const taxWords = doc.splitTextToSize(amountInWords(taxTotal), W - taxWordsLabelW - pad * 2);
-                    const taxWordsH = 2.5 + taxWords.length * 3.8 + 1.2;
                     const lowerH = 28;
                     const sigH = 16;
                     const totalRowH = 7;
-                    const footerH = totalRowH + wordsH + taxH + taxWordsH + lowerH + sigH;
+                    const footerH = totalRowH + wordsH + lowerH + sigH;
                     const lastLimit = boxBottom - footerH; // item table ends here on the last page
                     const contRowH = 7;
                     const fullLimit = boxBottom - contRowH; // ... or here on a page that continues
@@ -4996,10 +4959,10 @@
                     hLine(L, R, y);
 
                     // ---- Item table ----
-                    const cols = [8, 74, 20, 12, 22, 18, 10, 26]; // adds up to W
+                    const cols = [10, 104, 24, 20, 10, 22]; // adds up to W
                     const cx = cols.reduce((acc, w, i) => [...acc, acc[i] + w], [L]);
                     const colMid = (i) => (cx[i] + cx[i + 1]) / 2;
-                    const heads = [["Sl", "No."], ["Description of Goods"], ["HSN/SAC"], ["GST", "Rate"], ["Quantity"], ["Rate"], ["per"], ["Amount"]];
+                    const heads = [["Sl", "No."], ["Description of Goods"], ["Quantity"], ["Rate"], ["per"], ["Amount"]];
                     let tableTop = y;
                     const drawTableHeader = () => {
                         tableTop = y;
@@ -5047,32 +5010,16 @@
                         const b = y + 4.2;
                         font("normal", 8.5);
                         doc.text(String(i + 1), colMid(0), b, { align: "center" });
-                        doc.text(r.hsn, colMid(2), b, { align: "center" });
-                        doc.text(`${r.rate} %`, cx[4] - pad, b, { align: "right" });
-                        doc.text(money(r.unitRate), cx[6] - pad, b, { align: "right" });
-                        doc.text(r.unit, colMid(6), b, { align: "center" });
+                        doc.text(money(r.unitRate), cx[4] - pad, b, { align: "right" });
+                        doc.text(r.unit, colMid(4), b, { align: "center" });
                         font("bold", 8.5);
                         doc.text(nameLines, cx[1] + pad, b);
-                        doc.text(`${r.qty} ${r.unit}`, cx[5] - pad, b, { align: "right" });
-                        doc.text(money(r.taxable), cx[8] - pad, b, { align: "right" });
+                        doc.text(`${r.qty} ${r.unit}`, cx[3] - pad, b, { align: "right" });
+                        doc.text(money(r.amount), cx[6] - pad, b, { align: "right" });
                         y += rowH;
                     });
-
-                    // Tax lines sit under the items, inside the description column, as in Tally.
-                    const taxLines = [
-                        ["CGST", cgstTotal],
-                        ["SGST", sgstTotal],
-                        ...(roundOff ? [["R/O", roundOff]] : []),
-                    ];
-                    if (y + 4 + taxLines.length * 4.2 > lastLimit) breakPage();
-                    let ty = y + 5;
-                    taxLines.forEach(([label, amount]) => {
-                        font("bolditalic", 8.5);
-                        doc.text(label, cx[2] - pad, ty, { align: "right" });
-                        font("bold", 8.5);
-                        doc.text(signedMoney(amount), cx[8] - pad, ty, { align: "right" });
-                        ty += 4.2;
-                    });
+                    // The footer needs more room than a continuing page leaves; move it to a new page if needed.
+                    if (y > lastLimit) breakPage();
 
                     // ---- Totals and footer, pinned to the bottom of the last page ----
                     let fy = lastLimit;
@@ -5081,9 +5028,9 @@
                     font("normal", 8.5);
                     doc.text("Total", cx[2] - pad, fy + 4.8, { align: "right" });
                     font("bold", 8.5);
-                    doc.text(totalQty, cx[5] - pad, fy + 4.8, { align: "right" });
+                    doc.text(totalQty, cx[3] - pad, fy + 4.8, { align: "right" });
                     font("bold", 9.5);
-                    doc.text(`Rs. ${money(grandTotal)}`, cx[8] - pad, fy + 4.8, { align: "right" });
+                    doc.text(`Rs. ${money(grandTotal)}`, cx[6] - pad, fy + 4.8, { align: "right" });
                     fy += totalRowH;
                     hLine(L, R, fy);
 
@@ -5095,55 +5042,6 @@
                     doc.text(amountWords, L + pad, fy + 7.8);
                     fy += wordsH;
                     hLine(L, R, fy);
-
-                    // HSN-wise tax summary
-                    const tw = [66, 28, 12, 22, 12, 22, 28]; // adds up to W
-                    const tx = tw.reduce((acc, w, i) => [...acc, acc[i] + w], [L]);
-                    const tMid = (i) => (tx[i] + tx[i + 1]) / 2;
-                    const tTop = fy;
-                    font("normal", 7.5);
-                    doc.text("HSN/SAC", tMid(0), tTop + 5, { align: "center" });
-                    doc.text("Taxable", tMid(1), tTop + 3.3, { align: "center" });
-                    doc.text("Value", tMid(1), tTop + 6.9, { align: "center" });
-                    doc.text("CGST", (tx[2] + tx[4]) / 2, tTop + 3.3, { align: "center" });
-                    doc.text("SGST/UTGST", (tx[4] + tx[6]) / 2, tTop + 3.3, { align: "center" });
-                    ["Rate", "Amount", "Rate", "Amount"].forEach((t, i) =>
-                        doc.text(t, tMid(i + 2), tTop + 7.1, { align: "center" })
-                    );
-                    doc.text("Total", tMid(6), tTop + 3.3, { align: "center" });
-                    doc.text("Tax Amount", tMid(6), tTop + 6.9, { align: "center" });
-                    hLine(tx[2], tx[6], tTop + 4);
-                    fy = tTop + 8;
-                    hLine(L, R, fy);
-                    font("normal", 8);
-                    taxRows.forEach((g) => {
-                        const b = fy + 3.3;
-                        doc.text(g.hsn || "-", L + pad, b);
-                        doc.text(money(g.taxable), tx[2] - pad, b, { align: "right" });
-                        doc.text(`${g.rate / 2}%`, tx[3] - pad, b, { align: "right" });
-                        doc.text(money(g.cgst), tx[4] - pad, b, { align: "right" });
-                        doc.text(`${g.rate / 2}%`, tx[5] - pad, b, { align: "right" });
-                        doc.text(money(g.sgst), tx[6] - pad, b, { align: "right" });
-                        doc.text(money(round2(g.cgst + g.sgst)), tx[7] - pad, b, { align: "right" });
-                        fy += 4.5;
-                    });
-                    hLine(L, R, fy);
-                    font("bold", 8);
-                    doc.text("Total", tx[1] - pad, fy + 3.3, { align: "right" });
-                    doc.text(money(taxableTotal), tx[2] - pad, fy + 3.3, { align: "right" });
-                    doc.text(money(cgstTotal), tx[4] - pad, fy + 3.3, { align: "right" });
-                    doc.text(money(sgstTotal), tx[6] - pad, fy + 3.3, { align: "right" });
-                    doc.text(money(taxTotal), tx[7] - pad, fy + 3.3, { align: "right" });
-                    fy += 4.5;
-                    [tx[1], tx[2], tx[4], tx[6]].forEach((x) => vLine(x, tTop, fy));
-                    [tx[3], tx[5]].forEach((x) => vLine(x, tTop + 4, fy));
-                    hLine(L, R, fy);
-
-                    font("normal", 7.5);
-                    doc.text(taxWordsLabel, L + pad, fy + 3.8);
-                    font("bold", 8.5);
-                    doc.text(taxWords, L + pad + taxWordsLabelW, fy + 3.8);
-                    fy += taxWordsH;
 
                     // Company details + declaration (left), payment details + UPI QR (right)
                     const lowTop = fy;
