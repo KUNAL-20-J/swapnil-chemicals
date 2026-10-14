@@ -3410,6 +3410,245 @@
                 background: var(--c, #f97316);
                 box-shadow: 0 0 8px 2px var(--c, #f97316);
             }
+
+            /* ---------- Vijayadashami countdown pill (filled by JS, hidden while empty) ---------- */
+            .dussehra-countdown {
+                display: inline-block;
+                margin-left: 0.5rem;
+                padding: 1px 10px;
+                border-radius: 999px;
+                font-size: 0.78rem;
+                font-weight: 700;
+                color: #fde68a;
+                background: rgba(253, 230, 138, 0.16);
+                border: 1px solid rgba(253, 230, 138, 0.45);
+                white-space: nowrap;
+            }
+
+            .dussehra-countdown:empty {
+                display: none;
+            }
+
+            /* ---------- Bow-and-arrow ornament on section dividers ---------- */
+            .section-divider.max-w-xs {
+                position: relative;
+                overflow: visible;
+            }
+
+            .section-divider.max-w-xs::after {
+                content: "🏹";
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                translate: -50% -50%;
+                font-size: 1.15rem;
+                line-height: 1;
+                filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.55));
+            }
+
+            /* ---------- Ravan dahan mini-game: 10 hits = 10 heads ---------- */
+            .ravan-heads {
+                position: absolute;
+                left: 50%;
+                top: -30px;
+                translate: -50% 0;
+                display: none;
+                gap: 4px;
+                padding: 4px 8px;
+                border-radius: 999px;
+                background: rgba(28, 10, 10, 0.55);
+                border: 1px solid rgba(251, 191, 36, 0.4);
+            }
+
+            .ravan-wrap.game-on .ravan-heads {
+                display: flex;
+            }
+
+            .ravan-heads i {
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                background: #fbbf24;
+                box-shadow: 0 0 6px #f97316;
+                transition:
+                    background 0.3s ease,
+                    box-shadow 0.3s ease,
+                    transform 0.3s var(--ease-spring);
+            }
+
+            .ravan-heads i.down {
+                background: #44403c;
+                box-shadow: none;
+                transform: scale(0.7);
+            }
+
+            .ravan-wrap.hit {
+                animation: ravan-hit 0.35s ease-out;
+            }
+
+            @keyframes ravan-hit {
+                0% {
+                    filter: brightness(2) saturate(1.4);
+                }
+
+                100% {
+                    filter: none;
+                }
+            }
+
+            .effigy-fire {
+                transform-origin: 50% 100%;
+                transition: transform 0.8s ease;
+            }
+
+            .ravan-wrap.burning .effigy-fire {
+                transform: scale(1.25, 2.8);
+            }
+
+            .ravan-wrap.burning .ravan-effigy {
+                animation: effigy-collapse 2.6s ease-in 0.4s forwards;
+            }
+
+            @keyframes effigy-collapse {
+                0% {
+                    transform: none;
+                    filter: drop-shadow(0 0 22px rgba(249, 115, 22, 0.55));
+                }
+
+                35% {
+                    transform: rotate(-2deg);
+                    filter: brightness(1.7) sepia(0.6) drop-shadow(0 0 40px #f97316);
+                }
+
+                100% {
+                    transform: translateY(28%) scaleY(0.2) rotate(5deg);
+                    filter: brightness(0.4) drop-shadow(0 0 10px #dc2626);
+                    opacity: 0;
+                }
+            }
+
+            .ravan-wrap.rising .ravan-effigy {
+                animation: effigy-rise 1.2s var(--ease-spring) both;
+            }
+
+            @keyframes effigy-rise {
+                from {
+                    transform: translateY(30%) scaleY(0.3);
+                    opacity: 0;
+                }
+            }
+
+            .ravan-victory {
+                position: absolute;
+                left: 50%;
+                top: 18%;
+                z-index: 12;
+                translate: -50% 0;
+                width: max-content;
+                max-width: calc(100% - 32px);
+                padding: 12px 26px;
+                border-radius: 18px;
+                text-align: center;
+                font-family: var(--font-festive);
+                font-size: clamp(1.4rem, 1rem + 2vw, 2.4rem);
+                line-height: 1.25;
+                color: #fde68a;
+                background: rgba(59, 10, 10, 0.94);
+                backdrop-filter: blur(6px);
+                border: 1px solid rgba(251, 191, 36, 0.55);
+                box-shadow: 0 0 40px rgba(249, 115, 22, 0.5);
+                pointer-events: none;
+                opacity: 0;
+                scale: 0.8;
+                transition:
+                    opacity 0.4s ease,
+                    scale 0.5s var(--ease-spring);
+            }
+
+            .ravan-victory.show {
+                opacity: 1;
+                scale: 1;
+            }
+
+            .ravan-victory small {
+                display: block;
+                margin-top: 4px;
+                font-family: "Inter", sans-serif;
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: #fed7aa;
+            }
+
+            .hint-ravan {
+                display: none;
+            }
+
+            @media (min-width: 768px) {
+                .hero-gradient.ravan-game .hint-ravan {
+                    display: inline;
+                }
+            }
+
+            /* ---------- Footer diyas ---------- */
+            .diya-row {
+                display: flex;
+                justify-content: center;
+                gap: clamp(16px, 4vw, 36px);
+                padding-top: 18px;
+                margin-bottom: 0.5rem;
+            }
+
+            .diya {
+                position: relative;
+                width: 38px;
+                height: 16px;
+                border-radius: 0 0 20px 20px / 0 0 16px 16px;
+                background: linear-gradient(180deg, #d97706, #92400e);
+                box-shadow:
+                    inset 0 3px 0 #fbbf24,
+                    0 4px 10px rgba(0, 0, 0, 0.35);
+            }
+
+            .diya::before {
+                content: "";
+                position: absolute;
+                left: 50%;
+                bottom: 100%;
+                width: 10px;
+                height: 18px;
+                margin: 0 0 -3px -5px;
+                border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+                background: radial-gradient(ellipse at 50% 80%, #fff 0 15%, #fde047 35%, #f97316 65%, rgba(220, 38, 38, 0) 75%);
+                transform-origin: 50% 100%;
+                filter: drop-shadow(0 0 6px #f97316);
+                animation: flame-lick 0.8s ease-in-out infinite alternate;
+                animation-delay: var(--d, 0s);
+            }
+
+            /* ---------- Popups: marigold toran strip + leftover blue accents ---------- */
+            .cart-panel-header,
+            .assistant-panel-header,
+            .enquiry-modal-header {
+                border-bottom: 4px solid transparent;
+                border-image: repeating-linear-gradient(90deg, #fde047 0 8px, #f97316 8px 16px, #dc2626 16px 24px, #15803d 24px 30px) 1;
+            }
+
+            .cart-qty-btn:hover,
+            .added-cart-qty-ctrl button:hover {
+                border-color: #ea580c;
+                color: #c2410c;
+            }
+
+            .enquiry-input:focus,
+            .enquiry-textarea:focus,
+            .assistant-input:focus {
+                border-color: #ea580c;
+            }
+
+            .scroll-progress {
+                background: linear-gradient(90deg, #dc2626, #f97316, #fbbf24);
+                box-shadow: 0 0 12px rgba(249, 115, 22, 0.6);
+            }
         </style>
         <script type="application/ld+json">
             {
@@ -3596,6 +3835,7 @@
         <div class="dussehra-ribbon" role="note">
             🏹 <b lang="hi">शुभ विजयादशमी</b> &nbsp;·&nbsp; Happy Dussehra from Swapnil Chemicals — may goodness always
             win &amp; every ride shine ✨
+            <span class="dussehra-countdown" id="dussehraCountdown"></span>
         </div>
 
         <header class="sticky top-0 z-50 nav-blur">
@@ -3698,7 +3938,7 @@
                             <li><i class="fas fa-award" aria-hidden="true"></i> MSME &amp; Udyam certified</li>
                             <li><i class="fas fa-truck-fast" aria-hidden="true"></i> Bulk &amp; retail</li>
                         </ul>
-                        <p class="hero-tap-hint" aria-hidden="true">🏹 Tap anywhere in the sky to shoot a flaming arrow</p>
+                        <p class="hero-tap-hint" aria-hidden="true">🏹 Tap anywhere in the sky to shoot a flaming arrow<span class="hint-ravan"> · strike Ravan 10 times for Ravan dahan</span></p>
                     </div>
                 </div>
 
@@ -3717,6 +3957,7 @@
                     </g>
                 </svg>
                 <div class="ravan-wrap" aria-hidden="true">
+                    <div class="ravan-heads"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
                     <svg class="ravan-effigy" id="ravanEffigy" viewBox="0 0 240 330">
                         <defs>
                             <linearGradient id="rvTorso" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dc2626" /><stop offset="1" stop-color="#7f1d1d" /></linearGradient>
@@ -3762,6 +4003,10 @@
                         <path d="M108 84 Q114 79 120 84 Q126 79 132 84 Q126 89 120 86 Q114 89 108 84 Z" fill="#1c1917" />
                     </svg>
                     <div class="effigy-fire"><span style="--h: 46px; --d: -0.1s"></span><span style="--h: 72px; --d: -0.4s"></span><span style="--h: 58px; --d: -0.7s"></span><span style="--h: 90px; --d: -0.2s"></span><span style="--h: 64px; --d: -0.55s"></span><span style="--h: 80px; --d: -0.3s"></span><span style="--h: 50px; --d: -0.8s"></span></div>
+                </div>
+                <div class="ravan-victory" id="ravanVictory" aria-hidden="true">
+                    <span lang="hi">असत्य पर सत्य की विजय!</span>
+                    <small>Ravan dahan complete · Happy Dussehra 🏹</small>
                 </div>
                 <svg class="hero-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
                     <path d="M0,40 C240,90 480,0 720,30 C960,60 1200,10 1440,45 L1440,90 L0,90 Z" fill="currentColor" />
@@ -4150,6 +4395,11 @@
                 <p class="dussehra-footer-wish">
                     May this Vijayadashami bring victory, courage &amp; prosperity to you and your family 🏹
                 </p>
+                <div class="diya-row" aria-hidden="true">
+                    <span class="diya"></span><span class="diya" style="--d: -0.3s"></span
+                    ><span class="diya" style="--d: -0.6s"></span><span class="diya" style="--d: -0.15s"></span
+                    ><span class="diya" style="--d: -0.45s"></span>
+                </div>
                 <div class="border-t border-slate-700 mt-8 pt-8 text-center">
                     <p class="text-slate-300">
                         © <span id="copyrightYear">2026</span> Swapnil Chemicals. All rights reserved.
@@ -6859,6 +7109,19 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 let bowTip = null;
                 let effigyBox = null;
 
+                // Ravan dahan: each arrow that bursts on the effigy knocks off one of his 10 heads;
+                // the 10th burns him down, then he is rebuilt for another round.
+                const ravanWrap = effigy ? effigy.closest(".ravan-wrap") : null;
+                const headDots = ravanWrap ? Array.from(ravanWrap.querySelectorAll(".ravan-heads i")) : [];
+                const victory = document.getElementById("ravanVictory");
+                const RAVAN_HEADS = headDots.length || 10;
+                let hits = 0;
+                let burning = false;
+                if (ravanWrap) {
+                    ravanWrap.classList.add("game-on");
+                    hero.classList.add("ravan-game");
+                }
+
                 const rand = (min, max) => min + Math.random() * (max - min);
                 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
@@ -6892,7 +7155,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                     const y = bowTip ? bowTip.y : h;
                     const vy = -Math.sqrt(2 * GRAVITY * Math.max(60, y - ty));
                     const frames = -vy / GRAVITY;
-                    arrows.push({ x, y, vx: (tx - x) / frames, vy, color: pick(DUSSEHRA_COLORS) });
+                    arrows.push({ x, y, tx, ty, vx: (tx - x) / frames, vy, color: pick(DUSSEHRA_COLORS) });
                 };
 
                 const shootAtEffigy = () => {
@@ -6924,10 +7187,51 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                     }
                 };
 
+                const hitsEffigy = (x, y) =>
+                    !!effigyBox &&
+                    !burning &&
+                    x >= effigyBox.x &&
+                    x <= effigyBox.x + effigyBox.w &&
+                    y >= effigyBox.y &&
+                    y <= effigyBox.y + effigyBox.h;
+
+                const ravanDahan = () => {
+                    burning = true;
+                    ravanWrap.classList.add("burning");
+                    if (victory) victory.classList.add("show");
+                    const cx = effigyBox.x + effigyBox.w / 2;
+                    const cy = effigyBox.y + effigyBox.h * 0.3;
+                    for (let i = 0; i < 5; i++) {
+                        setTimeout(() => explode(cx + rand(-70, 70), cy + rand(-60, 40), pick(DUSSEHRA_COLORS)), i * 260);
+                    }
+                    setTimeout(() => {
+                        if (victory) victory.classList.remove("show");
+                        ravanWrap.classList.remove("burning");
+                        ravanWrap.classList.add("rising");
+                        hits = 0;
+                        headDots.forEach((d) => d.classList.remove("down"));
+                        setTimeout(() => {
+                            ravanWrap.classList.remove("rising");
+                            burning = false;
+                        }, 1200);
+                    }, 5000);
+                };
+
+                const strikeRavan = () => {
+                    if (!ravanWrap) return;
+                    hits++;
+                    headDots.forEach((d, i) => d.classList.toggle("down", i < hits));
+                    // Restart the flash even when hits land back to back.
+                    ravanWrap.classList.remove("hit");
+                    void ravanWrap.offsetWidth;
+                    ravanWrap.classList.add("hit");
+                    if (hits >= RAVAN_HEADS) ravanDahan();
+                };
+
                 // Embers drifting up from the burning effigy (negative gravity = they float).
                 const embers = () => {
                     if (!effigyBox) return;
-                    const perFrame = isSmall ? 1 : 2;
+                    const perFrame = (isSmall ? 1 : 2) * (burning ? 4 : 1);
                     for (let i = 0; i < perFrame; i++) {
                         addSpark({
                             x: effigyBox.x + effigyBox.w * rand(0.2, 0.8),
@@ -6995,8 +7299,9 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                             color: pick(["#f97316", "#fbbf24", "#ef4444"]),
                             twinkle: false,
                         });
-                        if (a.vy >= -0.4) {
+                        if (a.vy >= -GRAVITY * dt) {
                             explode(a.x, a.y, a.color);
+                            if (hitsEffigy(a.tx, a.ty)) strikeRavan();
                             arrows.splice(i, 1);
                         }
                     }
@@ -7049,7 +7354,12 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 hero.addEventListener("pointerdown", (e) => {
                     if (e.target.closest("a, button")) return;
                     const rect = hero.getBoundingClientRect();
-                    shoot(e.clientX - rect.left, e.clientY - rect.top);
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    // Taps on the effigy aim at its upper body: the arrow can't peak below the bow tip,
+                    // so aiming at his legs would burst above Ravan instead of on him.
+                    if (hitsEffigy(x, y)) shootAtEffigy();
+                    else shoot(x, y);
                 });
 
                 // Opening volley so the sky lights up straight away; the last arrow strikes Ravan.
@@ -7057,6 +7367,22 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 setTimeout(() => shootAtEffigy() || shoot(w * 0.8, h * 0.25), 650);
                 nextLaunch = performance.now() + 1500;
                 start();
+            }
+
+            // Countdown pill in the greeting ribbon. Vijayadashami 2026 falls on 20 October;
+            // update DUSSEHRA_DATE for the next festival. The pill stays hidden after the day.
+            const DUSSEHRA_DATE = { year: 2026, month: 9, day: 20 }; // month is 0-based
+
+            function initDussehraCountdown() {
+                const el = document.getElementById("dussehraCountdown");
+                if (!el) return;
+                const now = new Date();
+                const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+                const festival = Date.UTC(DUSSEHRA_DATE.year, DUSSEHRA_DATE.month, DUSSEHRA_DATE.day);
+                const days = Math.round((festival - today) / 86400000);
+                if (days > 1 && days <= 30) el.textContent = `⏳ ${days} days to Vijayadashami`;
+                else if (days === 1) el.textContent = "⏳ Vijayadashami is tomorrow!";
+                else if (days === 0) el.textContent = "🔥 Today is Vijayadashami!";
             }
 
             // Small festive ember burst, e.g. around the product image when it lands in the cart.
@@ -7212,6 +7538,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 initMagneticButtons();
                 initRipples();
                 initDussehraArrows();
+                initDussehraCountdown();
                 const yearEl = document.getElementById("copyrightYear");
                 if (yearEl) yearEl.textContent = String(new Date().getFullYear());
                 cart = restoreCart(storage.get(APP.CART_STORAGE_KEY, {}));
