@@ -1,4 +1,4 @@
-<?php
+<?php /*><!-- Keeps this PHP block hidden if the page is ever opened without PHP (file://, static host). */
 /*
  * Cart PDF -> WhatsApp (Meta WhatsApp Business Cloud API).
  * When a customer downloads the cart PDF, the page POSTs the same PDF here and it is sent
@@ -116,7 +116,7 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
     }
     $respond($sent ? 200 : 502, ['ok' => $sent > 0, 'sent' => $sent]);
 }
-?>
+/* --><? */ ?>
 <!doctype html>
 <!-- Automobile 10-10-26-->
 <html lang="en">
