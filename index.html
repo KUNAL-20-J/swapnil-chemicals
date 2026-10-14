@@ -3496,6 +3496,670 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                 background: var(--c, #fbbf24);
                 box-shadow: 0 0 8px 2px var(--c, #fbbf24);
             }
+
+            /* ================================================================
+               More Diwali: twinkling stars, Shubh-Labh, marigold petal rain,
+               garlanded product cards, diya dividers, corner mandalas and a
+               footer toran. Decorative only (aria-hidden); the global
+               prefers-reduced-motion rule stops every animation here.
+               ================================================================ */
+
+            /* Faint golden sparkle pattern over the whole page background */
+            body::before {
+                background:
+                    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><g fill="%23d97706" fill-opacity="0.13"><path d="M30 18l2.2 7.8L40 28l-7.8 2.2L30 38l-2.2-7.8L20 28l7.8-2.2z"/><path d="M90 78l1.6 5.4L97 85l-5.4 1.6L90 92l-1.6-5.4L83 85l5.4-1.6z"/><circle cx="90" cy="24" r="1.6"/><circle cx="24" cy="92" r="1.6"/><circle cx="60" cy="60" r="1.2"/></g></svg>') 0 0 / 120px 120px,
+                    radial-gradient(40vw 40vw at 0% 30%, rgba(251, 191, 36, 0.12), transparent 70%),
+                    radial-gradient(35vw 35vw at 100% 60%, rgba(225, 29, 72, 0.08), transparent 70%),
+                    radial-gradient(30vw 30vw at 50% 100%, rgba(234, 88, 12, 0.08), transparent 70%);
+            }
+
+            /* ---------- Twinkling stars in the hero (Amavasya night sky) ---------- */
+            .diwali-stars,
+            .diwali-stars::before {
+                position: absolute;
+                inset: 0 0 35% 0;
+                z-index: 1;
+                pointer-events: none;
+                background:
+                    radial-gradient(1.5px 1.5px at 8% 18%, #fff, transparent),
+                    radial-gradient(1px 1px at 17% 42%, #fde68a, transparent),
+                    radial-gradient(1.5px 1.5px at 26% 9%, #fff, transparent),
+                    radial-gradient(1px 1px at 37% 30%, #fff, transparent),
+                    radial-gradient(2px 2px at 48% 14%, #fde68a, transparent),
+                    radial-gradient(1px 1px at 58% 38%, #fff, transparent),
+                    radial-gradient(1.5px 1.5px at 67% 7%, #fff, transparent),
+                    radial-gradient(1px 1px at 76% 33%, #fde68a, transparent),
+                    radial-gradient(1.5px 1.5px at 88% 20%, #fff, transparent),
+                    radial-gradient(1px 1px at 95% 45%, #fff, transparent);
+                animation: star-twinkle 3.2s ease-in-out infinite alternate;
+            }
+
+            .diwali-stars::before {
+                content: "";
+                inset: 0;
+                transform: translate(4%, 6%) scaleX(-1);
+                animation-duration: 4.1s;
+                animation-delay: -2s;
+            }
+
+            @keyframes star-twinkle {
+                from {
+                    opacity: 0.35;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            /* ---------- Shubh-Labh (traditional Diwali blessing for a business) ---------- */
+            .shubh-labh {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 14px;
+                margin-top: 1.25rem;
+                font-family: var(--font-festive);
+                font-size: clamp(1rem, 0.85rem + 0.6vw, 1.3rem);
+                color: #fde68a;
+            }
+
+            .shubh-labh span:not(.shubh-labh-line) {
+                padding: 2px 14px;
+                border: 1px solid rgba(251, 191, 36, 0.5);
+                border-radius: 999px;
+                background: rgba(127, 29, 29, 0.35);
+                box-shadow: 0 0 18px -4px rgba(251, 191, 36, 0.6);
+            }
+
+            .shubh-labh-line {
+                width: clamp(28px, 8vw, 80px);
+                height: 1px;
+                background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+            }
+
+            .shubh-labh + .diwali-greeting {
+                margin-top: 0.5rem;
+            }
+
+            /* ---------- Marigold petal rain ---------- */
+            .petal-rain {
+                position: fixed;
+                inset: 0;
+                z-index: 40;
+                overflow: hidden;
+                pointer-events: none;
+            }
+
+            .petal {
+                position: absolute;
+                top: -24px;
+                left: var(--x);
+                width: 11px;
+                height: 15px;
+                border-radius: 60% 0 60% 0;
+                background: radial-gradient(circle at 30% 30%, #fde047, var(--pc, #f59e0b) 60%, #c2410c);
+                opacity: 0;
+                animation: petal-fall var(--dur, 14s) linear infinite;
+                animation-delay: var(--d, 0s);
+            }
+
+            @keyframes petal-fall {
+                0% {
+                    opacity: 0;
+                    transform: translate(0, 0) rotate(0deg);
+                }
+
+                8% {
+                    opacity: 0.75;
+                }
+
+                50% {
+                    transform: translate(40px, 55vh) rotate(260deg);
+                }
+
+                90% {
+                    opacity: 0.6;
+                }
+
+                100% {
+                    opacity: 0;
+                    transform: translate(-20px, 108vh) rotate(540deg);
+                }
+            }
+
+            @media (max-width: 767px) {
+                .petal:nth-child(n + 7) {
+                    display: none;
+                }
+            }
+
+            /* ---------- Section dividers carry a diya ---------- */
+            .section-divider.max-w-xs {
+                position: relative;
+                max-width: 180px;
+                margin-top: 1.6rem;
+                overflow: visible;
+                background: linear-gradient(90deg, transparent, #e11d48 20%, #f59e0b 40%, transparent 40% 60%, #f59e0b 60%, #e11d48 80%, transparent);
+            }
+
+            .section-divider.max-w-xs::after {
+                content: "🪔";
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -62%);
+                font-size: 1.35rem;
+                line-height: 1;
+                filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.8));
+            }
+
+            /* ---------- Product cards wear a marigold garland ---------- */
+            .product-card::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 4;
+                height: 22px;
+                pointer-events: none;
+                background:
+                    radial-gradient(circle at 8px 7px, #fde047 0 2.5px, #f59e0b 3px 6px, transparent 6.5px) 0 0 / 30px 14px repeat-x,
+                    radial-gradient(circle at 8px 7px, #fb923c 0 2.5px, #ea580c 3px 6px, transparent 6.5px) 15px 0 / 30px 14px repeat-x,
+                    radial-gradient(ellipse 3.5px 7px at 30px 15px, #15803d 0 85%, transparent 100%) 0 0 / 60px 22px repeat-x;
+                filter: drop-shadow(0 2px 2px rgba(127, 29, 29, 0.25));
+            }
+
+            .product-tag {
+                top: 26px;
+            }
+
+            .product-card .p-6 {
+                background: linear-gradient(180deg, transparent 70%, rgba(254, 243, 199, 0.55));
+            }
+
+            .qty-btn.active {
+                background: linear-gradient(135deg, #f59e0b, #d97706);
+                box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+            }
+
+            .qty-btn:hover {
+                border-color: #d97706;
+                color: #b45309;
+            }
+
+            /* ---------- Corner mandala on info cards ---------- */
+            .feature-card,
+            #contact .glass-card {
+                isolation: isolate;
+                overflow: hidden;
+            }
+
+            .feature-card::after,
+            #contact .glass-card::after {
+                content: "";
+                position: absolute;
+                z-index: -1;
+                top: -46px;
+                right: -46px;
+                width: 140px;
+                height: 140px;
+                border-radius: 50%;
+                pointer-events: none;
+                opacity: 0.16;
+                background: radial-gradient(circle, #fde047 0 7%, #e11d48 7% 10%, transparent 10.5%),
+                    repeating-conic-gradient(#e11d48 0 10deg, #f59e0b 10deg 20deg, #d97706 20deg 30deg);
+                mask-image: repeating-radial-gradient(circle, #000 0 10px, transparent 10px 14px);
+                -webkit-mask-image: repeating-radial-gradient(circle, #000 0 10px, transparent 10px 14px);
+                transition: opacity 0.4s ease, rotate 1.2s var(--ease-standard);
+            }
+
+            .feature-card:hover::after,
+            #contact .glass-card:hover::after {
+                opacity: 0.3;
+                rotate: 45deg;
+            }
+
+            /* Extra rangoli for the products and contact sections + footer */
+            .rangoli-products {
+                right: -150px;
+                top: 120px;
+                opacity: 0.14;
+                background: radial-gradient(circle, #fde047 0 6%, #be123c 6% 9%, transparent 9.5%),
+                    repeating-conic-gradient(#f97316 0 10deg, #be123c 10deg 20deg, #fbbf24 20deg 30deg, #0f766e 30deg 40deg);
+            }
+
+            .rangoli-contact {
+                left: -150px;
+                bottom: -40px;
+                animation-direction: reverse;
+            }
+
+            #products > .container {
+                position: relative;
+                z-index: 1;
+            }
+
+            #products,
+            #contact {
+                overflow-x: clip;
+            }
+
+            /* ---------- Footer: toran on top, rangoli behind the wish ---------- */
+            .site-footer::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 30px;
+                pointer-events: none;
+                background:
+                    radial-gradient(circle at 9px 8px, #fde047 0 3px, #f59e0b 3.5px 7px, transparent 7.5px) 0 0 / 36px 16px repeat-x,
+                    radial-gradient(circle at 9px 8px, #fb923c 0 3px, #ea580c 3.5px 7px, transparent 7.5px) 18px 0 / 36px 16px repeat-x,
+                    radial-gradient(ellipse 5px 10px at 36px 20px, #15803d 0 85%, transparent 100%) 0 0 / 72px 30px repeat-x,
+                    radial-gradient(circle at 36px 27px, #e11d48 0 3px, transparent 3.5px) 0 0 / 72px 30px repeat-x;
+            }
+
+            .site-footer {
+                padding-top: 4rem;
+            }
+
+            .site-footer .rangoli-footer {
+                left: 50%;
+                top: auto;
+                bottom: -170px;
+                z-index: -1;
+                margin-left: -170px;
+                opacity: 0.12;
+            }
+
+            .diwali-footer-wish {
+                text-shadow: 0 0 22px rgba(251, 191, 36, 0.45);
+            }
+
+            .site-footer .border-slate-700 {
+                border-color: rgba(251, 191, 36, 0.25);
+            }
+
+            /* ---------- Cart & modal headers: gold trim ---------- */
+            .cart-panel-header,
+            .assistant-panel-header,
+            .enquiry-modal-header {
+                border-bottom: 3px dotted #fbbf24;
+            }
+
+            .cart-badge {
+                background: #fbbf24;
+                color: #7f1d1d;
+                box-shadow: 0 0 10px rgba(251, 191, 36, 0.8);
+            }
+
+            /* ================================================================
+               Even more Diwali: countdown in the ribbon, ladi (string lights),
+               rising sky lanterns, Lakshmi charan footprints, the five days
+               of Diwali strip, a phuljhadi cursor trail and a glowing cart.
+               Decorative only; reduced motion stops all of it.
+               ================================================================ */
+
+            /* ---------- Ribbon countdown ---------- */
+            .diwali-countdown {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                margin-left: 10px;
+                padding: 2px 10px;
+                border-radius: 999px;
+                font-size: 0.75rem;
+                font-weight: 700;
+                color: #7f1d1d;
+                background: linear-gradient(135deg, #fde68a, #fbbf24);
+                box-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
+                white-space: nowrap;
+            }
+
+            .diwali-countdown[hidden] {
+                display: none;
+            }
+
+            /* ---------- Ladi: twinkling string lights ---------- */
+            .diwali-ladi {
+                position: relative;
+                height: 30px;
+                margin: 0 auto;
+                overflow: hidden;
+                pointer-events: none;
+            }
+
+            .diwali-ladi::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                height: 14px;
+                border-bottom: 1.5px solid rgba(120, 53, 15, 0.45);
+                border-radius: 0 0 50% 50% / 0 0 100% 100%;
+            }
+
+            .diwali-ladi span {
+                position: absolute;
+                top: calc(var(--sag, 0px) + 1px);
+                left: var(--x);
+                width: 8px;
+                height: 12px;
+                margin-left: -4px;
+                border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+                background: var(--c);
+                box-shadow: 0 0 8px 2px var(--c);
+                animation: ladi-twinkle 1.6s ease-in-out infinite alternate;
+                animation-delay: var(--d, 0s);
+            }
+
+            .diwali-ladi span::before {
+                content: "";
+                position: absolute;
+                top: -3px;
+                left: 2px;
+                width: 4px;
+                height: 4px;
+                border-radius: 1px;
+                background: #78350f;
+            }
+
+            @keyframes ladi-twinkle {
+                0% {
+                    opacity: 0.35;
+                    box-shadow: 0 0 2px 0 var(--c);
+                }
+
+                100% {
+                    opacity: 1;
+                    box-shadow: 0 0 12px 3px var(--c);
+                }
+            }
+
+            /* ---------- Sky lanterns rising through the hero ---------- */
+            .sky-lanterns {
+                position: absolute;
+                inset: 0;
+                overflow: hidden;
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            .sky-lantern {
+                position: absolute;
+                bottom: -60px;
+                left: var(--x);
+                width: 22px;
+                height: 30px;
+                border-radius: 40% 40% 30% 30% / 50% 50% 25% 25%;
+                background: radial-gradient(ellipse at 50% 85%, #fff7cc 0%, #fbbf24 35%, #ea580c 80%, #9a3412 100%);
+                box-shadow:
+                    0 0 18px 4px rgba(251, 146, 60, 0.55),
+                    0 0 40px 10px rgba(251, 191, 36, 0.2);
+                opacity: 0;
+                scale: var(--s, 1);
+                animation: lantern-rise var(--dur, 22s) linear infinite;
+                animation-delay: var(--d, 0s);
+            }
+
+            @keyframes lantern-rise {
+                0% {
+                    transform: translate(0, 0) rotate(-3deg);
+                    opacity: 0;
+                }
+
+                10% {
+                    opacity: 0.9;
+                }
+
+                50% {
+                    transform: translate(18px, -55vh) rotate(3deg);
+                }
+
+                85% {
+                    opacity: 0.7;
+                }
+
+                100% {
+                    transform: translate(-10px, -105vh) rotate(-2deg);
+                    opacity: 0;
+                }
+            }
+
+            @media (max-width: 767px) {
+                .sky-lantern:nth-child(n + 5) {
+                    display: none;
+                }
+            }
+
+            /* ---------- Lakshmi charan (footprints) walking into the products ---------- */
+            .lakshmi-charan {
+                display: flex;
+                justify-content: center;
+                align-items: flex-end;
+                gap: 18px;
+                margin: 0.5rem auto 1.25rem;
+                height: 54px;
+                pointer-events: none;
+            }
+
+            .lakshmi-charan span {
+                width: 18px;
+                height: 34px;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 34"><g fill="%23dc2626"><ellipse cx="9" cy="21" rx="6.5" ry="11"/><circle cx="3.6" cy="7.4" r="1.9"/><circle cx="7.4" cy="4.6" r="2.2"/><circle cx="11.6" cy="4.6" r="2"/><circle cx="14.6" cy="7" r="1.7"/><circle cx="16" cy="10.4" r="1.4"/></g><circle cx="9" cy="20" r="2.2" fill="%23fbbf24"/></svg>') center / contain no-repeat;
+                opacity: 0;
+                animation: charan-step 6s ease-in-out infinite;
+            }
+
+            .lakshmi-charan span:nth-child(odd) {
+                transform: translateY(-14px) rotate(-8deg) scaleX(-1);
+            }
+
+            .lakshmi-charan span:nth-child(even) {
+                transform: rotate(8deg);
+            }
+
+            .lakshmi-charan span:nth-child(1) { animation-delay: 0s; }
+            .lakshmi-charan span:nth-child(2) { animation-delay: 0.5s; }
+            .lakshmi-charan span:nth-child(3) { animation-delay: 1s; }
+            .lakshmi-charan span:nth-child(4) { animation-delay: 1.5s; }
+            .lakshmi-charan span:nth-child(5) { animation-delay: 2s; }
+            .lakshmi-charan span:nth-child(6) { animation-delay: 2.5s; }
+
+            @keyframes charan-step {
+                0%,
+                5% {
+                    opacity: 0;
+                }
+
+                15%,
+                70% {
+                    opacity: 0.85;
+                }
+
+                90%,
+                100% {
+                    opacity: 0;
+                }
+            }
+
+            /* Without animation the footprints stay visible instead of hidden */
+            @media (prefers-reduced-motion: reduce) {
+                .lakshmi-charan span {
+                    opacity: 0.85;
+                }
+
+                .sky-lantern {
+                    display: none;
+                }
+            }
+
+            /* ---------- Five days of Diwali ---------- */
+            .diwali-days {
+                position: relative;
+                padding: 2.5rem 0 1.5rem;
+            }
+
+            .diwali-days-title {
+                font-family: var(--font-festive);
+                font-size: clamp(1.6rem, 1.2rem + 1.8vw, 2.4rem);
+                text-align: center;
+                color: #b91c1c;
+                text-shadow: 0 0 18px rgba(251, 191, 36, 0.45);
+                margin-bottom: 0.25rem;
+            }
+
+            .diwali-days-sub {
+                text-align: center;
+                color: #78350f;
+                font-size: 0.95rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .diwali-days-list {
+                display: grid;
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+                gap: 14px;
+                max-width: 72rem;
+                margin: 0 auto;
+            }
+
+            .diwali-day {
+                position: relative;
+                padding: 18px 14px 16px;
+                border-radius: 18px;
+                text-align: center;
+                background: linear-gradient(160deg, #fff7ed, #fef3c7);
+                border: 1.5px solid rgba(217, 119, 6, 0.35);
+                box-shadow: 0 10px 24px -12px rgba(180, 83, 9, 0.45);
+                transition:
+                    transform 0.3s var(--ease-standard),
+                    box-shadow 0.3s var(--ease-standard);
+            }
+
+            .diwali-day::before {
+                content: "";
+                position: absolute;
+                inset: 5px;
+                border-radius: 14px;
+                border: 1px dashed rgba(225, 29, 72, 0.3);
+                pointer-events: none;
+            }
+
+            .diwali-day:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 16px 30px -12px rgba(225, 29, 72, 0.45);
+            }
+
+            .diwali-day.is-main {
+                background: linear-gradient(160deg, #7f1d1d, #be123c);
+                border-color: #fbbf24;
+                color: #fff7ed;
+                box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3), 0 16px 34px -12px rgba(190, 18, 60, 0.7);
+            }
+
+            .diwali-day-icon {
+                display: block;
+                font-size: 2rem;
+                line-height: 1;
+                margin-bottom: 8px;
+                filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
+            }
+
+            .diwali-day-num {
+                display: inline-block;
+                font-size: 0.65rem;
+                font-weight: 700;
+                letter-spacing: 0.16em;
+                text-transform: uppercase;
+                color: #b45309;
+            }
+
+            .diwali-day.is-main .diwali-day-num {
+                color: #fde68a;
+            }
+
+            .diwali-day h3 {
+                font-family: var(--font-festive);
+                font-size: 1.15rem;
+                margin: 2px 0 4px;
+                color: #9f1239;
+            }
+
+            .diwali-day.is-main h3 {
+                color: #fde68a;
+            }
+
+            .diwali-day p {
+                font-size: 0.8rem;
+                line-height: 1.45;
+                color: #57534e;
+            }
+
+            .diwali-day.is-main p {
+                color: #ffe4e6;
+            }
+
+            @media (max-width: 1023px) {
+                .diwali-days-list {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+            }
+
+            @media (max-width: 639px) {
+                .diwali-days-title [lang="hi"] {
+                    display: block;
+                }
+
+                .diwali-days-sep {
+                    display: none;
+                }
+
+                .diwali-days-list {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .diwali-day.is-main {
+                    grid-column: 1 / -1;
+                    order: -1;
+                }
+            }
+
+            /* ---------- Phuljhadi (sparkler) cursor trail ---------- */
+            .phuljhadi-spark {
+                position: fixed;
+                z-index: 9999;
+                width: 4px;
+                height: 4px;
+                margin: -2px 0 0 -2px;
+                border-radius: 50%;
+                pointer-events: none;
+                background: var(--c, #fde68a);
+                box-shadow: 0 0 6px 1px var(--c, #fbbf24);
+            }
+
+            /* ---------- Cart button glows like a diya ---------- */
+            .cart-icon-btn {
+                background: linear-gradient(135deg, #f59e0b, #e11d48);
+                animation: cart-diya-glow 2.4s ease-in-out infinite alternate;
+            }
+
+            @keyframes cart-diya-glow {
+                from {
+                    box-shadow: 0 8px 22px rgba(225, 29, 72, 0.35);
+                }
+
+                to {
+                    box-shadow:
+                        0 8px 26px rgba(225, 29, 72, 0.45),
+                        0 0 0 6px rgba(251, 191, 36, 0.18),
+                        0 0 24px 6px rgba(251, 191, 36, 0.35);
+                }
+            }
         </style>
         <script type="application/ld+json">
             {
@@ -3660,6 +4324,7 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
     <body class="min-h-screen text-gray-800">
         <a href="#main-content" class="skip-link">Skip to main content</a>
         <div class="scroll-progress" id="scrollProgress"></div>
+        <div class="petal-rain" aria-hidden="true"><span class="petal" style="--x: 4%; --d: 0s; --dur: 13s; --pc: #f59e0b"></span><span class="petal" style="--x: 12%; --d: -6s; --dur: 16s; --pc: #ea580c"></span><span class="petal" style="--x: 21%; --d: -3s; --dur: 12s; --pc: #fbbf24"></span><span class="petal" style="--x: 30%; --d: -9s; --dur: 15s; --pc: #e11d48"></span><span class="petal" style="--x: 39%; --d: -1s; --dur: 14s; --pc: #f59e0b"></span><span class="petal" style="--x: 47%; --d: -11s; --dur: 17s; --pc: #ea580c"></span><span class="petal" style="--x: 55%; --d: -4s; --dur: 13s; --pc: #fbbf24"></span><span class="petal" style="--x: 63%; --d: -8s; --dur: 16s; --pc: #e11d48"></span><span class="petal" style="--x: 71%; --d: -2s; --dur: 12s; --pc: #f59e0b"></span><span class="petal" style="--x: 79%; --d: -10s; --dur: 15s; --pc: #ea580c"></span><span class="petal" style="--x: 87%; --d: -5s; --dur: 14s; --pc: #fbbf24"></span><span class="petal" style="--x: 95%; --d: -7s; --dur: 17s; --pc: #e11d48"></span></div>
 
         <noscript>
             <div
@@ -3682,6 +4347,7 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
         <div class="diwali-ribbon" role="note">
             🪔 <b lang="hi">शुभ दीपावली</b> &nbsp;·&nbsp; Happy Diwali from Swapnil Chemicals — wishing you light,
             prosperity &amp; a sparkling ride ✨
+            <span class="diwali-countdown" id="diwaliCountdown" hidden></span>
         </div>
 
         <header class="sticky top-0 z-50 nav-blur">
@@ -3743,7 +4409,9 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                 </div>
                 <div class="hero-grid" aria-hidden="true"></div>
                 <div class="hero-bubbles" id="heroBubbles" aria-hidden="true"></div>
+                <div class="diwali-stars" aria-hidden="true"></div>
                 <canvas class="diwali-fireworks" id="diwaliFireworks" aria-hidden="true"></canvas>
+                <div class="sky-lanterns" aria-hidden="true"><span class="sky-lantern" style="--x: 6%; --d: 0s; --dur: 19s; --s: 1"></span><span class="sky-lantern" style="--x: 17%; --d: -7s; --dur: 24s; --s: 0.8"></span><span class="sky-lantern" style="--x: 28%; --d: -14s; --dur: 21s; --s: 1.15"></span><span class="sky-lantern" style="--x: 42%; --d: -3s; --dur: 26s; --s: 0.75"></span><span class="sky-lantern" style="--x: 58%; --d: -10s; --dur: 20s; --s: 1"></span><span class="sky-lantern" style="--x: 70%; --d: -17s; --dur: 23s; --s: 0.85"></span><span class="sky-lantern" style="--x: 81%; --d: -5s; --dur: 25s; --s: 1.1"></span><span class="sky-lantern" style="--x: 93%; --d: -12s; --dur: 22s; --s: 0.9"></span></div>
                 <div aria-hidden="true">
                     <span class="kandil kandil-wide" style="--x: 3%; --len: 36px; --c1: #f97316; --c2: #b91c1c; --swing: 4.5s"><span class="kandil-string"></span><span class="kandil-glow"></span><span class="kandil-body"></span><span class="kandil-tassel"></span></span>
                     <span class="kandil" style="--x: 11%; --len: 70px; --c1: #fbbf24; --c2: #c2410c; --swing: 5.5s"><span class="kandil-string"></span><span class="kandil-glow"></span><span class="kandil-body"></span><span class="kandil-tassel"></span></span>
@@ -3757,6 +4425,9 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                             <span class="hero-chip-dot" aria-hidden="true"></span>
                             Jaipur-based manufacturer &bull; Since 2020
                         </span>
+                        <div class="shubh-labh" lang="hi" aria-hidden="true">
+                            <span>शुभ</span><i class="shubh-labh-line"></i><span>लाभ</span>
+                        </div>
                         <p class="diwali-greeting"><span lang="hi">शुभ दीपावली</span> · Happy Diwali</p>
                         <h2 class="font-bold leading-tight mt-6 mb-6">
                             Premium Automobile <br /><span class="hero-shine-text">Cleaning Solutions</span>
@@ -3813,6 +4484,8 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                     ><i class="fas fa-star"></i>
                 </div>
             </div>
+
+            <div class="diwali-ladi" aria-hidden="true"><span style="--x: 1.8%; --sag: 3.7px; --c: #fbbf24; --d: -0.00s"></span><span style="--x: 5.4%; --sag: 6.3px; --c: #ef4444; --d: -0.37s"></span><span style="--x: 8.9%; --sag: 8.0px; --c: #22c55e; --d: -0.74s"></span><span style="--x: 12.5%; --sag: 9.3px; --c: #3b82f6; --d: -1.11s"></span><span style="--x: 16.1%; --sag: 10.3px; --c: #ec4899; --d: -1.48s"></span><span style="--x: 19.6%; --sag: 11.1px; --c: #f97316; --d: -0.25s"></span><span style="--x: 23.2%; --sag: 11.8px; --c: #fbbf24; --d: -0.62s"></span><span style="--x: 26.8%; --sag: 12.4px; --c: #ef4444; --d: -0.99s"></span><span style="--x: 30.4%; --sag: 12.9px; --c: #22c55e; --d: -1.36s"></span><span style="--x: 33.9%; --sag: 13.3px; --c: #3b82f6; --d: -0.13s"></span><span style="--x: 37.5%; --sag: 13.6px; --c: #ec4899; --d: -0.50s"></span><span style="--x: 41.1%; --sag: 13.8px; --c: #f97316; --d: -0.87s"></span><span style="--x: 44.6%; --sag: 13.9px; --c: #fbbf24; --d: -1.24s"></span><span style="--x: 48.2%; --sag: 14.0px; --c: #ef4444; --d: -0.01s"></span><span style="--x: 51.8%; --sag: 14.0px; --c: #22c55e; --d: -0.38s"></span><span style="--x: 55.4%; --sag: 13.9px; --c: #3b82f6; --d: -0.75s"></span><span style="--x: 58.9%; --sag: 13.8px; --c: #ec4899; --d: -1.12s"></span><span style="--x: 62.5%; --sag: 13.6px; --c: #f97316; --d: -1.49s"></span><span style="--x: 66.1%; --sag: 13.3px; --c: #fbbf24; --d: -0.26s"></span><span style="--x: 69.6%; --sag: 12.9px; --c: #ef4444; --d: -0.63s"></span><span style="--x: 73.2%; --sag: 12.4px; --c: #22c55e; --d: -1.00s"></span><span style="--x: 76.8%; --sag: 11.8px; --c: #3b82f6; --d: -1.37s"></span><span style="--x: 80.4%; --sag: 11.1px; --c: #ec4899; --d: -0.14s"></span><span style="--x: 83.9%; --sag: 10.3px; --c: #f97316; --d: -0.51s"></span><span style="--x: 87.5%; --sag: 9.3px; --c: #fbbf24; --d: -0.88s"></span><span style="--x: 91.1%; --sag: 8.0px; --c: #ef4444; --d: -1.25s"></span><span style="--x: 94.6%; --sag: 6.3px; --c: #22c55e; --d: -0.02s"></span><span style="--x: 98.2%; --sag: 3.7px; --c: #3b82f6; --d: -0.39s"></span></div>
 
             <section id="business-details" class="pt-6 pb-0 relative">
                 <div class="rangoli rangoli-left" aria-hidden="true"></div>
@@ -3938,7 +4611,54 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                 </div>
             </section>
 
+            <section class="diwali-days" id="diwali-days" aria-labelledby="diwaliDaysTitle">
+                <div class="container mx-auto px-4">
+                    <div class="text-center">
+                        <span class="section-eyebrow">Festival of lights</span>
+                        <h2 class="diwali-days-title" id="diwaliDaysTitle">
+                            <span lang="hi">पाँच दिन रोशनी के</span><span class="diwali-days-sep"> · </span>Five Days of Diwali
+                        </h2>
+                        <p class="diwali-days-sub">
+                            Diwali begins with cleaning the home. Give your vehicle the same festive shine.
+                        </p>
+                    </div>
+                    <ol class="diwali-days-list">
+                        <li class="diwali-day">
+                            <span class="diwali-day-icon" aria-hidden="true">🪙</span>
+                            <span class="diwali-day-num">Day 1</span>
+                            <h3>Dhanteras</h3>
+                            <p>An auspicious day to bring home something new: gold, utensils or a new vehicle.</p>
+                        </li>
+                        <li class="diwali-day">
+                            <span class="diwali-day-icon" aria-hidden="true">🧹</span>
+                            <span class="diwali-day-num">Day 2</span>
+                            <h3>Choti Diwali</h3>
+                            <p>Homes are cleaned top to bottom and the first diyas are lit at the doorstep.</p>
+                        </li>
+                        <li class="diwali-day is-main">
+                            <span class="diwali-day-icon" aria-hidden="true">🪔</span>
+                            <span class="diwali-day-num">Day 3</span>
+                            <h3>Lakshmi Puja</h3>
+                            <p>Diyas, rangoli and fireworks as families welcome Goddess Lakshmi for prosperity.</p>
+                        </li>
+                        <li class="diwali-day">
+                            <span class="diwali-day-icon" aria-hidden="true">🌾</span>
+                            <span class="diwali-day-num">Day 4</span>
+                            <h3>Govardhan Puja</h3>
+                            <p>Annakut: a mountain of food is offered in gratitude for the harvest.</p>
+                        </li>
+                        <li class="diwali-day">
+                            <span class="diwali-day-icon" aria-hidden="true">🎁</span>
+                            <span class="diwali-day-num">Day 5</span>
+                            <h3>Bhai Dooj</h3>
+                            <p>Sisters pray for their brothers' long life, and brothers return the love with gifts.</p>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
             <section id="products" class="pt-2 pb-8 relative">
+                <div class="rangoli rangoli-products" aria-hidden="true"></div>
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
                         <span class="section-eyebrow">Shop the range</span>
@@ -3948,6 +4668,7 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                             results.
                         </p>
                         <div class="section-divider max-w-xs mx-auto"></div>
+                        <div class="lakshmi-charan" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
                     </div>
                     <div class="max-w-xl mx-auto mb-8">
                         <div class="relative">
@@ -4090,6 +4811,8 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
             </section>
 
             <section id="contact" class="py-8 relative">
+                <div class="diwali-ladi" aria-hidden="true"><span style="--x: 1.8%; --sag: 3.7px; --c: #fbbf24; --d: -0.00s"></span><span style="--x: 5.4%; --sag: 6.3px; --c: #ef4444; --d: -0.37s"></span><span style="--x: 8.9%; --sag: 8.0px; --c: #22c55e; --d: -0.74s"></span><span style="--x: 12.5%; --sag: 9.3px; --c: #3b82f6; --d: -1.11s"></span><span style="--x: 16.1%; --sag: 10.3px; --c: #ec4899; --d: -1.48s"></span><span style="--x: 19.6%; --sag: 11.1px; --c: #f97316; --d: -0.25s"></span><span style="--x: 23.2%; --sag: 11.8px; --c: #fbbf24; --d: -0.62s"></span><span style="--x: 26.8%; --sag: 12.4px; --c: #ef4444; --d: -0.99s"></span><span style="--x: 30.4%; --sag: 12.9px; --c: #22c55e; --d: -1.36s"></span><span style="--x: 33.9%; --sag: 13.3px; --c: #3b82f6; --d: -0.13s"></span><span style="--x: 37.5%; --sag: 13.6px; --c: #ec4899; --d: -0.50s"></span><span style="--x: 41.1%; --sag: 13.8px; --c: #f97316; --d: -0.87s"></span><span style="--x: 44.6%; --sag: 13.9px; --c: #fbbf24; --d: -1.24s"></span><span style="--x: 48.2%; --sag: 14.0px; --c: #ef4444; --d: -0.01s"></span><span style="--x: 51.8%; --sag: 14.0px; --c: #22c55e; --d: -0.38s"></span><span style="--x: 55.4%; --sag: 13.9px; --c: #3b82f6; --d: -0.75s"></span><span style="--x: 58.9%; --sag: 13.8px; --c: #ec4899; --d: -1.12s"></span><span style="--x: 62.5%; --sag: 13.6px; --c: #f97316; --d: -1.49s"></span><span style="--x: 66.1%; --sag: 13.3px; --c: #fbbf24; --d: -0.26s"></span><span style="--x: 69.6%; --sag: 12.9px; --c: #ef4444; --d: -0.63s"></span><span style="--x: 73.2%; --sag: 12.4px; --c: #22c55e; --d: -1.00s"></span><span style="--x: 76.8%; --sag: 11.8px; --c: #3b82f6; --d: -1.37s"></span><span style="--x: 80.4%; --sag: 11.1px; --c: #ec4899; --d: -0.14s"></span><span style="--x: 83.9%; --sag: 10.3px; --c: #f97316; --d: -0.51s"></span><span style="--x: 87.5%; --sag: 9.3px; --c: #fbbf24; --d: -0.88s"></span><span style="--x: 91.1%; --sag: 8.0px; --c: #ef4444; --d: -1.25s"></span><span style="--x: 94.6%; --sag: 6.3px; --c: #22c55e; --d: -0.02s"></span><span style="--x: 98.2%; --sag: 3.7px; --c: #3b82f6; --d: -0.39s"></span></div>
+                <div class="rangoli rangoli-contact" aria-hidden="true"></div>
                 <div class="container mx-auto px-4">
                     <div class="text-center mb-8">
                         <span class="section-eyebrow">Let's talk</span>
@@ -4149,6 +4872,7 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
         </button>
 
         <footer class="site-footer text-white py-12">
+            <div class="rangoli rangoli-footer" aria-hidden="true"></div>
             <div class="container mx-auto px-4">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <div class="mb-8 md:mb-0 text-center md:text-left">
@@ -7068,6 +7792,75 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 start();
             }
 
+            // ---------- Diwali countdown in the greeting ribbon ----------
+            // Lakshmi Puja date (local time). Update this each year; the badge hides itself
+            // once the five-day festival is over, so a stale date never shows a wrong count.
+            const DIWALI_DATE = { y: 2026, m: 11, d: 8 };
+
+            function initDiwaliCountdown() {
+                const el = document.getElementById("diwaliCountdown");
+                if (!el) return;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const diwali = new Date(DIWALI_DATE.y, DIWALI_DATE.m - 1, DIWALI_DATE.d);
+                const days = Math.round((diwali - today) / 86400000);
+                let text = "";
+                if (days > 1) text = `🎆 ${days} days to Diwali`;
+                else if (days === 1) text = "🎆 Diwali is tomorrow!";
+                else if (days === 0) text = "🪔 Diwali is today!";
+                else if (days >= -3) text = "✨ Diwali week";
+                if (!text) return;
+                el.textContent = text;
+                el.hidden = false;
+            }
+
+            // ---------- Phuljhadi (sparkler) trail behind the mouse pointer ----------
+            // Desktop pointers only, throttled and capped so it stays cheap; off for reduced motion.
+            function initPhuljhadiTrail() {
+                if (prefersReducedMotion() || typeof Element.prototype.animate !== "function") return;
+                if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+                const MAX_LIVE = 40;
+                let live = 0;
+                let last = 0;
+                document.addEventListener(
+                    "pointermove",
+                    (e) => {
+                        const now = performance.now();
+                        if (now - last < 28 || live >= MAX_LIVE || document.hidden) return;
+                        last = now;
+                        for (let i = 0; i < 2; i++) {
+                            const spark = document.createElement("span");
+                            spark.className = "phuljhadi-spark";
+                            spark.setAttribute("aria-hidden", "true");
+                            spark.style.left = `${e.clientX}px`;
+                            spark.style.top = `${e.clientY}px`;
+                            spark.style.setProperty("--c", DIWALI_COLORS[(Math.random() * 4) | 0]);
+                            document.body.appendChild(spark);
+                            live++;
+                            const angle = Math.random() * Math.PI * 2;
+                            const dist = 10 + Math.random() * 22;
+                            const anim = spark.animate(
+                                [
+                                    { transform: "translate(0, 0) scale(1)", opacity: 1 },
+                                    {
+                                        transform: `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist + 18}px) scale(0.3)`,
+                                        opacity: 0,
+                                    },
+                                ],
+                                { duration: 500 + Math.random() * 300, easing: "ease-out", fill: "forwards" }
+                            );
+                            const done = () => {
+                                spark.remove();
+                                live--;
+                            };
+                            anim.onfinish = done;
+                            anim.oncancel = done;
+                        }
+                    },
+                    { passive: true }
+                );
+            }
+
             // Small festive spark burst, e.g. around the product image when it lands in the cart.
             // Sparks go into the open <dialog> (top layer) when there is one, otherwise <body>.
             function diwaliSparkBurst(anchor) {
@@ -7221,6 +8014,8 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 initMagneticButtons();
                 initRipples();
                 initDiwaliFireworks();
+                initDiwaliCountdown();
+                initPhuljhadiTrail();
                 const yearEl = document.getElementById("copyrightYear");
                 if (yearEl) yearEl.textContent = String(new Date().getFullYear());
                 cart = restoreCart(storage.get(APP.CART_STORAGE_KEY, {}));
