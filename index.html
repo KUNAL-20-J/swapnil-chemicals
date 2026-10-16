@@ -3329,8 +3329,8 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
 
             @media (max-width: 1279px) {
                 .ravan-wrap {
-                    width: 170px;
-                    opacity: 0.55;
+                    width: 180px;
+                    opacity: 0.85;
                 }
             }
 
@@ -3342,7 +3342,10 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
 
             @media (max-width: 767px) {
                 .ravan-wrap {
-                    display: none;
+                    right: 3%;
+                    bottom: 64px;
+                    width: 120px;
+                    opacity: 0.9;
                 }
 
                 .hero-bunting span:nth-child(n + 13) {
@@ -3605,33 +3608,6 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                 animation: ravan-hit 0.35s ease-out;
             }
 
-            /* Each strike knocks one head off: it pops up, then tumbles down and fades. */
-            .ravan-effigy .rv-head {
-                transform-box: fill-box;
-                transform-origin: 50% 50%;
-            }
-
-            .ravan-effigy .rv-head.fallen {
-                animation: head-fall 1s cubic-bezier(0.5, 0, 0.9, 0.5) forwards;
-            }
-
-            @keyframes head-fall {
-                0% {
-                    transform: none;
-                    opacity: 1;
-                }
-
-                18% {
-                    transform: translate(calc(var(--dx, 0px) * 0.25), -18px) rotate(calc(var(--rot, 180deg) * 0.15));
-                    opacity: 1;
-                }
-
-                100% {
-                    transform: translate(var(--dx, 0px), 240px) rotate(var(--rot, 180deg));
-                    opacity: 0;
-                }
-            }
-
             @keyframes ravan-hit {
                 0% {
                     filter: brightness(2) saturate(1.4);
@@ -3729,260 +3705,159 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                 display: none;
             }
 
+            /* ---------- One head burns per click ---------- */
+            .rv-head {
+                transform-box: fill-box;
+                transform-origin: 50% 100%;
+                transition:
+                    opacity 1.2s ease 0.35s,
+                    translate 1.2s ease 0.35s,
+                    scale 1.2s ease 0.35s;
+            }
+
+            .rv-head :is(circle, ellipse, path) {
+                transition:
+                    fill 0.6s ease,
+                    stroke 0.6s ease;
+            }
+
+            .rv-head.burnt {
+                opacity: 0.35;
+                translate: 0 6px;
+                scale: 0.8;
+            }
+
+            .rv-head.burnt :is(circle, ellipse, path) {
+                fill: #292524;
+                stroke: #0c0a09;
+            }
+
+            .head-flame {
+                position: absolute;
+                z-index: 2;
+                width: 15%;
+                aspect-ratio: 0.7;
+                translate: -50% -80%;
+                transform-origin: 50% 100%;
+                pointer-events: none;
+                animation: head-flame-life 2.4s ease-out forwards;
+            }
+
+            .head-flame::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+                background: radial-gradient(ellipse at 50% 85%, #fff 0 10%, #fde047 25%, #f97316 55%, rgba(220, 38, 38, 0) 72%);
+                transform-origin: 50% 100%;
+                mix-blend-mode: screen;
+                animation: flame-lick 0.45s ease-in-out infinite alternate;
+            }
+
+            @keyframes head-flame-life {
+                0% {
+                    scale: 0.2;
+                    opacity: 0;
+                }
+
+                15% {
+                    scale: 1.35;
+                    opacity: 1;
+                }
+
+                70% {
+                    scale: 1;
+                    opacity: 1;
+                }
+
+                100% {
+                    scale: 0.3;
+                    opacity: 0;
+                }
+            }
+
+            /* ---------- Right-side quick links (All Products / Contact Us) ---------- */
+            .quick-links {
+                position: fixed;
+                right: 0;
+                top: 50%;
+                z-index: 55;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 10px;
+                translate: 110% -50%;
+                visibility: hidden;
+                transition:
+                    translate 0.45s var(--ease-spring),
+                    visibility 0s linear 0.45s;
+            }
+
+            .quick-links.show {
+                translate: 0 -50%;
+                visibility: visible;
+                transition:
+                    translate 0.45s var(--ease-spring),
+                    visibility 0s;
+            }
+
+            .quick-link {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 18px 12px 16px;
+                border-radius: 14px 0 0 14px;
+                border: 1px solid rgba(253, 230, 138, 0.55);
+                border-right: 0;
+                background: linear-gradient(135deg, #ea580c, #b91c1c);
+                box-shadow: 0 10px 26px rgba(185, 28, 28, 0.35);
+                color: #fff;
+                font-size: 0.95rem;
+                font-weight: 700;
+                transition:
+                    padding-right 0.25s ease,
+                    box-shadow 0.25s ease;
+            }
+
+            .quick-link:hover {
+                padding-right: 26px;
+                box-shadow: 0 14px 32px rgba(185, 28, 28, 0.5);
+            }
+
+            .quick-link-contact {
+                background: linear-gradient(135deg, #2563eb, #1e3a8a);
+                box-shadow: 0 10px 26px rgba(30, 58, 138, 0.35);
+            }
+
+            .quick-link-contact:hover {
+                box-shadow: 0 14px 32px rgba(30, 58, 138, 0.5);
+            }
+
+            .quick-links-close {
+                width: 28px;
+                height: 28px;
+                margin-right: 8px;
+                border-radius: 50%;
+                border: 1px solid rgba(251, 191, 36, 0.5);
+                background: rgba(28, 10, 10, 0.8);
+                color: #fde68a;
+                font-size: 0.8rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            @media (max-width: 640px) {
+                .quick-link {
+                    gap: 8px;
+                    padding: 10px 12px;
+                    font-size: 0.82rem;
+                }
+            }
+
             @media (min-width: 768px) {
                 .hero-gradient.ravan-game .hint-ravan {
                     display: inline;
-                }
-            }
-
-            /* ---------- Ravan around the hero CTAs: click the body, one head burns per click ---------- */
-            .cta-ravan {
-                --hs: clamp(24px, 6.4vw, 40px);
-                position: relative;
-                width: fit-content;
-                max-width: 100%;
-                margin: 0 auto;
-            }
-
-            .cr-heads {
-                position: relative;
-                z-index: 3;
-                display: flex;
-                justify-content: center;
-                align-items: flex-end;
-                gap: 2px;
-                margin-bottom: -6px;
-                pointer-events: none;
-            }
-
-            .cr-head {
-                position: relative;
-                display: block;
-                width: var(--hs);
-            }
-
-            .cr-head svg {
-                width: 100%;
-                height: auto;
-                overflow: visible;
-                filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.45));
-            }
-
-            /* Heads rise in an arc towards the crowned centre head. */
-            .cr-heads > :nth-child(2),
-            .cr-heads > :nth-child(8) {
-                margin-bottom: calc(var(--hs) * 0.12);
-            }
-
-            .cr-heads > :nth-child(3),
-            .cr-heads > :nth-child(7) {
-                margin-bottom: calc(var(--hs) * 0.22);
-            }
-
-            .cr-heads > :nth-child(4),
-            .cr-heads > :nth-child(6) {
-                margin-bottom: calc(var(--hs) * 0.3);
-            }
-
-            .cr-head-col {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                margin: 0 2px;
-            }
-
-            .cr-head-top {
-                width: calc(var(--hs) * 0.8);
-                margin-bottom: -4px;
-            }
-
-            .cr-head-main {
-                width: calc(var(--hs) * 1.35);
-            }
-
-            .cr-torso {
-                position: relative;
-                padding: 22px 60px 96px;
-            }
-
-            .cr-body {
-                position: absolute;
-                inset: 0;
-                z-index: 0;
-                display: block;
-                width: 100%;
-                height: 100%;
-                padding: 0;
-                border: 0;
-                background: none;
-                cursor: pointer;
-            }
-
-            .cr-body svg {
-                width: 100%;
-                height: 100%;
-                filter: drop-shadow(0 0 18px rgba(249, 115, 22, 0.45));
-                transition: filter 0.3s ease;
-            }
-
-            .cr-body:hover svg {
-                filter: drop-shadow(0 0 26px rgba(251, 191, 36, 0.75)) brightness(1.08);
-            }
-
-            .cr-body:focus-visible {
-                outline: 2px dashed #fde68a;
-                outline-offset: 4px;
-                border-radius: 12px;
-            }
-
-            .cr-buttons {
-                position: relative;
-                z-index: 2;
-            }
-
-            .cr-fire {
-                position: absolute;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                z-index: 1;
-                height: 75%;
-                display: flex;
-                justify-content: center;
-                align-items: flex-end;
-                pointer-events: none;
-                opacity: 0;
-                transition: opacity 0.5s ease;
-            }
-
-            .cr-fire span {
-                flex: 0 1 60px;
-                height: var(--h, 60%);
-                margin: 0 -10px;
-                border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-                background: radial-gradient(ellipse at 50% 85%, #fff 0 10%, #fde047 25%, #f97316 55%, rgba(220, 38, 38, 0) 72%);
-                transform-origin: 50% 100%;
-                mix-blend-mode: screen;
-                animation: flame-lick 0.9s ease-in-out infinite alternate;
-                animation-delay: var(--d, 0s);
-            }
-
-            .cr-count {
-                margin-top: 0.75rem;
-                font-size: 0.85rem;
-                font-weight: 600;
-                color: #fed7aa;
-            }
-
-            .cta-ravan.hit .cr-body svg {
-                animation: ravan-hit 0.35s ease-out;
-            }
-
-            /* A burning head flares, chars black, then drifts up as ash. */
-            .cr-head.burning svg {
-                animation: cr-head-burn 0.9s ease-in forwards;
-            }
-
-            .cr-head.burning::after {
-                content: "";
-                position: absolute;
-                left: 50%;
-                bottom: 10%;
-                width: 130%;
-                height: 160%;
-                translate: -50% 0;
-                border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-                background: radial-gradient(ellipse at 50% 85%, #fff 0 10%, #fde047 25%, #f97316 55%, rgba(220, 38, 38, 0) 72%);
-                transform-origin: 50% 100%;
-                mix-blend-mode: screen;
-                pointer-events: none;
-                animation:
-                    flame-lick 0.25s ease-in-out infinite alternate,
-                    cr-flame-out 0.9s ease-in forwards;
-            }
-
-            .cr-head.burnt {
-                visibility: hidden;
-            }
-
-            @keyframes cr-head-burn {
-                0% {
-                    filter: none;
-                }
-
-                35% {
-                    filter: brightness(1.8) sepia(1) saturate(3) hue-rotate(-15deg);
-                    transform: translateY(-2px);
-                }
-
-                75% {
-                    filter: brightness(0.25) grayscale(1);
-                    transform: scale(0.85);
-                    opacity: 1;
-                }
-
-                100% {
-                    filter: brightness(0);
-                    transform: translateY(-8px) scale(0.5);
-                    opacity: 0;
-                }
-            }
-
-            @keyframes cr-flame-out {
-                0% {
-                    opacity: 0;
-                }
-
-                15%,
-                70% {
-                    opacity: 1;
-                }
-
-                100% {
-                    opacity: 0;
-                }
-            }
-
-            /* All 10 heads gone: the body burns, then Ravan is rebuilt. */
-            .cta-ravan.dahan .cr-fire {
-                opacity: 1;
-            }
-
-            .cta-ravan.dahan .cr-body svg {
-                animation: cr-body-burn 3.2s ease-in forwards;
-            }
-
-            @keyframes cr-body-burn {
-                30% {
-                    filter: brightness(1.6) sepia(0.7) drop-shadow(0 0 36px #f97316);
-                }
-
-                100% {
-                    filter: brightness(0.35) grayscale(0.6) drop-shadow(0 0 10px #dc2626);
-                    opacity: 0.55;
-                }
-            }
-
-            .cta-ravan.rising .cr-head svg,
-            .cta-ravan.rising .cr-body svg {
-                animation: cr-rise 0.7s var(--ease-spring) both;
-            }
-
-            @keyframes cr-rise {
-                from {
-                    transform: translateY(12px) scale(0.3);
-                    opacity: 0;
-                }
-            }
-
-            @media (max-width: 639px) {
-                .cr-torso {
-                    padding: 18px 26px 80px;
-                }
-
-                .cr-buttons a {
-                    padding-left: 1.5rem;
-                    padding-right: 1.5rem;
                 }
             }
 
@@ -4448,88 +4323,25 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                             registered, MSME and Udyam certified business, we supply orders across India. Call us at
                             9352470085 or 9024598298 for bulk orders or pricing.
                         </p>
-                        <!-- Ravan around the CTA buttons: 10 heads on top, the body wraps the buttons.
-                             Each click on the body burns one head; the 10th burns the whole effigy. -->
-                        <div class="cta-ravan" id="ctaRavan">
-                            <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
-                                <symbol id="crFace" viewBox="0 0 40 48">
-                                    <path d="M10 14 L14 2 L20 10 L26 2 L30 14 Z" fill="#fbbf24" stroke="#b45309" stroke-width="1.5" />
-                                    <ellipse cx="20" cy="30" rx="13" ry="15" fill="#f59e0b" stroke="#7c2d12" stroke-width="2" />
-                                    <ellipse cx="15" cy="28" rx="3" ry="2.2" fill="#fff" /><ellipse cx="25" cy="28" rx="3" ry="2.2" fill="#fff" />
-                                    <circle cx="15" cy="28" r="1.3" fill="#1c1917" /><circle cx="25" cy="28" r="1.3" fill="#1c1917" />
-                                    <path d="M10 23 L17 25 M30 23 L23 25" stroke="#1c1917" stroke-width="2" stroke-linecap="round" />
-                                    <path d="M20 18 V24" stroke="#dc2626" stroke-width="2" stroke-linecap="round" />
-                                    <path d="M12 37 Q16 33 20 37 Q24 33 28 37 Q24 40 20 38 Q16 40 12 37 Z" fill="#1c1917" />
-                                </symbol>
-                                <symbol id="crFaceMain" viewBox="0 0 40 52">
-                                    <path d="M6 20 L9 4 L15 13 L20 0 L25 13 L31 4 L34 20 Z" fill="#fde047" stroke="#b45309" stroke-width="1.5" />
-                                    <circle cx="20" cy="15" r="2.2" fill="#dc2626" />
-                                    <ellipse cx="20" cy="35" rx="14" ry="16" fill="#fbbf24" stroke="#7c2d12" stroke-width="2" />
-                                    <ellipse cx="14.5" cy="33" rx="3.4" ry="2.4" fill="#fff" /><ellipse cx="25.5" cy="33" rx="3.4" ry="2.4" fill="#fff" />
-                                    <circle cx="14.5" cy="33" r="1.5" fill="#1c1917" /><circle cx="25.5" cy="33" r="1.5" fill="#1c1917" />
-                                    <path d="M9 27 L17 30 M31 27 L23 30" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" />
-                                    <path d="M20 22 V29" stroke="#dc2626" stroke-width="2.4" stroke-linecap="round" />
-                                    <path d="M11 43 Q15.5 38.5 20 43 Q24.5 38.5 29 43 Q24.5 46.5 20 44.5 Q15.5 46.5 11 43 Z" fill="#1c1917" />
-                                </symbol>
-                            </svg>
-                            <!-- data-burn = burn order: outer pairs first, the top head and the crowned head last -->
-                            <div class="cr-heads" aria-hidden="true">
-                                <span class="cr-head" data-burn="0"><svg viewBox="0 0 40 48"><use href="#crFace" /></svg></span>
-                                <span class="cr-head" data-burn="2"><svg viewBox="0 0 40 48"><use href="#crFace" /></svg></span>
-                                <span class="cr-head" data-burn="4"><svg viewBox="0 0 40 48"><use href="#crFace" /></svg></span>
-                                <span class="cr-head" data-burn="6"><svg viewBox="0 0 40 48"><use href="#crFace" /></svg></span>
-                                <span class="cr-head-col">
-                                    <span class="cr-head cr-head-top" data-burn="8"><svg viewBox="0 0 40 48"><use href="#crFace" /></svg></span>
-                                    <span class="cr-head cr-head-main" data-burn="9"><svg viewBox="0 0 40 52"><use href="#crFaceMain" /></svg></span>
-                                </span>
-                                <span class="cr-head" data-burn="7"><svg viewBox="0 0 40 48"><use href="#crFace" /></svg></span>
-                                <span class="cr-head" data-burn="5"><svg viewBox="0 0 40 48"><use href="#crFace" /></svg></span>
-                                <span class="cr-head" data-burn="3"><svg viewBox="0 0 40 48"><use href="#crFace" /></svg></span>
-                                <span class="cr-head" data-burn="1"><svg viewBox="0 0 40 48"><use href="#crFace" /></svg></span>
-                            </div>
-                            <div class="cr-torso">
-                                <button type="button" class="cr-body" id="ctaRavanBody" aria-label="Burn one of Ravan's 10 heads">
-                                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                                        <defs>
-                                            <linearGradient id="crTorso" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dc2626" /><stop offset="1" stop-color="#7f1d1d" /></linearGradient>
-                                            <linearGradient id="crSkirt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f59e0b" /><stop offset="1" stop-color="#9a3412" /></linearGradient>
-                                        </defs>
-                                        <path d="M12 2 L0 46 L5 50 L17 14 Z" fill="#b91c1c" />
-                                        <path d="M88 2 L100 46 L95 50 L83 14 Z" fill="#b91c1c" />
-                                        <rect x="36" y="84" width="9" height="16" rx="1" fill="#991b1b" />
-                                        <rect x="55" y="84" width="9" height="16" rx="1" fill="#991b1b" />
-                                        <path d="M14 62 H86 L94 86 H6 Z" fill="url(#crSkirt)" />
-                                        <path d="M30 64 L22 84 M43 64 L40 84 M50 64 V84 M57 64 L60 84 M70 64 L78 84" stroke="#7f1d1d" stroke-width="2" opacity="0.45" vector-effect="non-scaling-stroke" />
-                                        <path d="M7 83 H93" stroke="#fde047" stroke-width="3" vector-effect="non-scaling-stroke" />
-                                        <path d="M10 0 H90 L86 60 H14 Z" fill="url(#crTorso)" />
-                                        <path d="M28 0 Q50 18 72 0" stroke="#fde047" stroke-width="3" fill="none" vector-effect="non-scaling-stroke" />
-                                        <path d="M33 0 Q50 26 67 0" stroke="#fbbf24" stroke-width="2" fill="none" stroke-dasharray="3 4" vector-effect="non-scaling-stroke" />
-                                        <rect x="13" y="58" width="74" height="5" fill="#fbbf24" />
-                                    </svg>
-                                </button>
-                                <div class="cr-fire" aria-hidden="true"><span style="--h: 46%; --d: -0.1s"></span><span style="--h: 72%; --d: -0.4s"></span><span style="--h: 58%; --d: -0.7s"></span><span style="--h: 90%; --d: -0.2s"></span><span style="--h: 64%; --d: -0.55s"></span><span style="--h: 80%; --d: -0.3s"></span><span style="--h: 50%; --d: -0.8s"></span></div>
-                                <div class="flex flex-wrap justify-center gap-4 md:gap-6 cr-buttons">
-                                    <a
-                                        href="#products"
-                                        class="btn-primary btn-shine magnetic text-white px-10 py-4 rounded-xl font-semibold text-lg"
-                                        ><i class="fas fa-boxes mr-3" aria-hidden="true"></i>View Products</a
-                                    ><a
-                                        href="#contact"
-                                        class="btn-secondary btn-shine magnetic text-white px-10 py-4 rounded-xl font-semibold text-lg"
-                                        ><i class="fas fa-phone-alt fa-flip-horizontal mr-3" aria-hidden="true"></i>Contact
-                                        Now</a
-                                    >
-                                </div>
-                            </div>
+                        <div class="flex flex-wrap justify-center gap-4 md:gap-6">
+                            <a
+                                href="#products"
+                                class="btn-primary btn-shine magnetic text-white px-10 py-4 rounded-xl font-semibold text-lg"
+                                ><i class="fas fa-boxes mr-3" aria-hidden="true"></i>View Products</a
+                            ><a
+                                href="#contact"
+                                class="btn-secondary btn-shine magnetic text-white px-10 py-4 rounded-xl font-semibold text-lg"
+                                ><i class="fas fa-phone-alt fa-flip-horizontal mr-3" aria-hidden="true"></i>Contact
+                                Now</a
+                            >
                         </div>
-                        <p class="cr-count" id="ctaRavanCount" aria-live="polite"></p>
                         <ul class="hero-trust" aria-label="Business credentials">
                             <!-- <li><i class="fas fa-industry" aria-hidden="true"></i> In-house manufacturing</li> -->
                             <li><i class="fas fa-file-invoice" aria-hidden="true"></i> GST registered</li>
                             <li><i class="fas fa-award" aria-hidden="true"></i> MSME &amp; Udyam certified</li>
                             <li><i class="fas fa-truck-fast" aria-hidden="true"></i> Bulk &amp; retail</li>
                         </ul>
-                        <p class="hero-tap-hint" aria-hidden="true">🏹 Tap anywhere in the sky to shoot a flaming arrow<span class="hint-ravan"> · click Ravan's body to burn his 10 heads</span></p>
+                        <p class="hero-tap-hint" aria-hidden="true">🏹 Tap anywhere in the sky to shoot a flaming arrow<span class="hint-ravan"> · every click burns one of Ravan's 10 heads</span></p>
                     </div>
                 </div>
 
@@ -4547,6 +4359,51 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                         <circle cx="142" cy="100" r="6" fill="#f97316" opacity="0.8" />
                     </g>
                 </svg>
+                <div class="ravan-wrap" aria-hidden="true">
+                    <div class="ravan-heads"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                    <svg class="ravan-effigy" id="ravanEffigy" viewBox="0 0 240 330">
+                        <defs>
+                            <linearGradient id="rvTorso" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dc2626" /><stop offset="1" stop-color="#7f1d1d" /></linearGradient>
+                            <linearGradient id="rvSkirt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f59e0b" /><stop offset="1" stop-color="#9a3412" /></linearGradient>
+                        </defs>
+                        <path d="M106 300 L100 330 M134 300 L140 330" stroke="#78350f" stroke-width="4" />
+                        <rect x="98" y="258" width="16" height="46" rx="3" fill="#991b1b" />
+                        <rect x="126" y="258" width="16" height="46" rx="3" fill="#991b1b" />
+                        <path d="M82 176 H158 L186 262 H54 Z" fill="url(#rvSkirt)" />
+                        <path d="M92 186 L74 254 M106 186 L100 254 M120 186 V254 M134 186 L140 254 M148 186 L166 254" stroke="#7f1d1d" stroke-width="3" opacity="0.45" />
+                        <path d="M58 252 H182" stroke="#fde047" stroke-width="4" />
+                        <path d="M94 102 L52 148 L62 156 L100 118 Z" fill="#b91c1c" />
+                        <path d="M146 102 L188 148 L178 156 L140 118 Z" fill="#b91c1c" />
+                        <circle cx="52" cy="154" r="17" fill="#6d28d9" stroke="#fbbf24" stroke-width="3" />
+                        <circle cx="52" cy="154" r="5" fill="#fbbf24" />
+                        <path d="M184 152 L214 86" stroke="#e5e7eb" stroke-width="5" stroke-linecap="round" />
+                        <path d="M176 150 L194 158" stroke="#fbbf24" stroke-width="5" stroke-linecap="round" />
+                        <path d="M92 96 H148 L160 178 H80 Z" fill="url(#rvTorso)" />
+                        <path d="M98 104 Q120 132 142 104" stroke="#fde047" stroke-width="4" fill="none" />
+                        <path d="M102 112 Q120 142 138 112" stroke="#fbbf24" stroke-width="3" fill="none" stroke-dasharray="3 4" />
+                        <rect x="80" y="170" width="80" height="9" fill="#fbbf24" />
+                        <!-- 10 heads, one <g> each, in burn order (outer heads first, the main head last) -->
+                        <g class="rv-head" data-x="32" data-y="78"><path d="M23 70 L32 56 L41 70 Z" fill="#fbbf24" /><circle cx="32" cy="78" r="11" fill="#f59e0b" stroke="#7c2d12" stroke-width="2" /><circle cx="28" cy="76" r="1.6" fill="#1c1917" /><circle cx="36" cy="76" r="1.6" fill="#1c1917" /></g>
+                        <g class="rv-head" data-x="208" data-y="78"><path d="M199 70 L208 56 L217 70 Z" fill="#fbbf24" /><circle cx="208" cy="78" r="11" fill="#f59e0b" stroke="#7c2d12" stroke-width="2" /><circle cx="204" cy="76" r="1.6" fill="#1c1917" /><circle cx="212" cy="76" r="1.6" fill="#1c1917" /></g>
+                        <g class="rv-head" data-x="54" data-y="78"><path d="M45 70 L54 56 L63 70 Z" fill="#fbbf24" /><circle cx="54" cy="78" r="11" fill="#f59e0b" stroke="#7c2d12" stroke-width="2" /><circle cx="50" cy="76" r="1.6" fill="#1c1917" /><circle cx="58" cy="76" r="1.6" fill="#1c1917" /></g>
+                        <g class="rv-head" data-x="186" data-y="78"><path d="M177 70 L186 56 L195 70 Z" fill="#fbbf24" /><circle cx="186" cy="78" r="11" fill="#f59e0b" stroke="#7c2d12" stroke-width="2" /><circle cx="182" cy="76" r="1.6" fill="#1c1917" /><circle cx="190" cy="76" r="1.6" fill="#1c1917" /></g>
+                        <g class="rv-head" data-x="76" data-y="78"><path d="M67 70 L76 56 L85 70 Z" fill="#fbbf24" /><circle cx="76" cy="78" r="11" fill="#f59e0b" stroke="#7c2d12" stroke-width="2" /><circle cx="72" cy="76" r="1.6" fill="#1c1917" /><circle cx="80" cy="76" r="1.6" fill="#1c1917" /></g>
+                        <g class="rv-head" data-x="164" data-y="78"><path d="M155 70 L164 56 L173 70 Z" fill="#fbbf24" /><circle cx="164" cy="78" r="11" fill="#f59e0b" stroke="#7c2d12" stroke-width="2" /><circle cx="160" cy="76" r="1.6" fill="#1c1917" /><circle cx="168" cy="76" r="1.6" fill="#1c1917" /></g>
+                        <g class="rv-head" data-x="98" data-y="78"><path d="M89 70 L98 56 L107 70 Z" fill="#fbbf24" /><circle cx="98" cy="78" r="11" fill="#f59e0b" stroke="#7c2d12" stroke-width="2" /><circle cx="94" cy="76" r="1.6" fill="#1c1917" /><circle cx="102" cy="76" r="1.6" fill="#1c1917" /></g>
+                        <g class="rv-head" data-x="142" data-y="78"><path d="M133 70 L142 56 L151 70 Z" fill="#fbbf24" /><circle cx="142" cy="78" r="11" fill="#f59e0b" stroke="#7c2d12" stroke-width="2" /><circle cx="138" cy="76" r="1.6" fill="#1c1917" /><circle cx="146" cy="76" r="1.6" fill="#1c1917" /></g>
+                        <g class="rv-head" data-x="120" data-y="16"><circle cx="120" cy="16" r="10" fill="#f59e0b" stroke="#7c2d12" stroke-width="2" /><circle cx="116" cy="14" r="1.5" fill="#1c1917" /><circle cx="124" cy="14" r="1.5" fill="#1c1917" /></g>
+                        <g class="rv-head rv-head-main" data-x="120" data-y="72">
+                            <path d="M100 54 L104 36 L112 48 L120 28 L128 48 L136 36 L140 54 Z" fill="#fde047" stroke="#b45309" stroke-width="2" />
+                            <ellipse cx="120" cy="74" rx="19" ry="22" fill="#fbbf24" stroke="#7c2d12" stroke-width="2" />
+                            <ellipse cx="112" cy="70" rx="4" ry="3" fill="#fff" /><ellipse cx="128" cy="70" rx="4" ry="3" fill="#fff" />
+                            <circle cx="112" cy="70" r="1.8" fill="#1c1917" /><circle cx="128" cy="70" r="1.8" fill="#1c1917" />
+                            <path d="M106 63 L116 66 M134 63 L124 66" stroke="#1c1917" stroke-width="2" stroke-linecap="round" fill="none" />
+                            <path d="M120 56 V65" stroke="#dc2626" stroke-width="3" stroke-linecap="round" fill="none" />
+                            <path d="M108 84 Q114 79 120 84 Q126 79 132 84 Q126 89 120 86 Q114 89 108 84 Z" fill="#1c1917" />
+                        </g>
+                    </svg>
+                    <div class="effigy-fire"><span style="--h: 46px; --d: -0.1s"></span><span style="--h: 72px; --d: -0.4s"></span><span style="--h: 58px; --d: -0.7s"></span><span style="--h: 90px; --d: -0.2s"></span><span style="--h: 64px; --d: -0.55s"></span><span style="--h: 80px; --d: -0.3s"></span><span style="--h: 50px; --d: -0.8s"></span></div>
+                </div>
                 <div class="ravan-victory" id="ravanVictory" aria-hidden="true">
                     <span lang="hi">असत्य पर सत्य की विजय!</span>
                     <small>Ravan dahan complete · Happy Dussehra 🏹</small>
@@ -4946,6 +4803,19 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                 </div>
             </section>
         </main>
+
+        <!-- Slides in from the right on the first click anywhere on the page (see initRavanHeads) -->
+        <nav class="quick-links" id="quickLinks" aria-label="Quick links">
+            <button type="button" class="quick-links-close" aria-label="Hide quick links">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+            <a href="#products" class="quick-link"
+                ><i class="fas fa-boxes" aria-hidden="true"></i><span>All Products</span></a
+            >
+            <a href="#contact" class="quick-link quick-link-contact"
+                ><i class="fas fa-phone-alt fa-flip-horizontal" aria-hidden="true"></i><span>Contact Us</span></a
+            >
+        </nav>
 
         <button id="scrollToTop" class="fixed bottom-6 right-6 text-white hidden z-50" aria-label="Scroll to top">
             <i class="fas fa-arrow-up text-lg" aria-hidden="true"></i>
@@ -7667,6 +7537,93 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 initScrollAnimations();
             }
 
+            // ---------- Ravan dahan: every click burns one of his 10 heads ----------
+            // A click anywhere on the page sets the next head on fire (outer heads first, the main head
+            // last); the 10th burns the whole effigy down, then he is rebuilt for another round.
+            // The first click also slides in the All Products / Contact Us links on the right.
+            // ravanFx is shared with initDussehraArrows, which adds canvas fire when motion is allowed.
+            const ravanFx = { burning: false, burst: null, dahan: null };
+
+            function initRavanHeads() {
+                const hero = document.getElementById("hero");
+                const effigy = document.getElementById("ravanEffigy");
+                const wrap = effigy ? effigy.closest(".ravan-wrap") : null;
+                const heads = effigy ? Array.from(effigy.querySelectorAll(".rv-head")) : [];
+                const dots = wrap ? Array.from(wrap.querySelectorAll(".ravan-heads i")) : [];
+                const victory = document.getElementById("ravanVictory");
+                const quickLinks = document.getElementById("quickLinks");
+                let burnt = 0;
+                let linksDismissed = false;
+
+                if (wrap && heads.length) {
+                    wrap.classList.add("game-on");
+                    if (hero) hero.classList.add("ravan-game");
+                }
+
+                // Flame over the head, placed from its viewBox centre (data-x / data-y).
+                const VIEW_W = 240;
+                const VIEW_H = 330;
+                const lightHead = (head) => {
+                    if (prefersReducedMotion()) return;
+                    const flame = document.createElement("span");
+                    flame.className = "head-flame";
+                    flame.style.left = `${(Number(head.dataset.x) / VIEW_W) * 100}%`;
+                    flame.style.top = `${(Number(head.dataset.y) / VIEW_H) * 100}%`;
+                    flame.addEventListener("animationend", (e) => e.target === flame && flame.remove());
+                    wrap.appendChild(flame);
+                };
+
+                const dahan = () => {
+                    wrap.classList.add("burning");
+                    if (victory) victory.classList.add("show");
+                    if (ravanFx.dahan) ravanFx.dahan();
+                    setTimeout(() => {
+                        if (victory) victory.classList.remove("show");
+                        wrap.classList.remove("burning");
+                        wrap.classList.add("rising");
+                        burnt = 0;
+                        heads.forEach((h) => h.classList.remove("burnt"));
+                        dots.forEach((d) => d.classList.remove("down"));
+                        setTimeout(() => {
+                            wrap.classList.remove("rising");
+                            ravanFx.burning = false;
+                        }, 1200);
+                    }, 5000);
+                };
+
+                const burnNextHead = () => {
+                    if (!wrap || !heads.length || ravanFx.burning) return;
+                    const head = heads[burnt];
+                    burnt++;
+                    head.classList.add("burnt");
+                    dots.forEach((d, i) => d.classList.toggle("down", i < burnt));
+                    lightHead(head);
+                    if (ravanFx.burst) ravanFx.burst(head);
+                    if (burnt >= heads.length) {
+                        // Block further clicks until he has burned down and risen again.
+                        ravanFx.burning = true;
+                        setTimeout(dahan, 900);
+                    }
+                };
+
+                const showQuickLinks = () => {
+                    if (quickLinks && !linksDismissed) quickLinks.classList.add("show");
+                };
+
+                if (quickLinks) {
+                    quickLinks.querySelector(".quick-links-close").addEventListener("click", () => {
+                        linksDismissed = true;
+                        quickLinks.classList.remove("show");
+                    });
+                }
+
+                document.addEventListener("click", (e) => {
+                    if (quickLinks && quickLinks.contains(e.target)) return;
+                    showQuickLinks();
+                    burnNextHead();
+                });
+            }
+
             // ---------- Dussehra flaming arrows ----------
             // Flaming arrows fly from Ram's bow (or the bottom of the hero on narrow screens) and burst
             // into embers; some are aimed at the Ravan effigy, which sheds rising embers from its fire.
@@ -7698,19 +7655,6 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 let bowTip = null;
                 let effigyBox = null;
 
-                // Ravan dahan: each arrow that bursts on the effigy knocks off one of his 10 heads;
-                // the 10th burns him down, then he is rebuilt for another round.
-                const ravanWrap = effigy ? effigy.closest(".ravan-wrap") : null;
-                const headDots = ravanWrap ? Array.from(ravanWrap.querySelectorAll(".ravan-heads i")) : [];
-                const heads = effigy ? Array.from(effigy.querySelectorAll(".rv-head")) : [];
-                const victory = document.getElementById("ravanVictory");
-                const RAVAN_HEADS = heads.length || headDots.length || 10;
-                let hits = 0;
-                let burning = false;
-                if (ravanWrap) {
-                    ravanWrap.classList.add("game-on");
-                    hero.classList.add("ravan-game");
-                }
 
                 const rand = (min, max) => min + Math.random() * (max - min);
                 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -7739,22 +7683,18 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                     if (sparks.length < MAX_SPARKS) sparks.push(spark);
                 };
 
-                // The arrow peaks exactly at (tx, ty), where it bursts. Only `strike` arrows
-                // (fired by clicking Ravan) knock off a head; ambient arrows just burst.
-                const shoot = (tx, ty, strike = false) => {
+                // The arrow peaks exactly at (tx, ty), where it bursts.
+                const shoot = (tx, ty) => {
                     const x = bowTip ? bowTip.x : Math.min(w - 20, Math.max(20, tx + rand(-120, 120)));
                     const y = bowTip ? bowTip.y : h;
                     const vy = -Math.sqrt(2 * GRAVITY * Math.max(60, y - ty));
                     const frames = -vy / GRAVITY;
-                    arrows.push({ x, y, tx, ty, vx: (tx - x) / frames, vy, color: pick(DUSSEHRA_COLORS), strike });
+                    arrows.push({ x, y, tx, ty, vx: (tx - x) / frames, vy, color: pick(DUSSEHRA_COLORS) });
                 };
 
-                const shootAtEffigy = (strike = false) => {
+                const shootAtEffigy = () => {
                     if (!effigyBox) return false;
-                    // A click aims at the next head still standing; ambient arrows hit his upper body.
-                    const target = strike && measure(heads[Math.min(hits, heads.length - 1)]);
-                    if (target) shoot(target.x + target.w / 2, target.y + target.h / 2, true);
-                    else shoot(effigyBox.x + effigyBox.w * rand(0.35, 0.65), effigyBox.y + effigyBox.h * rand(0.15, 0.4), strike);
+                    shoot(effigyBox.x + effigyBox.w * rand(0.35, 0.65), effigyBox.y + effigyBox.h * rand(0.15, 0.4));
                     return true;
                 };
 
@@ -7783,57 +7723,30 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
 
                 const hitsEffigy = (x, y) =>
                     !!effigyBox &&
-                    !burning &&
+                    !ravanFx.burning &&
                     x >= effigyBox.x &&
                     x <= effigyBox.x + effigyBox.w &&
                     y >= effigyBox.y &&
                     y <= effigyBox.y + effigyBox.h;
 
-                const ravanDahan = () => {
-                    burning = true;
-                    ravanWrap.classList.add("burning");
-                    if (victory) victory.classList.add("show");
+                // Hooks for initRavanHeads: fire on a burning head, fireworks for Ravan dahan.
+                ravanFx.burst = (head) => {
+                    const r = onScreen && measure(head);
+                    if (r) explode(r.x + r.w / 2, r.y + r.h / 2, pick(["#f97316", "#fbbf24", "#ef4444"]));
+                };
+                ravanFx.dahan = () => {
+                    if (!effigyBox) return;
                     const cx = effigyBox.x + effigyBox.w / 2;
                     const cy = effigyBox.y + effigyBox.h * 0.3;
                     for (let i = 0; i < 5; i++) {
                         setTimeout(() => explode(cx + rand(-70, 70), cy + rand(-60, 40), pick(DUSSEHRA_COLORS)), i * 260);
                     }
-                    setTimeout(() => {
-                        if (victory) victory.classList.remove("show");
-                        ravanWrap.classList.remove("burning");
-                        ravanWrap.classList.add("rising");
-                        hits = 0;
-                        headDots.forEach((d) => d.classList.remove("down"));
-                        heads.forEach((hd) => hd.classList.remove("fallen"));
-                        setTimeout(() => {
-                            ravanWrap.classList.remove("rising");
-                            burning = false;
-                        }, 1200);
-                    }, 5000);
-                };
-
-                const strikeRavan = () => {
-                    if (!ravanWrap) return;
-                    hits++;
-                    headDots.forEach((d, i) => d.classList.toggle("down", i < hits));
-                    const head = heads[hits - 1];
-                    if (head) {
-                        // Burst of sparks where the head was, then it tumbles off.
-                        const box = measure(head);
-                        if (box) explode(box.x + box.w / 2, box.y + box.h / 2, "#f97316");
-                        head.classList.add("fallen");
-                    }
-                    // Restart the flash even when hits land back to back.
-                    ravanWrap.classList.remove("hit");
-                    void ravanWrap.offsetWidth;
-                    ravanWrap.classList.add("hit");
-                    if (hits >= RAVAN_HEADS) ravanDahan();
                 };
 
                 // Embers drifting up from the burning effigy (negative gravity = they float).
                 const embers = () => {
                     if (!effigyBox) return;
-                    const perFrame = (isSmall ? 1 : 2) * (burning ? 4 : 1);
+                    const perFrame = (isSmall ? 1 : 2) * (ravanFx.burning ? 4 : 1);
                     for (let i = 0; i < perFrame; i++) {
                         addSpark({
                             x: effigyBox.x + effigyBox.w * rand(0.2, 0.8),
@@ -7903,7 +7816,6 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                         });
                         if (a.vy >= -GRAVITY * dt) {
                             explode(a.x, a.y, a.color);
-                            if (a.strike && hitsEffigy(a.tx, a.ty)) strikeRavan();
                             arrows.splice(i, 1);
                         }
                     }
@@ -7960,7 +7872,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                     const y = e.clientY - rect.top;
                     // Taps on the effigy aim at its upper body: the arrow can't peak below the bow tip,
                     // so aiming at his legs would burst above Ravan instead of on him.
-                    if (hitsEffigy(x, y)) shootAtEffigy(true);
+                    if (hitsEffigy(x, y)) shootAtEffigy();
                     else shoot(x, y);
                 });
 
@@ -7969,72 +7881,6 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 setTimeout(() => shootAtEffigy() || shoot(w * 0.8, h * 0.25), 650);
                 nextLaunch = performance.now() + 1500;
                 start();
-            }
-
-            // ---------- Ravan around the hero buttons ----------
-            // Each click on Ravan's body burns one of his 10 heads (outer heads first, the crowned head
-            // last); the 10th burns the whole effigy, then he is rebuilt for another round.
-            function initCtaRavan() {
-                const wrap = document.getElementById("ctaRavan");
-                const body = document.getElementById("ctaRavanBody");
-                if (!wrap || !body) return;
-                const heads = Array.from(wrap.querySelectorAll(".cr-head")).sort((a, b) => a.dataset.burn - b.dataset.burn);
-                const count = document.getElementById("ctaRavanCount");
-                const victory = document.getElementById("ravanVictory");
-                const hero = document.getElementById("hero");
-                const BURN_MS = 900;
-                const DAHAN_MS = 4500;
-                let burnt = 0;
-                let busy = false;
-                if (hero) hero.classList.add("ravan-game");
-
-                const setCount = () => {
-                    const left = heads.length - burnt;
-                    if (count) {
-                        count.textContent = left
-                            ? `🔥 Click Ravan's body to burn his heads · ${left} left`
-                            : "🔥 Ravan dahan! Victory of good over evil";
-                    }
-                    body.setAttribute("aria-label", left ? `Burn one of Ravan's heads (${left} left)` : "Ravan is burning");
-                };
-
-                const rebuild = () => {
-                    if (victory) victory.classList.remove("show");
-                    wrap.classList.remove("dahan");
-                    heads.forEach((hd) => hd.classList.remove("burning", "burnt"));
-                    burnt = 0;
-                    setCount();
-                    wrap.classList.add("rising");
-                    setTimeout(() => {
-                        wrap.classList.remove("rising");
-                        busy = false;
-                    }, 800);
-                };
-
-                body.addEventListener("click", () => {
-                    if (busy || burnt >= heads.length) return;
-                    const head = heads[burnt++];
-                    head.classList.add("burning");
-                    setTimeout(() => {
-                        head.classList.remove("burning");
-                        head.classList.add("burnt");
-                    }, BURN_MS);
-                    // Restart the body flash even when clicks land back to back.
-                    wrap.classList.remove("hit");
-                    void wrap.offsetWidth;
-                    wrap.classList.add("hit");
-                    setCount();
-                    if (burnt === heads.length) {
-                        busy = true;
-                        setTimeout(() => {
-                            wrap.classList.add("dahan");
-                            if (victory) victory.classList.add("show");
-                        }, BURN_MS);
-                        setTimeout(rebuild, BURN_MS + DAHAN_MS);
-                    }
-                });
-
-                setCount();
             }
 
             // Countdown pill in the greeting ribbon. Vijayadashami 2026 falls on 20 October;
@@ -8205,8 +8051,8 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 initCardTilt();
                 initMagneticButtons();
                 initRipples();
+                initRavanHeads();
                 initDussehraArrows();
-                initCtaRavan();
                 initDussehraCountdown();
                 const yearEl = document.getElementById("copyrightYear");
                 if (yearEl) yearEl.textContent = String(new Date().getFullYear());
