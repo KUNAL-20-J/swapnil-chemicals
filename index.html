@@ -69,7 +69,8 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
             CURLOPT_POSTFIELDS => $isJson ? json_encode($fields) : $fields,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 15,
         ]);
         $body = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -3976,6 +3977,20 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
             .surya-motif {
                 will-change: transform;
             }
+
+            /* Aarti overlay sits exactly on top of .puja-art (same viewBox, same 8px wrap padding). Its own
+               layer means the per-frame aarti repaint never touches the deity photos underneath. */
+            .puja-aarti-layer {
+                position: absolute;
+                left: 0;
+                top: 8px;
+                z-index: 1;
+                width: 100%;
+                height: auto;
+                aspect-ratio: 360 / 270;
+                pointer-events: none;
+                will-change: transform;
+            }
         </style>
         <script type="application/ld+json">
             {
@@ -4398,8 +4413,11 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                                     <use href="#pjLotus" transform="translate(70 238)" />
                                     <use href="#pjLotus" transform="translate(180 238) scale(1.3 1.15)" />
                                     <use href="#pjLotus" transform="translate(290 238)" />
-
-                                    <!-- Aarti: the thali circles clockwise in front of the deities and stays upright -->
+                                </svg>
+                                <!-- Aarti: the thali circles clockwise in front of the deities and stays upright.
+                                     It lives in its own composited overlay SVG: animating it inside .puja-art repainted
+                                     the three deity photos (clip-paths + gradients) on every frame. -->
+                                <svg class="puja-aarti-layer" viewBox="0 0 360 270" aria-hidden="true" focusable="false">
                                     <circle cx="180" cy="170" r="34" fill="none" stroke="#fde047" stroke-width="1" stroke-dasharray="1 5" opacity="0.6" />
                                     <g class="pj-aarti">
                                         <g class="pj-aarti-plate">
@@ -7554,6 +7572,8 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
 
                 const shower = () => {
                     if (!wrap || prefersReducedMotion()) return;
+                    // Off screen the puja's animations are paused, so petals would never finish and be removed.
+                    if (wrap.closest(".anim-paused")) return;
                     if (wrap.querySelectorAll(".pj-petal").length > MAX_PETALS) return;
                     for (let i = 0; i < 14; i++) {
                         const petal = document.createElement("span");
@@ -7613,7 +7633,17 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 if (!ctx) return;
 
                 const isSmall = window.innerWidth < 768;
-                const MAX_SPARKS = isSmall ? 160 : 300;
+                // Low-end devices / data saver: no automatic salvos, only the opening volley and taps,
+                // so the canvas loop goes idle instead of running for as long as the hero is visible.
+                const lowPower =
+                    (navigator.hardwareConcurrency || 8) <= 4 ||
+                    (navigator.deviceMemory || 8) <= 4 ||
+                    Boolean(navigator.connection && navigator.connection.saveData);
+                const autoLaunch = !lowPower;
+                const MAX_SPARKS = lowPower ? 120 : isSmall ? 160 : 300;
+                // Sparks are tiny glowing dots, so a lower backing resolution looks the same once the CSS
+                // scales the canvas up, and cuts the full-canvas fade fill to a quarter of the pixels.
+                const RENDER_SCALE = isSmall ? 0.75 : 0.5;
                 // ~30fps everywhere: each frame fades the whole hero-sized canvas, and at 60fps that fill
                 // competed with scrolling on laptops too. Motion is computed from dt, so speed is unchanged.
                 const MIN_FRAME_MS = 32;
@@ -7632,8 +7662,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
                 const resize = () => {
-                    // Sparks are 1-2px dots, so extra canvas resolution only adds fill cost.
-                    const dpr = 1;
+                    const dpr = RENDER_SCALE;
                     w = hero.clientWidth;
                     h = hero.clientHeight;
                     canvas.width = Math.round(w * dpr);
@@ -7683,7 +7712,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                     const dt = Math.min((now - (last || now)) / 16.67, 3);
                     last = now;
 
-                    if (now >= nextLaunch) {
+                    if (autoLaunch && now >= nextLaunch) {
                         const salvo = Math.random() < 0.2 ? 3 : 1;
                         for (let i = 0; i < salvo; i++) launch(rand(w * 0.1, w * 0.9), rand(h * 0.1, h * 0.42));
                         nextLaunch = now + rand(800, 1700);
@@ -7748,6 +7777,12 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                         ctx.fillStyle = s.color;
                         ctx.fillRect(s.x - s.size, s.y - s.size, s.size * 2, s.size * 2);
                     }
+
+                    // Nothing left in the sky and nothing scheduled: stop until the next tap.
+                    if (!autoLaunch && !rockets.length && !sparks.length) {
+                        ctx.clearRect(0, 0, w, h);
+                        stop();
+                    }
                 };
 
                 const start = () => {
@@ -7758,6 +7793,11 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 const stop = () => {
                     cancelAnimationFrame(rafId);
                     rafId = 0;
+                };
+                // Launch and make sure the loop is running (it may have gone idle on low-power devices).
+                const fire = (tx, ty) => {
+                    launch(tx, ty);
+                    start();
                 };
 
                 resize();
@@ -7776,7 +7816,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 hero.addEventListener("pointerdown", (e) => {
                     if (e.target.closest("a, button")) return;
                     const rect = hero.getBoundingClientRect();
-                    launch(e.clientX - rect.left, e.clientY - rect.top);
+                    fire(e.clientX - rect.left, e.clientY - rect.top);
                 });
 
                 // Start only after the page has loaded, so the canvas doesn't compete with images and
@@ -7784,7 +7824,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 const begin = () => {
                     ready = true;
                     resize();
-                    [0, 300, 650].forEach((delay, i) => setTimeout(() => launch(w * (0.3 + i * 0.2), h * rand(0.15, 0.3)), delay));
+                    [0, 300, 650].forEach((delay, i) => setTimeout(() => fire(w * (0.3 + i * 0.2), h * rand(0.15, 0.3)), delay));
                     nextLaunch = performance.now() + 1500;
                     start();
                 };
