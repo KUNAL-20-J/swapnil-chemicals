@@ -3937,6 +3937,45 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                 backdrop-filter: none;
                 -webkit-backdrop-filter: none;
             }
+
+            /* Fairy lights: animating box-shadow repainted all ~40 bulbs every frame. Keep the glow
+               static and twinkle with opacity only, which runs on the compositor. */
+            .hero-bunting span,
+            .footer-bunting span {
+                box-shadow: 0 0 10px 3px var(--bulb);
+                animation-name: bulb-twinkle-cheap;
+            }
+
+            @keyframes bulb-twinkle-cheap {
+                from {
+                    opacity: 0.35;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            /* Full-width ribbon above the header and the hero greeting panned their gradients every frame
+               (a full repaint each time, and the ribbon never scrolls out of the paused zone). Same colours, static. */
+            .diwali-ribbon,
+            .diwali-greeting {
+                animation: none;
+            }
+
+            .diwali-greeting {
+                text-shadow: none;
+            }
+
+            /* Footer diya flames: a drop-shadow filter on an animated element is re-rendered every frame. */
+            .diya::before {
+                filter: none;
+                will-change: transform, opacity;
+            }
+
+            .surya-motif {
+                will-change: transform;
+            }
         </style>
         <script type="application/ld+json">
             {
@@ -7407,7 +7446,9 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
             // Infinite decorative animations keep the GPU busy even when off-screen; pause them there.
             function initOffscreenAnimationPause() {
                 if (!("IntersectionObserver" in window)) return;
-                const targets = document.querySelectorAll(".hero-gradient, .product-marquee, .site-footer, .puja-stage");
+                const targets = document.querySelectorAll(
+                    ".hero-gradient, .product-marquee, .site-footer, .puja-stage, .puja-diyas, .diwali-days, .surya-motif"
+                );
                 const obs = new IntersectionObserver((entries) =>
                     entries.forEach((entry) => entry.target.classList.toggle("anim-paused", !entry.isIntersecting))
                 );
@@ -7572,9 +7613,10 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 if (!ctx) return;
 
                 const isSmall = window.innerWidth < 768;
-                const MAX_SPARKS = isSmall ? 200 : 450;
-                // ~30fps on phones, <=60fps elsewhere (120/144Hz screens otherwise ran the sky at full rate).
-                const MIN_FRAME_MS = isSmall ? 32 : 15;
+                const MAX_SPARKS = isSmall ? 160 : 300;
+                // ~30fps everywhere: each frame fades the whole hero-sized canvas, and at 60fps that fill
+                // competed with scrolling on laptops too. Motion is computed from dt, so speed is unchanged.
+                const MIN_FRAME_MS = 32;
                 const GRAVITY = 0.05;
                 const rockets = [];
                 const sparks = [];
@@ -7584,6 +7626,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 let last = 0;
                 let nextLaunch = 0;
                 let onScreen = true;
+                let ready = false;
 
                 const rand = (min, max) => min + Math.random() * (max - min);
                 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -7708,7 +7751,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 };
 
                 const start = () => {
-                    if (rafId || !onScreen || document.hidden) return;
+                    if (rafId || !ready || !onScreen || document.hidden) return;
                     last = 0;
                     rafId = requestAnimationFrame(frame);
                 };
@@ -7736,10 +7779,17 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                     launch(e.clientX - rect.left, e.clientY - rect.top);
                 });
 
-                // Opening volley so the sky lights up straight away.
-                [0, 300, 650].forEach((delay, i) => setTimeout(() => launch(w * (0.3 + i * 0.2), h * rand(0.15, 0.3)), delay));
-                nextLaunch = performance.now() + 1500;
-                start();
+                // Start only after the page has loaded, so the canvas doesn't compete with images and
+                // fonts for the main thread during the first paint. Then an opening volley lights the sky.
+                const begin = () => {
+                    ready = true;
+                    resize();
+                    [0, 300, 650].forEach((delay, i) => setTimeout(() => launch(w * (0.3 + i * 0.2), h * rand(0.15, 0.3)), delay));
+                    nextLaunch = performance.now() + 1500;
+                    start();
+                };
+                if (document.readyState === "complete") begin();
+                else window.addEventListener("load", begin, { once: true });
             }
 
             // Countdown pill in the greeting ribbon. Diwali (Lakshmi Puja) 2026 falls on 8 November;
