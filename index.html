@@ -3284,15 +3284,33 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
             }
 
 
-            /* Outer group circles the aarti path; the inner group counter-rotates so the thali stays level. */
+            /* Outer box circles the aarti path; the inner box counter-rotates so the thali stays level.
+               These are HTML boxes, not SVG groups: transforms on elements inside an SVG cannot run on the
+               compositor, so the old version repainted on the main thread every frame and hung the page.
+               Percentages map the 360x270 art viewBox (orbit centre 180,170; thali pivot 180,204). */
             .pj-aarti {
-                transform-origin: 180px 170px;
+                position: absolute;
+                inset: 0;
+                transform-origin: 50% 62.963%;
                 animation: aarti-circle 4.5s linear infinite;
             }
 
             .pj-aarti-plate {
-                transform-origin: 180px 204px;
+                position: absolute;
+                left: 43.889%;
+                top: 65.185%;
+                width: 12.222%;
+                height: 19.259%;
+                transform-origin: 50% 53.846%;
                 animation: aarti-circle 4.5s linear infinite reverse;
+            }
+
+            .pj-aarti-plate svg {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                overflow: visible;
             }
 
             @keyframes aarti-circle {
@@ -3301,8 +3319,12 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                 }
             }
 
-            .pj-flame {
-                transform-box: fill-box;
+            .pj-aarti-plate .pj-flame {
+                inset: auto;
+                left: 41.818%;
+                top: 18.269%;
+                width: 16.364%;
+                height: 28.846%;
                 transform-origin: 50% 100%;
                 animation: flame-lick 0.45s ease-in-out infinite alternate;
             }
@@ -3978,18 +4000,23 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                 will-change: transform;
             }
 
-            /* Aarti overlay sits exactly on top of .puja-art (same viewBox, same 8px wrap padding). Its own
-               layer means the per-frame aarti repaint never touches the deity photos underneath. */
+            /* Aarti overlay sits exactly on top of .puja-art (same 360x270 box, same 8px wrap padding).
+               Only its HTML children move, so the deity art underneath is never repainted. */
             .puja-aarti-layer {
                 position: absolute;
                 left: 0;
                 top: 8px;
                 z-index: 1;
                 width: 100%;
-                height: auto;
                 aspect-ratio: 360 / 270;
                 pointer-events: none;
-                will-change: transform;
+            }
+
+            .puja-aarti-path {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
             }
         </style>
         <script type="application/ld+json">
@@ -4415,25 +4442,31 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                                     <use href="#pjLotus" transform="translate(290 238)" />
                                 </svg>
                                 <!-- Aarti: the thali circles clockwise in front of the deities and stays upright.
-                                     It lives in its own composited overlay SVG: animating it inside .puja-art repainted
-                                     the three deity photos (clip-paths + gradients) on every frame. -->
-                                <svg class="puja-aarti-layer" viewBox="0 0 360 270" aria-hidden="true" focusable="false">
-                                    <circle cx="180" cy="170" r="34" fill="none" stroke="#fde047" stroke-width="1" stroke-dasharray="1 5" opacity="0.6" />
-                                    <g class="pj-aarti">
-                                        <g class="pj-aarti-plate">
-                                            <circle cx="180" cy="194" r="16" fill="url(#pjGlow)" />
-                                            <path d="M180 208 V220" stroke="#d97706" stroke-width="3" stroke-linecap="round" />
-                                            <circle cx="180" cy="222" r="3" fill="#fbbf24" />
-                                            <ellipse cx="180" cy="205" rx="18" ry="4.5" fill="url(#pjGold)" stroke="#b45309" stroke-width="1" />
-                                            <circle cx="167" cy="203.5" r="1.8" fill="#dc2626" />
-                                            <circle cx="193" cy="203.5" r="1.8" fill="#facc15" />
-                                            <circle cx="171" cy="202" r="1.6" fill="#f97316" />
-                                            <circle cx="189" cy="202" r="1.6" fill="#f97316" />
-                                            <path d="M172 200 Q180 208 188 200 Z" fill="#d97706" stroke="#92400e" stroke-width="0.8" />
-                                            <ellipse class="pj-flame" cx="180" cy="193" rx="3.6" ry="7.5" fill="url(#pjFlame)" />
-                                        </g>
-                                    </g>
-                                </svg>
+                                     The moving parts are HTML boxes wrapping small static SVGs, so the browser rotates
+                                     them on the GPU instead of repainting an SVG on the main thread every frame. -->
+                                <div class="puja-aarti-layer" aria-hidden="true">
+                                    <svg class="puja-aarti-path" viewBox="0 0 360 270" focusable="false">
+                                        <circle cx="180" cy="170" r="34" fill="none" stroke="#fde047" stroke-width="1" stroke-dasharray="1 5" opacity="0.6" />
+                                    </svg>
+                                    <div class="pj-aarti">
+                                        <div class="pj-aarti-plate">
+                                            <svg viewBox="158 176 44 52" focusable="false">
+                                                <circle cx="180" cy="194" r="16" fill="url(#pjGlow)" />
+                                                <path d="M180 208 V220" stroke="#d97706" stroke-width="3" stroke-linecap="round" />
+                                                <circle cx="180" cy="222" r="3" fill="#fbbf24" />
+                                                <ellipse cx="180" cy="205" rx="18" ry="4.5" fill="url(#pjGold)" stroke="#b45309" stroke-width="1" />
+                                                <circle cx="167" cy="203.5" r="1.8" fill="#dc2626" />
+                                                <circle cx="193" cy="203.5" r="1.8" fill="#facc15" />
+                                                <circle cx="171" cy="202" r="1.6" fill="#f97316" />
+                                                <circle cx="189" cy="202" r="1.6" fill="#f97316" />
+                                                <path d="M172 200 Q180 208 188 200 Z" fill="#d97706" stroke="#92400e" stroke-width="0.8" />
+                                            </svg>
+                                            <svg class="pj-flame" viewBox="176.4 185.5 7.2 15" focusable="false">
+                                                <ellipse cx="180" cy="193" rx="3.6" ry="7.5" fill="url(#pjFlame)" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="diya-row puja-diyas" aria-hidden="true">
                                 <span class="diya"></span><span class="diya" style="--d: -0.3s"></span
