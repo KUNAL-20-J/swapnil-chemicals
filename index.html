@@ -3902,6 +3902,41 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                     order: -1;
                 }
             }
+
+            /* ================================================================
+               Performance: Diwali layer. Same look, far less per-frame paint.
+               ================================================================ */
+            /* Panning a background repaints the element every frame, and the ribbon is always on screen. */
+            .diwali-ribbon,
+            .diwali-greeting {
+                animation: none;
+            }
+
+            /* Fairy lights twinkle with opacity only (compositor); animating box-shadow repainted every bulb each frame. */
+            :is(.hero-bunting, .footer-bunting) span {
+                box-shadow: 0 0 10px 3px var(--bulb);
+            }
+
+            @keyframes bulb-twinkle {
+                from {
+                    opacity: 0.35;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            /* The aarti animates inside this SVG, so a filter on it was re-rendered with the deity images every frame. */
+            .puja-art {
+                filter: none;
+            }
+
+            /* Near-opaque already; the blur was composited even while the blessing was hidden. */
+            .puja-blessing {
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+            }
         </style>
         <script type="application/ld+json">
             {
@@ -7372,7 +7407,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
             // Infinite decorative animations keep the GPU busy even when off-screen; pause them there.
             function initOffscreenAnimationPause() {
                 if (!("IntersectionObserver" in window)) return;
-                const targets = document.querySelectorAll(".hero-gradient, .product-marquee, .site-footer");
+                const targets = document.querySelectorAll(".hero-gradient, .product-marquee, .site-footer, .puja-stage");
                 const obs = new IntersectionObserver((entries) =>
                     entries.forEach((entry) => entry.target.classList.toggle("anim-paused", !entry.isIntersecting))
                 );
@@ -7537,7 +7572,9 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 if (!ctx) return;
 
                 const isSmall = window.innerWidth < 768;
-                const MAX_SPARKS = isSmall ? 450 : 1000;
+                const MAX_SPARKS = isSmall ? 200 : 450;
+                // ~30fps on phones, <=60fps elsewhere (120/144Hz screens otherwise ran the sky at full rate).
+                const MIN_FRAME_MS = isSmall ? 32 : 15;
                 const GRAVITY = 0.05;
                 const rockets = [];
                 const sparks = [];
@@ -7552,7 +7589,8 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
                 const resize = () => {
-                    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+                    // Sparks are 1-2px dots, so extra canvas resolution only adds fill cost.
+                    const dpr = 1;
                     w = hero.clientWidth;
                     h = hero.clientHeight;
                     canvas.width = Math.round(w * dpr);
@@ -7575,7 +7613,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
 
                 const explode = (x, y, baseColor) => {
                     const type = pick(["peony", "peony", "ring", "willow", "multi"]);
-                    const count = Math.round((isSmall ? 0.6 : 1) * (type === "ring" ? 60 : rand(80, 120)));
+                    const count = Math.round((isSmall ? 0.5 : 0.7) * (type === "ring" ? 60 : rand(80, 120)));
                     const speed = rand(2.6, 4.2);
                     for (let i = 0; i < count; i++) {
                         const angle = (Math.PI * 2 * i) / count + rand(-0.05, 0.05);
@@ -7598,6 +7636,7 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
 
                 const frame = (now) => {
                     rafId = requestAnimationFrame(frame);
+                    if (last && now - last < MIN_FRAME_MS) return;
                     const dt = Math.min((now - (last || now)) / 16.67, 3);
                     last = now;
 
@@ -7661,11 +7700,10 @@ doc.text("Company's Bank Details", bx, lowTop + 3.8);
                             continue;
                         }
                         if (s.twinkle && Math.random() < 0.35) continue;
+                        // A square looks the same as a circle at this size and skips building a path per spark.
                         ctx.globalAlpha = Math.max(0, s.life);
                         ctx.fillStyle = s.color;
-                        ctx.beginPath();
-                        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                        ctx.fill();
+                        ctx.fillRect(s.x - s.size, s.y - s.size, s.size * 2, s.size * 2);
                     }
                 };
 
