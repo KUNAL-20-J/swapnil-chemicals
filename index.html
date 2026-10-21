@@ -3276,6 +3276,9 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                 width: min(560px, 100%);
                 overflow: hidden;
                 padding-top: 8px;
+                /* Keeps the animated aarti/petal layers from forcing the rest of the section onto extra layers. */
+                contain: layout paint;
+                isolation: isolate;
             }
 
             .puja-art {
@@ -3295,20 +3298,26 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
             /* Outer box circles the aarti path; the inner box counter-rotates so the thali stays level.
                These are HTML boxes, not SVG groups: transforms on elements inside an SVG cannot run on the
                compositor, so the old version repainted on the main thread every frame and hung the page.
-               Percentages map the 360x270 art viewBox (orbit centre 180,170; thali pivot 180,204). */
+               Percentages map the 360x270 art viewBox (orbit centre 180,170; thali pivot 180,204).
+               The rotating box is only the 128x128 square around the orbit (the thali reaches ~62 units from
+               the centre), not the whole art: a full-size layer made the GPU re-composite the deity art area every frame. */
             .pj-aarti {
                 position: absolute;
-                inset: 0;
-                transform-origin: 50% 62.963%;
+                left: 32.222%;
+                top: 39.259%;
+                width: 35.556%;
+                height: 47.407%;
+                transform-origin: 50% 50%;
                 animation: aarti-circle 4.5s linear infinite;
+                will-change: transform;
             }
 
             .pj-aarti-plate {
                 position: absolute;
-                left: 43.889%;
-                top: 65.185%;
-                width: 12.222%;
-                height: 19.259%;
+                left: 32.813%;
+                top: 54.688%;
+                width: 34.375%;
+                height: 40.625%;
                 transform-origin: 50% 53.846%;
                 animation: aarti-circle 4.5s linear infinite reverse;
             }
@@ -4037,6 +4046,9 @@ if (($_GET['action'] ?? '') === 'send-cart-pdf') {
                 width: 100%;
                 aspect-ratio: 360 / 270;
                 pointer-events: none;
+                /* Static paintings get their own layer, rastered once, so scrolling and the aarti
+                   moving over them never re-decode or re-scale the images. */
+                will-change: transform;
             }
 
             .pj-deity-img {
