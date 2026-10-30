@@ -3713,6 +3713,376 @@
                 height: 48px;
                 border-radius: 14px;
             }
+
+            /* ---------- Product filters ---------- */
+            .product-toolbar {
+                margin-bottom: 1.25rem;
+            }
+
+            .product-filters {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.6rem;
+            }
+
+            .filter-chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.55rem 1.05rem;
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                background: var(--surface);
+                color: var(--ink-2);
+                font-size: 0.875rem;
+                font-weight: 600;
+                transition:
+                    background-color 0.2s var(--ease-standard),
+                    border-color 0.2s var(--ease-standard),
+                    color 0.2s var(--ease-standard);
+            }
+
+            .filter-chip i {
+                color: var(--brand);
+                font-size: 0.8rem;
+            }
+
+            .filter-chip:hover {
+                border-color: rgba(37, 99, 235, 0.45);
+                color: var(--brand);
+            }
+
+            .filter-chip.is-active {
+                background: var(--navy);
+                border-color: var(--navy);
+                color: #fff;
+            }
+
+            .filter-chip.is-active i {
+                color: var(--cyan);
+            }
+
+            .product-count {
+                margin: 1rem 0 1.75rem;
+                text-align: center;
+                font-size: 0.85rem;
+                color: var(--muted);
+            }
+
+            /* Filtering hides existing cards instead of re-rendering them, so images, the chosen
+               pack size and the reveal animation all survive a search. */
+            .product-card[hidden] {
+                display: none;
+            }
+
+            .product-empty {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+                max-width: 30rem;
+                margin: 0 auto;
+                padding: 2.5rem 1.5rem;
+                text-align: center;
+                border: 1px dashed var(--line);
+                border-radius: var(--radius-xl);
+                background: var(--surface);
+                color: var(--muted);
+            }
+
+            .product-empty[hidden] {
+                display: none;
+            }
+
+            .product-empty a {
+                color: var(--brand);
+                text-decoration: underline;
+            }
+
+            .product-empty b {
+                color: var(--ink);
+                overflow-wrap: anywhere;
+            }
+
+            /* ---------- Ordering steps: icon + number ---------- */
+            .step-head {
+                display: flex;
+                align-items: center;
+                gap: 0.85rem;
+            }
+
+            /* ---------- Mobile quick-contact bar ---------- */
+            .mobile-action-bar {
+                display: none;
+            }
+
+            @media (max-width: 767px) {
+                .mobile-action-bar {
+                    position: fixed;
+                    inset: auto 0 0 0;
+                    z-index: 55;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0.6rem;
+                    padding: 0.6rem 0.75rem calc(0.6rem + env(safe-area-inset-bottom));
+                    background: rgba(255, 255, 255, 0.97);
+                    border-top: 1px solid var(--line);
+                    box-shadow: 0 -8px 24px -12px rgba(15, 23, 42, 0.25);
+                }
+
+                .mobile-action-bar a {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5rem;
+                    min-height: 46px;
+                    border-radius: 12px;
+                    font-size: 0.9rem;
+                    font-weight: 700;
+                    color: #fff;
+                }
+
+                .mobile-action-call {
+                    background: var(--navy);
+                }
+
+                .mobile-action-wa {
+                    background: var(--wa);
+                }
+
+                /* Keep page content and the floating buttons clear of the bar. */
+                body {
+                    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+                }
+
+                #scrollToTop,
+                .ai-assistant-btn {
+                    bottom: calc(82px + env(safe-area-inset-bottom));
+                }
+
+                .assistant-panel {
+                    bottom: calc(150px + env(safe-area-inset-bottom));
+                }
+            }
+
+            /* ================================================================
+               2026 polish — progressive enhancements only. Browsers that don't
+               support a feature skip that rule and keep the design above.
+               ================================================================ */
+            @property --hero-sweep {
+                syntax: "<angle>";
+                inherits: false;
+                initial-value: 0deg;
+            }
+
+            html {
+                /* Opening a modal hides the page scrollbar; reserving its gutter stops the layout shifting sideways. */
+                scrollbar-gutter: stable;
+                hanging-punctuation: first last;
+                accent-color: var(--brand);
+            }
+
+            .section-title,
+            .hero-title {
+                letter-spacing: -0.025em;
+                font-kerning: normal;
+            }
+
+            /* Figures line up in prices, totals and registration numbers. */
+            .product-price,
+            #cartTotal,
+            .reg-row dd,
+            .hero-card dd,
+            .mono {
+                font-variant-numeric: tabular-nums;
+            }
+
+            /* Hero card: a slow light sweep around its border. Paused off-screen by .anim-paused
+               and switched off for reduced motion by the global rule near the top. */
+            .hero-card {
+                position: relative;
+            }
+
+            .hero-card::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                padding: 1px;
+                border-radius: inherit;
+                pointer-events: none;
+                background: conic-gradient(
+                    from var(--hero-sweep),
+                    transparent 0 68%,
+                    rgba(56, 189, 248, 0.85) 84%,
+                    rgba(147, 197, 253, 0.4) 92%,
+                    transparent
+                );
+                -webkit-mask:
+                    linear-gradient(#000 0 0) content-box,
+                    linear-gradient(#000 0 0);
+                -webkit-mask-composite: xor;
+                mask:
+                    linear-gradient(#000 0 0) content-box exclude,
+                    linear-gradient(#000 0 0);
+                animation: hero-sweep 7s linear infinite;
+            }
+
+            @keyframes hero-sweep {
+                to {
+                    --hero-sweep: 360deg;
+                }
+            }
+
+            /* Product cards adapt to their own width, not the viewport, so narrow grid columns stay tidy. */
+            .product-card {
+                container: product-card / inline-size;
+            }
+
+            @container product-card (max-width: 290px) {
+                .product-card .p-6 {
+                    padding: 1.15rem;
+                }
+
+                .product-card h3 {
+                    font-size: 1.1rem;
+                }
+
+                .product-price {
+                    font-size: 1.3rem;
+                }
+
+                .product-price-row .enquiry-trigger-btn {
+                    padding-inline: 0.7rem;
+                }
+            }
+
+            /* Category changes animate cards into place (names are set only while filtering,
+               so the enquiry-modal view transition isn't affected). */
+            #productsGrid.is-filtering > .product-card {
+                view-transition-name: match-element;
+                view-transition-class: product-card;
+            }
+
+            ::view-transition-group(*.product-card) {
+                animation-duration: 0.35s;
+                animation-timing-function: var(--ease-standard);
+            }
+
+            /* Address field grows with its content instead of showing a tiny scroll box. */
+            .enquiry-textarea {
+                field-sizing: content;
+                min-block-size: 4.5rem;
+                max-block-size: 12rem;
+            }
+
+            @media (prefers-reduced-transparency: reduce) {
+                .nav-blur,
+                dialog.sc-modal::backdrop {
+                    backdrop-filter: none;
+                }
+
+                .nav-blur {
+                    background: var(--surface);
+                }
+            }
+
+            @media (forced-colors: active) {
+                .btn,
+                .filter-chip,
+                .qty-btn,
+                .add-to-cart-btn,
+                .enquiry-trigger-btn,
+                .cart-icon-btn {
+                    border: 1px solid ButtonText;
+                }
+
+                .product-card,
+                .value-card,
+                .step,
+                .reg-card,
+                .hero-card {
+                    border: 1px solid CanvasText;
+                }
+
+                .gradient-text,
+                .gradient-text-hero,
+                .hero-title .accent {
+                    background: none;
+                    -webkit-text-fill-color: currentColor;
+                }
+
+                .hero-card::before {
+                    display: none;
+                }
+            }
+
+            /* Print: browsers drop backgrounds, which left the hero and footer as white-on-white. */
+            @media print {
+                .skip-link,
+                .scroll-progress,
+                .site-header,
+                .mobile-nav,
+                .mobile-action-bar,
+                #scrollToTop,
+                .ai-assistant-btn,
+                .assistant-panel,
+                .cart-panel,
+                .product-toolbar,
+                .product-filters,
+                .qty-section,
+                .add-to-cart-btn,
+                .copy-btn,
+                .hero-actions,
+                .hero-card-actions {
+                    display: none !important;
+                }
+
+                body {
+                    padding-bottom: 0;
+                    background: #fff;
+                }
+
+                .hero,
+                .site-footer {
+                    background: none !important;
+                }
+
+                .hero,
+                .hero *,
+                .site-footer,
+                .site-footer * {
+                    color: #000 !important;
+                    -webkit-text-fill-color: currentColor !important;
+                }
+
+                .hero::after,
+                .hero-card::before {
+                    display: none;
+                }
+
+                /* Cards start hidden until scrolled into view; print them all. */
+                .product-card,
+                .feature-card,
+                .scroll-reveal {
+                    opacity: 1 !important;
+                    translate: none !important;
+                    animation: none !important;
+                }
+
+                .section {
+                    padding-block: 1.5rem;
+                }
+
+                .product-card,
+                .value-card,
+                .step,
+                .faq-item,
+                .reg-card {
+                    break-inside: avoid;
+                    box-shadow: none !important;
+                }
+            }
         </style>
         <script type="application/ld+json">
             {
@@ -4084,7 +4454,7 @@
                             Automobile cleaning and detailing products, available in bulk and retail quantities.
                         </p>
                     </div>
-                    <div class="max-w-xl mx-auto mb-8">
+                    <div class="max-w-xl mx-auto product-toolbar">
                         <div class="relative">
                             <i
                                 class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -4096,16 +4466,41 @@
                                 class="w-full pl-11 pr-12 py-3 rounded-xl border border-gray-200 bg-white focus:border-blue-500 focus:outline-none transition-shadow text-sm"
                                 placeholder="Search products (e.g. tyre polish, micro towel)..."
                                 aria-label="Search products"
+                                aria-keyshortcuts="/"
+                                enterkeyhint="search"
+                                autocomplete="off"
                             />
                             <button type="button" id="voiceSearchBtn" class="voice-btn" aria-label="Search by voice">
                                 <i class="fas fa-microphone" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
+                    <div class="product-filters" role="group" aria-label="Filter products by category">
+                        <button type="button" class="filter-chip is-active" data-action="filter-category" data-category="all" aria-pressed="true">
+                            <i class="fas fa-border-all" aria-hidden="true"></i>All products
+                        </button>
+                        <button type="button" class="filter-chip" data-action="filter-category" data-category="liquids" aria-pressed="false">
+                            <i class="fas fa-flask" aria-hidden="true"></i>Polishes &amp; cleaners
+                        </button>
+                        <button type="button" class="filter-chip" data-action="filter-category" data-category="accessories" aria-pressed="false">
+                            <i class="fas fa-toolbox" aria-hidden="true"></i>Accessories
+                        </button>
+                    </div>
+                    <p class="product-count" id="productCount" aria-live="polite"></p>
                     <div
                         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
                         id="productsGrid"
                     ></div>
+                    <div class="product-empty" id="productEmpty" hidden>
+                        <span class="icon-tile"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></span>
+                        <p>
+                            No products match <b id="productEmptyQuery"></b>. Try a different search, or
+                            <a href="#contact">contact us</a> for custom requirements.
+                        </p>
+                        <button type="button" class="btn btn-outline btn-sm" data-action="reset-product-filters">
+                            <i class="fas fa-rotate-left" aria-hidden="true"></i>Show all products
+                        </button>
+                    </div>
                 </div>
             </section>
 
@@ -4151,17 +4546,17 @@
                     </div>
                     <ol class="steps">
                         <li class="step">
-                            <span class="step-num">Step 01</span>
+                            <span class="step-head"><span class="icon-tile"><i class="fas fa-hand-pointer" aria-hidden="true"></i></span><span class="step-num">Step 01</span></span>
                             <h3>Choose your products</h3>
                             <p>Browse the range, pick a product and select the quantity you need.</p>
                         </li>
                         <li class="step">
-                            <span class="step-num">Step 02</span>
+                            <span class="step-head"><span class="icon-tile"><i class="fas fa-cart-plus" aria-hidden="true"></i></span><span class="step-num">Step 02</span></span>
                             <h3>Add to cart or enquire</h3>
                             <p>Add items to your cart, or use “Enquiry” on any product to share your requirements.</p>
                         </li>
                         <li class="step">
-                            <span class="step-num">Step 03</span>
+                            <span class="step-head"><span class="icon-tile"><i class="fab fa-whatsapp" aria-hidden="true"></i></span><span class="step-num">Step 03</span></span>
                             <h3>Send on WhatsApp</h3>
                             <p>Your order details go straight to our team on WhatsApp, and we get back to you to confirm.</p>
                         </li>
@@ -4414,6 +4809,19 @@
                 </div>
             </section>
         </main>
+
+        <nav class="mobile-action-bar" aria-label="Quick contact">
+            <a href="tel:+919352470085" class="mobile-action-call"
+                ><i class="fas fa-phone" aria-hidden="true"></i>Call now</a
+            >
+            <a
+                href="https://wa.me/919352470085?text=Hello%20Swapnil%20Chemicals%2C%20I%20would%20like%20a%20quote."
+                class="mobile-action-wa"
+                target="_blank"
+                rel="noopener"
+                ><i class="fab fa-whatsapp" aria-hidden="true"></i>WhatsApp quote</a
+            >
+        </nav>
 
         <button id="scrollToTop" class="fixed bottom-6 right-6 text-white hidden z-50" aria-label="Scroll to top">
             <i class="fas fa-arrow-up text-lg" aria-hidden="true"></i>
@@ -5878,7 +6286,7 @@
                         <div class="product-price-row">
                             <div class="product-price">${formatCurrency(product.price)}<span>/${escapeHtml(product.unit)}</span></div>
                             <div class="flex gap-2">
-                                <a href="tel:9352470085" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm" aria-label="Call about ${name}"><i class="fas fa-phone" aria-hidden="true"></i></a>
+                                <a href="tel:+919352470085" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm" aria-label="Call about ${name}"><i class="fas fa-phone" aria-hidden="true"></i></a>
                                 <button type="button" class="enquiry-trigger-btn" data-action="open-enquiry" data-product-id="${product.id}" aria-label="Send an enquiry for ${name}"><i class="fas fa-clipboard-list" aria-hidden="true"></i> Enquiry</button>
                             </div>
                         </div>
@@ -5899,9 +6307,19 @@
                 btn.setAttribute("aria-pressed", "true");
             }
 
+            // Cards are rendered once; search and the category chips only show, hide and reorder them.
             function renderProducts() {
                 const container = document.getElementById("productsGrid");
-                if (container) container.innerHTML = products.map((p) => createProductCard(p)).join("");
+                if (!container) return;
+                container.innerHTML = products.map((p) => createProductCard(p)).join("");
+                const input = document.getElementById("productSearch");
+                filterProducts(input ? input.value : "");
+            }
+
+            let activeCategory = "all";
+
+            function productCategory(product) {
+                return product.unit === "Lt" ? "liquids" : "accessories";
             }
 
             const SEARCH_SYNONYMS = {
@@ -5959,23 +6377,76 @@
             }
 
             function filterProducts(rawQuery) {
-                const query = String(rawQuery || "");
-                const q = query.trim().toLowerCase();
+                const query = String(rawQuery || "").trim();
+                const queryWords = query.toLowerCase().split(/\s+/).filter(Boolean);
                 const container = document.getElementById("productsGrid");
                 if (!container) return;
-                if (!q) {
-                    renderProducts();
+
+                const entries = products.map((product) => ({
+                    product,
+                    card: container.querySelector(`.product-card[data-product-id="${product.id}"]`),
+                    score: queryWords.length ? scoreProductAgainstQuery(product, queryWords) : 1,
+                }));
+                let visible = 0;
+                entries.forEach((entry) => {
+                    if (!entry.card) return;
+                    const inCategory = activeCategory === "all" || productCategory(entry.product) === activeCategory;
+                    entry.card.hidden = !(inCategory && entry.score > 0);
+                    if (!entry.card.hidden) visible++;
+                });
+                // Best matches first. Moving the nodes (rather than re-rendering) keeps loaded images and
+                // the selected pack size, and keeps tab order the same as the visual order. sort() is stable,
+                // so ties and the empty query fall back to catalogue order.
+                entries
+                    .filter((entry) => entry.card)
+                    .sort((a, b) => b.score - a.score)
+                    .forEach((entry) => container.appendChild(entry.card));
+
+                updateProductStatus(visible, query);
+            }
+
+            function updateProductStatus(visible, query) {
+                const total = products.length;
+                const countEl = document.getElementById("productCount");
+                const emptyEl = document.getElementById("productEmpty");
+                const emptyQueryEl = document.getElementById("productEmptyQuery");
+                if (countEl) {
+                    countEl.textContent =
+                        visible === total ? `Showing all ${total} products` : `Showing ${visible} of ${total} products`;
+                    countEl.hidden = visible === 0;
+                }
+                if (emptyQueryEl) emptyQueryEl.textContent = query ? `"${query}"` : "this category";
+                if (emptyEl) emptyEl.hidden = visible > 0;
+            }
+
+            function setProductCategory(category) {
+                activeCategory = category || "all";
+                document.querySelectorAll(".filter-chip").forEach((chip) => {
+                    const isActive = chip.dataset.category === activeCategory;
+                    chip.classList.toggle("is-active", isActive);
+                    chip.setAttribute("aria-pressed", String(isActive));
+                });
+                const input = document.getElementById("productSearch");
+                filterProducts(input ? input.value : "");
+            }
+
+            // Category changes animate cards into their new positions where View Transitions exist.
+            function withProductTransition(update) {
+                const grid = document.getElementById("productsGrid");
+                if (!grid || !document.startViewTransition || prefersReducedMotion()) {
+                    update();
                     return;
                 }
-                const queryWords = q.split(/\s+/).filter(Boolean);
-                const ranked = products
-                    .map((product) => ({ product, score: scoreProductAgainstQuery(product, queryWords) }))
-                    .filter((entry) => entry.score > 0)
-                    .sort((a, b) => b.score - a.score);
+                grid.classList.add("is-filtering");
+                const cleanup = () => grid.classList.remove("is-filtering");
+                document.startViewTransition(update).finished.then(cleanup, cleanup);
+            }
 
-                container.innerHTML = ranked.length
-                    ? ranked.map((entry) => createProductCard(entry.product)).join("")
-                    : `<p class="col-span-full text-center text-gray-500 py-12">No products match "${escapeHtml(query.trim())}". Try a different search or <a href="#contact" class="text-blue-600 underline">contact us</a> for custom requirements.</p>`;
+            function resetProductFilters() {
+                const input = document.getElementById("productSearch");
+                if (input) input.value = "";
+                setProductCategory("all");
+                if (input) input.focus();
             }
 
             function initProductSearch() {
@@ -5985,6 +6456,16 @@
                     "input",
                     debounce(() => filterProducts(input.value), 150)
                 );
+
+                // "/" jumps to product search, as on most catalogue sites.
+                document.addEventListener("keydown", (e) => {
+                    if (e.key !== "/" || e.ctrlKey || e.metaKey || e.altKey || e.defaultPrevented) return;
+                    if (isAnyDialogOpen()) return;
+                    if (e.target instanceof Element && e.target.closest("input, textarea, select, [contenteditable]")) return;
+                    e.preventDefault();
+                    input.focus({ preventScroll: true });
+                    input.scrollIntoView({ block: "center", behavior: prefersReducedMotion() ? "auto" : "smooth" });
+                });
             }
 
             function isSpeechRecognitionSupported() {
@@ -7163,6 +7644,12 @@
                     }
                     case "add-to-cart":
                         addToCart(productId);
+                        break;
+                    case "filter-category":
+                        withProductTransition(() => setProductCategory(target.dataset.category));
+                        break;
+                    case "reset-product-filters":
+                        withProductTransition(resetProductFilters);
                         break;
                     default:
                         break;
