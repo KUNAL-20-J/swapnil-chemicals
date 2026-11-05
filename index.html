@@ -4917,6 +4917,806 @@
                     padding-top: 2.5rem;
                 }
             }
+
+            /* ================================================================
+               Cart drawer + enquiry form (2026). Slide-over drawer with a
+               blurred backdrop; enquiry form split into numbered sections.
+               ================================================================ */
+            body.cart-open::after {
+                content: "";
+                position: fixed;
+                inset: 0;
+                z-index: 65;
+                background: rgb(15 23 42 / 0.35);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                animation: backdrop-in 0.25s ease-out;
+            }
+
+            html:has(body.cart-open) {
+                overflow: hidden;
+            }
+
+            .cart-panel,
+            .cart-panel.hidden {
+                position: fixed;
+                inset: 0 0 0 auto;
+                z-index: 70;
+                width: min(440px, 100vw);
+                max-height: none;
+                height: 100dvh;
+                border-radius: 24px 0 0 24px;
+                border: 0;
+                border-left: 1px solid var(--line);
+                background: var(--surface-2);
+                box-shadow: -30px 0 60px -20px rgb(15 23 42 / 0.3);
+                transform-origin: right center;
+                transition:
+                    translate 0.4s var(--ease-out),
+                    opacity 0.3s ease,
+                    visibility 0.4s;
+                translate: 0 0;
+                transform: none;
+                opacity: 1;
+            }
+
+            .cart-panel.hidden {
+                translate: 100% 0;
+                opacity: 1;
+                visibility: hidden;
+                pointer-events: none;
+            }
+
+            @media (max-width: 480px) {
+                .cart-panel,
+                .cart-panel.hidden {
+                    top: 0;
+                    right: 0;
+                    width: 100vw;
+                    border-radius: 0;
+                }
+            }
+
+            .cart-panel .cart-panel-header {
+                padding: 1.1rem 1.25rem;
+                background: #fff;
+                color: var(--ink-950);
+                border-bottom: 1px solid var(--line);
+            }
+
+            .cart-head-title {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            .cart-head-icon {
+                display: grid;
+                place-items: center;
+                width: 42px;
+                height: 42px;
+                border-radius: 12px;
+                color: #fff;
+                background: var(--brand-gradient);
+                box-shadow: 0 8px 16px -8px rgb(37 99 235 / 0.7);
+            }
+
+            .cart-head-title h2 {
+                font-family: var(--font-display);
+                font-size: 1.15rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
+
+            .cart-head-title p {
+                font-size: 0.8rem;
+                color: var(--ink-500);
+            }
+
+            .cart-panel .panel-close-btn {
+                width: 38px;
+                height: 38px;
+                border-radius: 12px;
+                color: var(--ink-700);
+                background: var(--surface-2);
+                border: 1px solid var(--line);
+            }
+
+            .cart-panel .panel-close-btn:hover {
+                color: var(--ink-950);
+                background: #eef2f7;
+            }
+
+            .cart-panel .cart-items-list {
+                flex: 1;
+                max-height: none;
+                padding: 1rem;
+                display: grid;
+                align-content: start;
+                gap: 0.75rem;
+                overscroll-behavior: contain;
+            }
+
+            .cart-item-row,
+            .cart-panel .cart-item-row {
+                display: flex;
+                align-items: stretch;
+                gap: 0.85rem;
+                padding: 0.75rem;
+                border: 1px solid var(--line);
+                border-radius: 18px;
+                background: #fff;
+                box-shadow: var(--shadow-xs);
+                font-size: 0.875rem;
+                animation: cart-row-in 0.35s var(--ease-out);
+            }
+
+            @keyframes cart-row-in {
+                from {
+                    opacity: 0;
+                    translate: 12px 0;
+                }
+            }
+
+            .cart-item-thumb {
+                display: grid;
+                place-items: center;
+                flex: none;
+                width: 76px;
+                border-radius: 14px;
+                background: linear-gradient(160deg, #f8fbff, #eaf2ff);
+            }
+
+            .cart-item-thumb img {
+                width: 60px;
+                height: 60px;
+                object-fit: contain;
+            }
+
+            .cart-item-info {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                min-width: 0;
+            }
+
+            .cart-item-top {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 0.5rem;
+            }
+
+            .cart-item-name {
+                font-weight: 600;
+                color: var(--ink-950);
+                line-height: 1.3;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .cart-item-remove {
+                display: grid;
+                place-items: center;
+                flex: none;
+                width: 26px;
+                height: 26px;
+                border-radius: 8px;
+                font-size: 0.8rem;
+                color: var(--ink-500);
+                background: transparent;
+                transition:
+                    background-color 0.2s ease,
+                    color 0.2s ease;
+            }
+
+            .cart-item-remove:hover {
+                color: #dc2626;
+                background: #fef2f2;
+            }
+
+            .cart-item-meta {
+                margin-top: 0.15rem;
+                font-size: 0.75rem;
+                color: var(--ink-500);
+            }
+
+            .cart-item-bottom {
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                gap: 0.5rem;
+                margin-top: auto;
+                padding-top: 0.6rem;
+            }
+
+            .cart-panel .cart-item-qty-ctrl {
+                display: inline-flex;
+                align-items: center;
+                gap: 0;
+                margin: 0;
+                border: 1px solid var(--line-strong);
+                border-radius: 10px;
+                background: #fff;
+                overflow: hidden;
+            }
+
+            .cart-panel .cart-qty-btn {
+                width: 32px;
+                height: 32px;
+                border: 0;
+                border-radius: 0;
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--ink-700);
+                background: transparent;
+                transition: background-color 0.2s ease;
+            }
+
+            .cart-panel .cart-qty-btn:hover:not(:disabled) {
+                color: var(--brand);
+                background: var(--brand-tint);
+            }
+
+            .cart-panel .cart-qty-btn:disabled {
+                opacity: 0.35;
+                cursor: not-allowed;
+            }
+
+            .cart-qty-value {
+                min-width: 30px;
+                text-align: center;
+                font-weight: 700;
+                font-size: 0.875rem;
+                color: var(--ink-950);
+                font-variant-numeric: tabular-nums;
+            }
+
+            .cart-item-total {
+                display: grid;
+                justify-items: end;
+                line-height: 1.2;
+            }
+
+            .cart-item-total span {
+                font-size: 0.7rem;
+                color: var(--ink-500);
+            }
+
+            .cart-item-total strong {
+                font-family: var(--font-display);
+                font-size: 1rem;
+                color: var(--ink-950);
+                font-variant-numeric: tabular-nums;
+            }
+
+            /* Empty state */
+            .cart-panel .cart-empty-msg {
+                display: grid;
+                justify-items: center;
+                gap: 0.4rem;
+                margin: auto 0;
+                padding: 3rem 1.5rem;
+                text-align: center;
+            }
+
+            .cart-empty-icon {
+                display: grid;
+                place-items: center;
+                width: 72px;
+                height: 72px;
+                margin-bottom: 0.5rem;
+                border-radius: 22px;
+                font-size: 1.6rem;
+                color: var(--brand);
+                background: var(--brand-tint);
+            }
+
+            .cart-empty-title {
+                font-family: var(--font-display);
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: var(--ink-950);
+            }
+
+            .cart-empty-text {
+                max-width: 16rem;
+                font-size: 0.875rem;
+                color: var(--ink-500);
+            }
+
+            .cart-empty-btn {
+                margin-top: 0.75rem;
+                height: 44px;
+                padding: 0 1.25rem;
+                border-radius: 12px;
+                font-weight: 600;
+                color: #fff;
+                background: var(--brand-gradient);
+                box-shadow: 0 8px 18px -10px rgb(37 99 235 / 0.8);
+            }
+
+            /* Footer summary */
+            .cart-panel .cart-panel-footer {
+                padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom));
+                background: #fff;
+                border-top: 1px solid var(--line);
+                box-shadow: 0 -12px 30px -20px rgb(15 23 42 / 0.25);
+            }
+
+            .cart-summary {
+                display: grid;
+                gap: 0.4rem;
+                margin: 0 0 0.9rem;
+                font-size: 0.875rem;
+            }
+
+            .cart-summary > div {
+                display: flex;
+                justify-content: space-between;
+                gap: 1rem;
+            }
+
+            .cart-summary dt {
+                color: var(--ink-500);
+            }
+
+            .cart-summary dd {
+                margin: 0;
+                font-weight: 600;
+                color: var(--ink-900);
+            }
+
+            .cart-summary-muted {
+                font-weight: 500 !important;
+                color: var(--wa) !important;
+            }
+
+            .cart-summary-total {
+                margin-top: 0.35rem;
+                padding-top: 0.65rem;
+                border-top: 1px dashed var(--line-strong);
+            }
+
+            .cart-summary-total dt {
+                font-weight: 600;
+                color: var(--ink-950);
+            }
+
+            .cart-summary-total dd {
+                font-family: var(--font-display);
+                font-size: 1.35rem;
+                font-weight: 700;
+                color: var(--ink-950);
+                font-variant-numeric: tabular-nums;
+            }
+
+            .cart-panel .cart-action-btn {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 54px;
+                padding: 0 1.1rem;
+                border-radius: 14px;
+                font-size: 1rem;
+                font-weight: 600;
+                background: linear-gradient(135deg, #16a34a, #22c55e);
+                box-shadow: 0 12px 24px -12px rgb(22 163 74 / 0.8);
+            }
+
+            .cart-panel .cart-action-btn:hover {
+                background: linear-gradient(135deg, #15803d, #16a34a);
+            }
+
+            .cart-action-btn > span {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .cart-action-total {
+                padding: 0.3rem 0.65rem;
+                border-radius: 9px;
+                font-size: 0.9rem;
+                background: rgb(255 255 255 / 0.2);
+            }
+
+            .cart-footer-links {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 0.6rem;
+            }
+
+            .cart-link-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                padding: 0.4rem 0.25rem;
+                font-size: 0.825rem;
+                font-weight: 600;
+                color: var(--ink-600);
+                background: none;
+            }
+
+            .cart-link-btn:hover {
+                color: var(--brand);
+            }
+
+            .cart-link-danger:hover {
+                color: #dc2626;
+            }
+
+            .cart-secure-note {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.4rem;
+                margin-top: 0.5rem;
+                font-size: 0.75rem;
+                color: var(--ink-500);
+            }
+
+            .cart-secure-note i {
+                color: var(--wa);
+            }
+
+            /* ---------- Enquiry modal ---------- */
+            .enquiry-modal-box {
+                max-width: 540px;
+                border-radius: 24px;
+                background: var(--surface-2);
+                box-shadow: 0 40px 100px -20px rgb(15 23 42 / 0.45);
+            }
+
+            .enquiry-modal-box .enquiry-modal-header {
+                z-index: 2;
+                gap: 0.85rem;
+                justify-content: flex-start;
+                padding: 1.1rem 1.25rem;
+                border-radius: 24px 24px 0 0;
+                background: rgb(255 255 255 / 0.92);
+                border-bottom: 1px solid var(--line);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
+
+            .enquiry-header-icon {
+                display: grid;
+                place-items: center;
+                flex: none;
+                width: 44px;
+                height: 44px;
+                border-radius: 13px;
+                color: #fff;
+                background: var(--brand-gradient);
+                box-shadow: 0 8px 16px -8px rgb(37 99 235 / 0.7);
+            }
+
+            .enquiry-header-text {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .enquiry-modal-header #enquiryModalTitle {
+                font-family: var(--font-display);
+                font-size: 1.15rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                color: var(--ink-950);
+            }
+
+            .enquiry-modal-header #enquiryModalSubtitle {
+                margin-top: 0.1rem;
+                font-size: 0.8rem;
+                color: var(--ink-500);
+            }
+
+            .enquiry-modal-header .enquiry-close-btn {
+                width: 38px;
+                height: 38px;
+                border-radius: 12px;
+                color: var(--ink-700);
+                background: var(--surface-2);
+                border: 1px solid var(--line);
+            }
+
+            .enquiry-modal-header .enquiry-close-btn:hover {
+                transform: none;
+                color: var(--ink-950);
+                background: #eef2f7;
+            }
+
+            .enquiry-body {
+                padding: 1.25rem;
+            }
+
+            .order-summary,
+            .details-section,
+            .enquiry-product-preview {
+                margin-bottom: 1rem;
+                padding: 1.1rem;
+                border-radius: 18px;
+                background: #fff;
+                border: 1px solid var(--line);
+            }
+
+            .form-section-head {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+                margin-bottom: 0.9rem;
+            }
+
+            .form-section-head h3 {
+                font-family: var(--font-display);
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--ink-950);
+            }
+
+            .form-step {
+                display: grid;
+                place-items: center;
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                font-size: 0.75rem;
+                font-weight: 700;
+                color: var(--brand);
+                background: var(--brand-tint);
+            }
+
+            .form-section-aside {
+                margin-left: auto;
+                padding: 0.2rem 0.6rem;
+                border-radius: 999px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: var(--ink-600);
+                background: var(--surface-2);
+                border: 1px solid var(--line);
+            }
+
+            .summary-list {
+                display: grid;
+                gap: 0.25rem;
+                max-height: 240px;
+                margin: 0;
+                padding: 0;
+                overflow-y: auto;
+                list-style: none;
+            }
+
+            .summary-item {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .summary-item:last-child {
+                border-bottom: 0;
+            }
+
+            .summary-thumb {
+                display: grid;
+                place-items: center;
+                flex: none;
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                background: linear-gradient(160deg, #f8fbff, #eaf2ff);
+            }
+
+            .summary-thumb img {
+                width: 38px;
+                height: 38px;
+                object-fit: contain;
+            }
+
+            .summary-info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .summary-name {
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: var(--ink-950);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .summary-meta {
+                font-size: 0.75rem;
+                color: var(--ink-500);
+            }
+
+            .summary-price {
+                font-weight: 700;
+                font-size: 0.9rem;
+                color: var(--ink-950);
+                font-variant-numeric: tabular-nums;
+            }
+
+            .summary-total {
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                margin-top: 0.6rem;
+                padding: 0.8rem 0.9rem;
+                border-radius: 12px;
+                background: var(--brand-tint);
+            }
+
+            .summary-total span {
+                font-weight: 600;
+                color: var(--ink-700);
+            }
+
+            .summary-total strong {
+                font-family: var(--font-display);
+                font-size: 1.3rem;
+                color: var(--brand);
+                font-variant-numeric: tabular-nums;
+            }
+
+            .summary-note {
+                display: flex;
+                gap: 0.4rem;
+                margin-top: 0.6rem;
+                font-size: 0.75rem;
+                color: var(--ink-500);
+            }
+
+            .summary-note i {
+                margin-top: 0.15rem;
+                color: var(--brand-600);
+            }
+
+            /* Inputs */
+            .enquiry-body .enquiry-input,
+            .enquiry-body .enquiry-textarea {
+                width: 100%;
+                min-height: 46px;
+                padding: 0.7rem 0.9rem;
+                border: 1px solid var(--line-strong);
+                border-radius: 12px;
+                background: #fff;
+                font-size: 0.925rem;
+                color: var(--ink-950);
+                transition:
+                    border-color 0.2s ease,
+                    box-shadow 0.2s ease;
+            }
+
+            .enquiry-body .enquiry-input:hover,
+            .enquiry-body .enquiry-textarea:hover {
+                border-color: #94a3b8;
+            }
+
+            .enquiry-body .enquiry-input:focus,
+            .enquiry-body .enquiry-textarea:focus {
+                outline: none;
+                border-color: var(--brand-600);
+                box-shadow: 0 0 0 4px rgb(37 99 235 / 0.12);
+            }
+
+            .enquiry-body .enquiry-input[readonly] {
+                background: var(--brand-tint);
+                border-color: color-mix(in oklab, var(--brand-600) 30%, white);
+                color: var(--brand);
+            }
+
+            .enquiry-body .enquiry-field-wrap:has(.enquiry-error:not(.hidden)) .enquiry-input {
+                border-color: #ef4444;
+                background: #fef2f2;
+                box-shadow: 0 0 0 4px rgb(239 68 68 / 0.1);
+            }
+
+            .enquiry-body label {
+                font-size: 0.825rem;
+                color: var(--ink-700);
+            }
+
+            .enquiry-body .enquiry-product-preview {
+                gap: 1rem;
+            }
+
+            .enquiry-body .enquiry-product-preview img {
+                width: 72px;
+                height: 72px;
+                padding: 0.35rem;
+                border-radius: 14px;
+                background: linear-gradient(160deg, #f8fbff, #eaf2ff);
+            }
+
+            .enquiry-body .enquiry-qty-btn {
+                height: 38px;
+                padding: 0 1rem;
+                border: 1px solid var(--line-strong);
+                border-radius: 999px;
+                background: #fff;
+                color: var(--ink-700);
+            }
+
+            /* Sticky action area */
+            .enquiry-actions {
+                position: sticky;
+                bottom: -1.25rem;
+                z-index: 1;
+                margin: 0 -1.25rem -1.25rem;
+                padding: 1rem 1.25rem 1.25rem;
+                background: linear-gradient(180deg, rgb(248 250 252 / 0.85), var(--surface-2) 35%);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                border-top: 1px solid var(--line);
+            }
+
+            .enquiry-body .enquiry-submit-btn {
+                height: 54px;
+                margin-top: 0;
+                border-radius: 14px;
+                font-size: 1rem;
+                font-weight: 600;
+                background: linear-gradient(135deg, #16a34a, #22c55e);
+                box-shadow: 0 12px 24px -12px rgb(22 163 74 / 0.8);
+            }
+
+            .enquiry-body .enquiry-submit-btn:hover {
+                background: linear-gradient(135deg, #15803d, #16a34a);
+            }
+
+            .enquiry-body .enquiry-pdf-btn {
+                height: 46px;
+                margin-top: 0.6rem;
+                padding: 0;
+                border: 1px solid var(--line-strong);
+                border-radius: 14px;
+                font-weight: 600;
+                color: var(--ink-900);
+                background: #fff;
+            }
+
+            .enquiry-body .enquiry-pdf-btn:hover {
+                border-color: var(--brand-600);
+                color: var(--brand);
+                background: #fff;
+            }
+
+            .enquiry-body .enquiry-pdf-btn i {
+                color: #dc2626;
+            }
+
+            .enquiry-trust {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.4rem;
+                margin-top: 0.75rem;
+                text-align: center;
+                font-size: 0.75rem;
+                color: var(--ink-500);
+            }
+
+            .enquiry-trust i {
+                color: var(--wa);
+            }
+
+            @media (max-width: 480px) {
+                dialog.sc-modal:has(.enquiry-modal-box) {
+                    padding: 0;
+                    align-items: flex-end;
+                }
+
+                .enquiry-modal-box {
+                    max-height: 94dvh;
+                    border-radius: 24px 24px 0 0;
+                }
+            }
         </style>
         <script type="application/ld+json">
             {
@@ -5676,11 +6476,14 @@
             </div>
         </footer>
 
-        <aside class="cart-panel hidden" id="cartPanel" role="dialog" aria-label="Shopping cart">
+        <aside class="cart-panel hidden" id="cartPanel" role="dialog" aria-modal="true" aria-labelledby="cartPanelTitle">
             <div class="cart-panel-header">
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-                    <span class="font-bold text-base">Your Cart</span>
+                <div class="cart-head-title">
+                    <span class="cart-head-icon"><i class="fas fa-bag-shopping" aria-hidden="true"></i></span>
+                    <div>
+                        <h2 id="cartPanelTitle">Your cart</h2>
+                        <p id="cartHeaderCount">0 items</p>
+                    </div>
                 </div>
                 <button
                     type="button"
@@ -5693,17 +6496,33 @@
             </div>
             <div class="cart-items-list" id="cartItemsList"></div>
             <div class="cart-panel-footer" id="cartFooter" style="display: none">
-                <div class="flex justify-between items-center mb-3">
-                    <span class="font-semibold text-gray-700">Total:</span>
-                    <span class="font-bold text-lg text-gray-800" id="cartTotal">₹0</span>
-                </div>
+                <dl class="cart-summary">
+                    <div>
+                        <dt>Items</dt>
+                        <dd id="cartSummaryItems">0</dd>
+                    </div>
+                    <div>
+                        <dt>Delivery</dt>
+                        <dd class="cart-summary-muted">Confirmed on WhatsApp</dd>
+                    </div>
+                    <div class="cart-summary-total">
+                        <dt>Estimated total</dt>
+                        <dd id="cartTotal">&#8377;0</dd>
+                    </div>
+                </dl>
                 <button id="cartEnquiryBtn" class="cart-action-btn" data-action="open-cart-enquiry">Send Enquiry</button>
-                <button
-                    class="w-full mt-2 text-xs text-gray-400 hover:text-red-500 font-semibold py-1"
-                    data-action="clear-cart"
-                >
-                    <i class="fas fa-trash-can mr-1" aria-hidden="true"></i> Clear cart
-                </button>
+                <div class="cart-footer-links">
+                    <button type="button" class="cart-link-btn" data-action="browse-products">
+                        <i class="fas fa-arrow-left" aria-hidden="true"></i> Continue shopping
+                    </button>
+                    <button type="button" class="cart-link-btn cart-link-danger" data-action="clear-cart">
+                        <i class="fas fa-trash-can" aria-hidden="true"></i> Clear cart
+                    </button>
+                </div>
+                <p class="cart-secure-note">
+                    <i class="fas fa-shield-halved" aria-hidden="true"></i> No payment now. We confirm price &amp; delivery
+                    with you first.
+                </p>
             </div>
         </aside>
 
@@ -5765,7 +6584,8 @@
         <dialog id="enquiryModal" class="sc-modal" aria-labelledby="enquiryModalTitle">
             <div class="enquiry-modal-box" tabindex="-1">
                 <div class="enquiry-modal-header">
-                    <div>
+                    <span class="enquiry-header-icon" aria-hidden="true"><i class="fas fa-clipboard-list"></i></span>
+                    <div class="enquiry-header-text">
                         <h2 id="enquiryModalTitle" class="text-white text-xl font-bold">Enquiry Form</h2>
                         <p id="enquiryModalSubtitle" class="text-blue-100 text-xs mt-1">
                             Tell us about your requirements
@@ -6244,7 +7064,12 @@
 
                 if (keys.length === 0) {
                     renderedCartKeys = new Set();
-                    list.innerHTML = `<div class="cart-empty-msg"><i class="fas fa-shopping-cart text-3xl mb-2 block" aria-hidden="true"></i>Your cart is empty</div>`;
+                    list.innerHTML = `<div class="cart-empty-msg">
+                        <span class="cart-empty-icon"><i class="fas fa-bag-shopping" aria-hidden="true"></i></span>
+                        <p class="cart-empty-title">Your cart is empty</p>
+                        <p class="cart-empty-text">Add products and send us one enquiry for everything.</p>
+                        <button type="button" class="cart-empty-btn" data-action="browse-products">Browse products</button>
+                    </div>`;
                     footer.style.display = "none";
                     return;
                 }
@@ -6263,16 +7088,21 @@
                     const safeKey = escapeHtml(key);
 
                     itemsHTML += `<div class="cart-item-row">
-                        <img src="${escapeHtml(product.image)}" alt="" loading="lazy" decoding="async" style="width:40px;height:40px;object-fit:contain;border-radius:8px;background:#f8fafc;flex-shrink:0">
-                        <div class="flex-1 min-w-0">
-                            <p class="font-semibold text-gray-800 truncate" title="${name}">${name}</p>
-                            <p class="text-xs text-gray-500">${totalQty} ${unit} &bull; ${formatCurrency(lineTotal)}</p>
-                        </div>
-                        <div class="cart-item-qty-ctrl">
-                            <button class="cart-qty-btn" data-action="cart-qty" data-key="${safeKey}" data-delta="-1" aria-label="Decrease ${name}"${qty <= 1 ? " disabled" : ""}>−</button>
-                            <span class="text-xs font-bold" aria-live="polite">${qty}</span>
-                            <button class="cart-qty-btn" data-action="cart-qty" data-key="${safeKey}" data-delta="1" aria-label="Increase ${name}">+</button>
-                            <button class="cart-item-remove text-red-400 hover:text-red-600 ml-1" data-action="remove-from-cart" data-key="${safeKey}" aria-label="Remove ${name} from cart" style="background:none;border:none;cursor:pointer"><i class="fas fa-trash-can text-xs" aria-hidden="true"></i></button>
+                        <div class="cart-item-thumb"><img src="${escapeHtml(product.image)}" alt="" loading="lazy" decoding="async"></div>
+                        <div class="cart-item-info">
+                            <div class="cart-item-top">
+                                <p class="cart-item-name" title="${name}">${name}</p>
+                                <button type="button" class="cart-item-remove" data-action="remove-from-cart" data-key="${safeKey}" aria-label="Remove ${name} from cart"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+                            </div>
+                            <p class="cart-item-meta">${selectedQty} ${escapeHtml(unit)} pack &middot; ${formatCurrency(product.price)}/${escapeHtml(unit)}</p>
+                            <div class="cart-item-bottom">
+                                <div class="cart-item-qty-ctrl" role="group" aria-label="Packs of ${name}">
+                                    <button type="button" class="cart-qty-btn" data-action="cart-qty" data-key="${safeKey}" data-delta="-1" aria-label="Decrease ${name}"${qty <= 1 ? " disabled" : ""}>&minus;</button>
+                                    <span class="cart-qty-value" aria-live="polite">${qty}</span>
+                                    <button type="button" class="cart-qty-btn" data-action="cart-qty" data-key="${safeKey}" data-delta="1" aria-label="Increase ${name}">+</button>
+                                </div>
+                                <div class="cart-item-total"><span>${totalQty} ${escapeHtml(unit)}</span><strong>${formatCurrency(lineTotal)}</strong></div>
+                            </div>
                         </div>
                     </div>`;
                 });
@@ -6291,7 +7121,7 @@
 
                 const enquiryBtn = document.getElementById("cartEnquiryBtn");
                 if (enquiryBtn) {
-                    enquiryBtn.innerHTML = `<i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry &bull; ${formatCurrency(Math.round(grandTotal))}`;
+                    enquiryBtn.innerHTML = `<span><i class="fab fa-whatsapp" aria-hidden="true"></i> Send enquiry</span><span class="cart-action-total">${formatCurrency(Math.round(grandTotal))} <i class="fas fa-arrow-right" aria-hidden="true"></i></span>`;
                 }
             }
 
@@ -6493,39 +7323,53 @@
                         const unit = cartUnitLabel(product);
                         const lineTotal = product.price * qty;
                         grandTotal += lineTotal;
-                        return `<div class="flex items-center gap-3 py-2 border-b border-sky-100 last:border-0">
-                            <img src="${escapeHtml(product.image)}" alt="" loading="lazy" decoding="async" class="w-10 h-10 object-contain bg-white rounded-lg flex-shrink-0">
-                            <div class="flex-1 min-w-0">
-                                <p class="font-semibold text-gray-800 text-sm truncate">${escapeHtml(product.name)}</p>
-                                <p class="text-xs text-gray-500">${qty} ${unit} &times; ${formatCurrency(product.price)}/${unit}</p>
+                        return `<li class="summary-item">
+                            <div class="summary-thumb"><img src="${escapeHtml(product.image)}" alt="" loading="lazy" decoding="async"></div>
+                            <div class="summary-info">
+                                <p class="summary-name">${escapeHtml(product.name)}</p>
+                                <p class="summary-meta">${packs} &times; ${selectedQty} ${escapeHtml(unit)} pack &middot; ${formatCurrency(product.price)}/${escapeHtml(unit)}</p>
                             </div>
-                            <span class="font-bold text-sm text-gray-800">${formatCurrency(lineTotal)}</span>
-                        </div>`;
+                            <span class="summary-price">${formatCurrency(lineTotal)}</span>
+                        </li>`;
                     })
                     .join("");
 
                 const body = document.querySelector(".enquiry-body");
                 if (!body) return;
+                const totalItems = keys.reduce((s, k) => s + cart[k].qty, 0);
                 body.innerHTML = `
-          <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4 mb-5" aria-label="Order summary">
-              ${itemsHtml}
-              <div class="flex justify-between items-center pt-3 font-bold text-gray-800"><span>Grand Total</span><span class="text-blue-600">${formatCurrency(grandTotal)}</span></div>
+          <section class="order-summary" aria-labelledby="orderSummaryTitle">
+              <div class="form-section-head">
+                  <span class="form-step">1</span>
+                  <h3 id="orderSummaryTitle">Order summary</h3>
+                  <span class="form-section-aside">${totalItems} item${totalItems === 1 ? "" : "s"}</span>
+              </div>
+              <ul class="summary-list">${itemsHtml}</ul>
+              <div class="summary-total"><span>Estimated total</span><strong>${formatCurrency(grandTotal)}</strong></div>
+              <p class="summary-note"><i class="fas fa-circle-info" aria-hidden="true"></i> Final price and delivery are confirmed by our team on WhatsApp.</p>
+          </section>
+          <section class="details-section" aria-labelledby="yourDetailsTitle">
+              <div class="form-section-head">
+                  <span class="form-step">2</span>
+                  <h3 id="yourDetailsTitle">Your details</h3>
+              </div>
+              ${customerFieldsHtml("cart-enquiry")}
+              <div class="enquiry-field-wrap mb-4">
+                  <label class="block text-sm font-semibold text-gray-700 mb-1" for="cart-enquiry-details">Address &amp; requirements</label>
+                  <textarea id="cart-enquiry-details" class="enquiry-textarea" rows="3" maxlength="300" placeholder="Delivery address, any specific requirements..."></textarea>
+              </div>
+          </section>
+          <div class="enquiry-actions">
+              <button class="enquiry-submit-btn" data-action="submit-cart-enquiry">
+                  <i class="fab fa-whatsapp" aria-hidden="true"></i> Send enquiry via WhatsApp
+              </button>
+              <button type="button" class="enquiry-pdf-btn" data-action="download-cart-pdf">
+                  <i class="fas fa-file-pdf" aria-hidden="true"></i> Download PDF
+              </button>
+              <p class="enquiry-trust"><i class="fas fa-lock" aria-hidden="true"></i> Sent directly to <b>Swapnil Chemicals</b> on WhatsApp. No payment needed now.</p>
           </div>
-          ${customerFieldsHtml("cart-enquiry")}
-          <div class="enquiry-field-wrap mb-4">
-              <label class="block text-sm font-semibold text-gray-700 mb-1" for="cart-enquiry-details">Address &amp; Requirements</label>
-              <textarea id="cart-enquiry-details" class="enquiry-textarea" rows="2" maxlength="300" placeholder="Delivery address, any specific requirements..."></textarea>
-          </div>
-          <button class="enquiry-submit-btn" data-action="submit-cart-enquiry">
-              <i class="fab fa-whatsapp" aria-hidden="true"></i> Send Enquiry via WhatsApp
-          </button>
-          <button type="button" class="enquiry-pdf-btn" data-action="download-cart-pdf">
-              <i class="fas fa-file-pdf" aria-hidden="true"></i> Download Cart PDF
-          </button>
-          <p class="text-center text-xs text-gray-400 mt-3">Your enquiry will be sent directly to <b>Swapnil Chemicals</b> on WhatsApp</p>
       `;
                 initCustomerFields("cart-enquiry");
-                const totalItems = keys.reduce((s, k) => s + cart[k].qty, 0);
                 setEnquiryHeader(
                     "Cart Enquiry",
                     `${totalItems} item${totalItems === 1 ? "" : "s"} \u2022 ${formatCurrency(grandTotal)}`,
