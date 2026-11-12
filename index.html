@@ -1669,6 +1669,66 @@
                 z-index: 0;
             }
 
+            .hero-aurora {
+                position: absolute;
+                inset: 0;
+                z-index: 0;
+                overflow: hidden;
+                pointer-events: none;
+            }
+
+            .aurora-orb {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(70px);
+                opacity: 0.55;
+                mix-blend-mode: screen;
+                animation: aurora-drift 18s ease-in-out infinite alternate;
+            }
+
+            .orb-1 {
+                width: 460px;
+                height: 460px;
+                top: -120px;
+                left: -80px;
+                background: #a855f7;
+            }
+
+            .orb-2 {
+                width: 380px;
+                height: 380px;
+                top: 30%;
+                right: -100px;
+                background: #06b6d4;
+                animation-duration: 22s;
+                animation-delay: -6s;
+            }
+
+            .orb-3 {
+                width: 320px;
+                height: 320px;
+                bottom: -120px;
+                left: 35%;
+                background: #f97316;
+                opacity: 0.35;
+                animation-duration: 26s;
+                animation-delay: -12s;
+            }
+
+            @keyframes aurora-drift {
+                0% {
+                    transform: translate(0, 0) scale(1);
+                }
+
+                50% {
+                    transform: translate(60px, 40px) scale(1.15);
+                }
+
+                100% {
+                    transform: translate(-40px, 70px) scale(0.95);
+                }
+            }
+
             .hero-grid {
                 position: absolute;
                 inset: 0;
@@ -1679,6 +1739,49 @@
                 background-size: 56px 56px;
                 mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
                 -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+            }
+
+            .hero-bubbles {
+                position: absolute;
+                inset: 0;
+                z-index: 1;
+                overflow: hidden;
+                pointer-events: none;
+            }
+
+            .bubble {
+                position: absolute;
+                bottom: -60px;
+                left: var(--x);
+                width: var(--s);
+                height: var(--s);
+                border-radius: 50%;
+                background: radial-gradient(
+                    circle at 30% 30%,
+                    rgba(255, 255, 255, 0.85) 0 8%,
+                    rgba(255, 255, 255, 0.18) 22%,
+                    rgba(165, 243, 252, 0.08) 60%,
+                    rgba(255, 255, 255, 0.25) 100%
+                );
+                border: 1px solid rgba(255, 255, 255, 0.25);
+                animation: bubble-rise var(--dur) linear infinite;
+                animation-delay: var(--delay);
+            }
+
+            @keyframes bubble-rise {
+                0% {
+                    transform: translate(0, 0) scale(0.6);
+                    opacity: 0;
+                }
+
+                10% {
+                    opacity: 0.9;
+                }
+
+                100% {
+                    transform: translate(var(--drift), -105vh) scale(1.1);
+                    opacity: 0;
+                }
             }
 
             .hero-chip {
@@ -1761,6 +1864,115 @@
                 color: #67e8f9;
             }
 
+            .hero-scroll-cue {
+                position: absolute;
+                left: 50%;
+                bottom: 78px;
+                z-index: 10;
+                translate: -50% 0;
+            }
+
+            .hero-scroll-mouse {
+                display: block;
+                width: 26px;
+                height: 42px;
+                border: 2px solid rgba(255, 255, 255, 0.5);
+                border-radius: 14px;
+                position: relative;
+            }
+
+            .hero-scroll-mouse span {
+                position: absolute;
+                top: 7px;
+                left: 50%;
+                width: 4px;
+                height: 8px;
+                margin-left: -2px;
+                border-radius: 2px;
+                background: #fff;
+                animation: scroll-wheel 1.8s ease-in-out infinite;
+            }
+
+            @keyframes scroll-wheel {
+                0% {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+
+                100% {
+                    transform: translateY(14px);
+                    opacity: 0;
+                }
+            }
+
+            @media (max-height: 980px), (max-width: 640px) {
+                .hero-scroll-cue {
+                    display: none;
+                }
+            }
+
+            .hero-wave {
+                position: absolute;
+                left: 0;
+                bottom: -1px;
+                z-index: 5;
+                width: 100%;
+                height: 70px;
+                color: var(--page-bg);
+            }
+
+            /* ---------- Product marquee ---------- */
+            .product-marquee {
+                overflow: hidden;
+                padding: 14px 0 6px;
+                mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+                -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+            }
+
+            .product-marquee-track {
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                width: max-content;
+                animation: marquee 38s linear infinite;
+            }
+
+            .product-marquee:hover .product-marquee-track {
+                animation-play-state: paused;
+            }
+
+            .product-marquee span {
+                font-family: var(--font-display);
+                font-size: clamp(1.1rem, 0.9rem + 1vw, 1.6rem);
+                font-weight: 700;
+                letter-spacing: -0.01em;
+                white-space: nowrap;
+                background: linear-gradient(
+                    90deg,
+                    #4c1d95,
+                    var(--violet-bright) 25%,
+                    #2563eb 50%,
+                    #0891b2 75%,
+                    #4c1d95
+                );
+                background-size: 300% 100%;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                animation: gradient-pan 6s linear infinite;
+            }
+
+            .product-marquee i {
+                color: var(--brand-cta);
+                font-size: 0.9rem;
+            }
+
+            @keyframes marquee {
+                to {
+                    transform: translateX(calc(-50% - 1rem));
+                }
+            }
+
             /* ---------- Buttons ---------- */
             .btn-primary {
                 background: linear-gradient(135deg, var(--violet-bright), var(--indigo) 55%, #2563eb);
@@ -1802,6 +2014,30 @@
             .btn-shine:hover::after,
             .add-to-cart-btn:hover::after {
                 transform: translateX(120%);
+            }
+
+            .magnetic {
+                transform: translate(var(--tx, 0px), var(--ty, 0px));
+            }
+
+            .magnetic:hover:not(:active) {
+                transform: translate(var(--tx, 0px), calc(var(--ty, 0px) - 2px));
+            }
+
+            .ripple {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.45);
+                transform: scale(0);
+                animation: ripple-out 0.6s ease-out forwards;
+                pointer-events: none;
+            }
+
+            @keyframes ripple-out {
+                to {
+                    transform: scale(1);
+                    opacity: 0;
+                }
             }
 
             .add-to-cart-btn {
@@ -1929,6 +2165,25 @@
                 transition:
                     transform 0.12s ease-out,
                     box-shadow 0.45s var(--ease-standard);
+            }
+
+            .product-spotlight {
+                position: absolute;
+                inset: 0;
+                z-index: 2;
+                pointer-events: none;
+                border-radius: inherit;
+                background: radial-gradient(
+                    380px circle at var(--mx, 50%) var(--my, 50%),
+                    rgba(124, 58, 237, 0.12),
+                    transparent 45%
+                );
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            }
+
+            .product-card:hover .product-spotlight {
+                opacity: 1;
             }
 
             .product-image-container::after {
@@ -2447,7 +2702,41 @@
                 background: rgba(255, 255, 255, 0.9);
             }
 
-            /* Hero / footer animations pause while scrolled out of view (class set by JS). */
+            /* Aurora orbs: soft radial gradients instead of a 70px blur filter + blend mode re-rendered every frame. */
+            .aurora-orb {
+                filter: none;
+                mix-blend-mode: normal;
+                will-change: transform;
+                background: radial-gradient(circle, var(--orb-color) 0%, transparent 68%) !important;
+            }
+
+            .orb-1 {
+                --orb-color: rgba(168, 85, 247, 0.8);
+            }
+
+            .orb-2 {
+                --orb-color: rgba(6, 182, 212, 0.75);
+            }
+
+            .orb-3 {
+                --orb-color: rgba(249, 115, 22, 0.7);
+            }
+
+            .bubble {
+                will-change: transform, opacity;
+            }
+
+            /* Animated text gradients repaint every frame; keep them static where there are many. */
+            .product-marquee span,
+            .site-footer .footer-credentials {
+                animation: none;
+            }
+
+            .product-marquee-track {
+                will-change: transform;
+            }
+
+            /* Hero / marquee / footer animations pause while scrolled out of view (class set by JS). */
             .anim-paused,
             .anim-paused *,
             .anim-paused *::before,
@@ -2548,2190 +2837,6 @@
                     to {
                         scale: 1 1;
                     }
-                }
-            }
-
-            /* ================================================================
-               2026 professional theme. Final layer: overrides the earlier
-               layers above (later source order wins at equal specificity).
-               One brand palette, hairline borders, calm motion.
-               ================================================================ */
-            :root {
-                --bg: #f6f8fb;
-                --surface: #ffffff;
-                --surface-2: #f8fafc;
-                --line: #e5e9f0;
-                --line-strong: #d5dce6;
-                --ink-950: #0a1222;
-                --ink-900: #0f172a;
-                --ink-700: #334155;
-                --ink-600: #475569;
-                --ink-500: #64748b;
-                --brand: #1d4ed8;
-                --brand-600: #2563eb;
-                --brand-700: #1e40af;
-                --brand-tint: color-mix(in oklab, var(--brand-600) 8%, white);
-                --brand-sky: #0ea5e9;
-                --brand-gradient: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
-                --accent: #ea580c;
-                --accent-700: #c2410c;
-                --wa: #16a34a;
-                --wa-700: #15803d;
-                --radius-sm: 10px;
-                --radius: 14px;
-                --radius-lg: 20px;
-                --shadow-xs: 0 1px 2px rgb(15 23 42 / 0.06);
-                --shadow-sm: 0 1px 3px rgb(15 23 42 / 0.06), 0 1px 2px rgb(15 23 42 / 0.04);
-                --shadow-md: 0 8px 24px -8px rgb(15 23 42 / 0.14), 0 2px 6px rgb(15 23 42 / 0.05);
-                --shadow-lg: 0 24px 48px -16px rgb(15 23 42 / 0.22);
-                --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-                --font-display: "Sora", "Inter", system-ui, sans-serif;
-                --brand-accent: var(--brand-600);
-                --brand-accent-dark: var(--brand);
-                --brand-cta: var(--accent);
-                --brand-cta-dark: var(--accent-700);
-                --violet: var(--brand);
-                --violet-bright: var(--brand-600);
-                --indigo: var(--brand-700);
-                --violet-deep: var(--ink-950);
-                --glow-violet: var(--shadow-md);
-            }
-
-            html {
-                scrollbar-color: #94a3b8 transparent;
-            }
-
-            ::-webkit-scrollbar-track {
-                background: #eef2f7;
-            }
-
-            ::-webkit-scrollbar-thumb {
-                background: #94a3b8;
-            }
-
-            ::selection {
-                background: var(--brand-600);
-                color: #fff;
-            }
-
-            body {
-                background: var(--bg);
-                color: var(--ink-900);
-                font-feature-settings: "cv11", "ss01";
-                -webkit-font-smoothing: antialiased;
-                text-rendering: optimizeLegibility;
-            }
-
-            body::before {
-                content: none;
-            }
-
-            p {
-                text-wrap: pretty;
-            }
-
-            :is(button, a, input, textarea, select, summary):focus-visible {
-                outline: 2px solid var(--brand-600);
-                outline-offset: 3px;
-                border-radius: 6px;
-            }
-
-            /* Neutralise the decorative effects of the earlier layers. */
-            .feature-card::before,
-            .glass-card::before,
-            .product-card::before,
-            .product-image-container::after,
-            .btn-shine::after,
-            .add-to-cart-btn::after {
-                content: none;
-                display: none;
-            }
-
-            /* ---------- Buttons ---------- */
-            .btn {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.6rem;
-                min-height: 48px;
-                padding: 0.8rem 1.4rem;
-                border-radius: var(--radius-sm);
-                font-weight: 600;
-                font-size: 0.975rem;
-                line-height: 1.2;
-                text-decoration: none;
-                border: 1px solid transparent;
-                transition:
-                    background-color 0.2s ease,
-                    border-color 0.2s ease,
-                    color 0.2s ease,
-                    box-shadow 0.2s ease,
-                    transform 0.2s var(--ease-out);
-            }
-
-            .btn:hover {
-                transform: translateY(-1px);
-            }
-
-            .btn:active {
-                transform: translateY(0) scale(0.98);
-            }
-
-            .btn.btn-primary {
-                background: linear-gradient(135deg, var(--brand-600), var(--brand-sky) 140%);
-                color: #fff;
-                box-shadow:
-                    inset 0 1px 0 rgb(255 255 255 / 0.25),
-                    0 8px 20px -8px rgb(37 99 235 / 0.6);
-            }
-
-            .btn.btn-primary:hover {
-                background: linear-gradient(135deg, var(--brand), var(--brand-600) 140%);
-                box-shadow:
-                    inset 0 1px 0 rgb(255 255 255 / 0.25),
-                    0 12px 26px -8px rgb(37 99 235 / 0.65);
-            }
-
-            .btn-outline {
-                color: var(--ink-900);
-                background: rgb(255 255 255 / 0.7);
-                border-color: var(--line-strong);
-                box-shadow: var(--shadow-xs);
-            }
-
-            .btn-outline:hover {
-                background: #fff;
-                border-color: var(--brand-600);
-                color: var(--brand);
-            }
-
-            .btn-white {
-                background: #fff;
-                color: var(--brand);
-                box-shadow: 0 8px 20px -10px rgb(15 23 42 / 0.4);
-            }
-
-            .btn-white:hover {
-                background: #f8fafc;
-            }
-
-            .btn-wa {
-                background: var(--wa);
-                color: #fff;
-            }
-
-            .btn-wa:hover {
-                background: var(--wa-700);
-            }
-
-            /* ---------- Header ---------- */
-            .site-header.nav-blur {
-                background: rgb(255 255 255 / 0.86);
-                border-bottom: 1px solid var(--line);
-                box-shadow: none;
-            }
-
-            @supports (backdrop-filter: blur(1px)) {
-                .site-header.nav-blur {
-                    backdrop-filter: saturate(160%) blur(14px);
-                    -webkit-backdrop-filter: saturate(160%) blur(14px);
-                }
-            }
-
-            .site-header.nav-blur.scrolled {
-                background: rgb(255 255 255 / 0.94);
-                box-shadow: 0 6px 20px -12px rgb(15 23 42 / 0.25);
-            }
-
-            .site-header .header-bar,
-            .site-header.scrolled .header-bar {
-                display: flex;
-                align-items: center;
-                gap: 1.5rem;
-                min-height: 72px;
-                padding-top: 0.6rem;
-                padding-bottom: 0.6rem;
-            }
-
-            .brand {
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                min-width: 0;
-                margin-right: auto;
-                text-decoration: none;
-            }
-
-            .brand-logo {
-                width: 44px;
-                height: 44px;
-                flex: none;
-                border-radius: 12px;
-                object-fit: cover;
-                box-shadow: 0 0 0 1px var(--line);
-            }
-
-            .brand-text {
-                display: flex;
-                flex-direction: column;
-                min-width: 0;
-            }
-
-            .brand-name {
-                font-family: var(--font-display);
-                font-weight: 700;
-                font-size: 1.15rem;
-                letter-spacing: -0.02em;
-                color: var(--ink-950);
-                line-height: 1.2;
-            }
-
-            .brand-tagline {
-                font-size: 0.75rem;
-                color: var(--ink-500);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .header-actions {
-                display: flex;
-                align-items: center;
-                gap: 0.6rem;
-            }
-
-            .nav-call-btn {
-                display: inline-flex;
-                align-items: center;
-                gap: 0.5rem;
-                height: 42px;
-                padding: 0 1rem;
-                border-radius: var(--radius-sm);
-                background: var(--brand-gradient);
-                color: #fff;
-                font-weight: 600;
-                font-size: 0.875rem;
-                white-space: nowrap;
-                box-shadow: 0 6px 16px -8px rgb(37 99 235 / 0.7);
-                transition:
-                    filter 0.2s ease,
-                    box-shadow 0.2s ease;
-            }
-
-            .nav-call-btn:hover {
-                filter: brightness(1.06);
-                box-shadow: 0 10px 22px -8px rgb(37 99 235 / 0.75);
-            }
-
-            .nav-call-btn i {
-                font-size: 0.8rem;
-            }
-
-            .cart-icon-btn {
-                width: 42px;
-                height: 42px;
-                border-radius: var(--radius-sm);
-                background: var(--surface);
-                color: var(--ink-900);
-                border: 1px solid var(--line-strong);
-                box-shadow: none;
-            }
-
-            .cart-icon-btn:hover {
-                background: var(--surface-2);
-                border-color: var(--ink-500);
-                transform: none;
-                box-shadow: none;
-            }
-
-            .cart-badge {
-                top: -6px;
-                right: -6px;
-                background: var(--accent);
-                box-shadow: 0 0 0 2px #fff;
-            }
-
-            .nav-toggle {
-                display: none;
-                width: 42px;
-                height: 42px;
-                align-items: center;
-                justify-content: center;
-                border-radius: var(--radius-sm);
-                border: 1px solid var(--line-strong);
-                background: var(--surface);
-                color: var(--ink-900);
-            }
-
-            /* Primary nav: inline on desktop; a native popover (no JS) on small screens. */
-            .primary-nav-list {
-                list-style: none;
-                margin: 0;
-                padding: 0;
-            }
-
-            .nav-link {
-                position: relative;
-                display: inline-block;
-                padding: 0.5rem 0.25rem;
-                font-weight: 500;
-                font-size: 0.925rem;
-                color: var(--ink-600);
-                transition: color 0.2s ease;
-            }
-
-            .nav-link::after {
-                content: "";
-                position: absolute;
-                left: 0.25rem;
-                right: 0.25rem;
-                bottom: 0.1rem;
-                height: 2px;
-                border-radius: 2px;
-                background: var(--brand-600);
-                scale: 0 1;
-                transition: scale 0.25s var(--ease-out);
-            }
-
-            .nav-link:hover,
-            .nav-link[aria-current="true"] {
-                color: var(--ink-950);
-            }
-
-            .nav-link:hover::after,
-            .nav-link[aria-current="true"]::after {
-                scale: 1 1;
-            }
-
-            @media (min-width: 1024px) {
-                #primaryNav {
-                    position: static;
-                    inset: auto;
-                    display: flex;
-                    gap: 1.75rem;
-                    width: auto;
-                    height: auto;
-                    margin: 0;
-                    padding: 0;
-                    border: 0;
-                    background: none;
-                    overflow: visible;
-                    color: inherit;
-                }
-
-                .nav-mobile-call {
-                    display: none;
-                }
-            }
-
-            @media (max-width: 1023.98px) {
-                .nav-toggle {
-                    display: inline-flex;
-                }
-
-                #primaryNav {
-                    position: fixed;
-                    inset: calc(var(--header-h, 72px) + 8px) 12px auto auto;
-                    width: min(280px, calc(100vw - 24px));
-                    margin: 0;
-                    padding: 0.5rem;
-                    border: 1px solid var(--line);
-                    border-radius: var(--radius);
-                    background: var(--surface);
-                    box-shadow: var(--shadow-lg);
-                    opacity: 1;
-                    translate: 0 0;
-                    transition:
-                        opacity 0.2s ease,
-                        translate 0.2s var(--ease-out),
-                        display 0.2s allow-discrete,
-                        overlay 0.2s allow-discrete;
-                }
-
-                #primaryNav:not(:popover-open) {
-                    opacity: 0;
-                    translate: 0 -8px;
-                }
-
-                @starting-style {
-                    #primaryNav:popover-open {
-                        opacity: 0;
-                        translate: 0 -8px;
-                    }
-                }
-
-                #primaryNav .nav-link {
-                    display: block;
-                    padding: 0.75rem 0.9rem;
-                    border-radius: var(--radius-sm);
-                    color: var(--ink-900);
-                }
-
-                #primaryNav .nav-link:hover {
-                    background: var(--surface-2);
-                }
-
-                #primaryNav .nav-link::after {
-                    content: none;
-                }
-
-                .nav-mobile-call {
-                    padding: 0.4rem 0.4rem 0.2rem;
-                }
-
-                .nav-mobile-call .nav-call-btn {
-                    width: 100%;
-                    justify-content: center;
-                }
-            }
-
-            @media (max-width: 640px) {
-                .header-call {
-                    display: none;
-                }
-
-                .brand-tagline {
-                    display: none;
-                }
-            }
-
-            .scroll-progress {
-                height: 2px;
-                background: var(--brand-600);
-                box-shadow: none;
-            }
-
-            /* ---------- Hero ---------- */
-            .hero-gradient.hero {
-                min-height: auto;
-                display: block;
-                color: var(--ink-950);
-                background:
-                    radial-gradient(1000px 520px at 85% -10%, rgb(14 165 233 / 0.16), transparent 60%),
-                    radial-gradient(800px 480px at -5% 0%, rgb(37 99 235 / 0.12), transparent 60%),
-                    radial-gradient(700px 400px at 60% 110%, rgb(251 146 60 / 0.1), transparent 60%),
-                    linear-gradient(180deg, #f8fbff 0%, #f1f6fe 100%);
-                border-bottom: 1px solid var(--line);
-            }
-
-            .hero-gradient.hero::before {
-                content: none;
-            }
-
-            .hero .hero-grid {
-                position: absolute;
-                inset: 0;
-                pointer-events: none;
-                background-image: radial-gradient(rgb(15 23 42 / 0.09) 1px, transparent 1px);
-                background-size: 22px 22px;
-                mask-image: radial-gradient(ellipse 70% 65% at 50% 35%, #000 15%, transparent 75%);
-                -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 35%, #000 15%, transparent 75%);
-            }
-
-            /* Soft drifting colour orbs (compositor-only transforms, paused off-screen by JS). */
-            .hero-orbs {
-                position: absolute;
-                inset: 0;
-                overflow: hidden;
-                pointer-events: none;
-            }
-
-            .hero-orbs span {
-                position: absolute;
-                border-radius: 50%;
-                opacity: 0.55;
-                will-change: transform;
-                animation: orb-drift 22s ease-in-out infinite alternate;
-            }
-
-            .hero-orbs span:nth-child(1) {
-                width: 420px;
-                height: 420px;
-                top: -140px;
-                right: 8%;
-                background: radial-gradient(circle, rgb(56 189 248 / 0.45), transparent 68%);
-            }
-
-            .hero-orbs span:nth-child(2) {
-                width: 360px;
-                height: 360px;
-                bottom: -160px;
-                left: -60px;
-                background: radial-gradient(circle, rgb(99 102 241 / 0.3), transparent 68%);
-                animation-duration: 26s;
-                animation-delay: -8s;
-            }
-
-            .hero-orbs span:nth-child(3) {
-                width: 280px;
-                height: 280px;
-                bottom: -80px;
-                right: 35%;
-                background: radial-gradient(circle, rgb(251 146 60 / 0.28), transparent 68%);
-                animation-duration: 30s;
-                animation-delay: -14s;
-            }
-
-            @keyframes orb-drift {
-                to {
-                    transform: translate(40px, 30px) scale(1.12);
-                }
-            }
-
-            .hero-inner {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 2.5rem;
-                align-items: center;
-                padding-block: clamp(3.5rem, 2rem + 6vw, 7rem);
-            }
-
-            @media (min-width: 1024px) {
-                .hero-inner {
-                    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr);
-                    gap: 4rem;
-                }
-            }
-
-            .hero .hero-chip {
-                gap: 0.6rem;
-                padding: 0.4rem 0.9rem 0.4rem 0.7rem;
-                font-size: 0.8rem;
-                font-weight: 600;
-                color: var(--ink-700);
-                background: rgb(255 255 255 / 0.8);
-                border: 1px solid var(--line);
-                box-shadow: var(--shadow-xs);
-            }
-
-            .hero .hero-chip-dot {
-                width: 7px;
-                height: 7px;
-                background: #22c55e;
-                box-shadow: 0 0 0 3px rgb(34 197 94 / 0.18);
-            }
-
-            .hero .hero-chip-dot::after {
-                content: none;
-            }
-
-            .hero-title {
-                margin: 1.4rem 0 1.25rem;
-                font-family: var(--font-display);
-                font-weight: 700;
-                font-size: clamp(2.35rem, 1.3rem + 4vw, 4.25rem);
-                line-height: 1.04;
-                letter-spacing: -0.04em;
-                color: var(--ink-950);
-            }
-
-            .hero .hero-shine-text {
-                display: inline;
-                background: linear-gradient(100deg, #1d4ed8 0%, #2563eb 35%, #0ea5e9 75%, #06b6d4 100%);
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
-            }
-
-            .hero .hero-lead {
-                max-width: 38rem;
-                margin: 0;
-                font-size: clamp(1rem, 0.95rem + 0.35vw, 1.175rem);
-                line-height: 1.7;
-                color: var(--ink-600);
-            }
-
-            .hero-actions {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.75rem;
-                margin-top: 2rem;
-            }
-
-            .hero .hero-trust {
-                justify-content: flex-start;
-                gap: 0.5rem 1.5rem;
-                margin-top: 2rem;
-            }
-
-            .hero .hero-trust li {
-                padding: 0;
-                background: none;
-                border: 0;
-                border-radius: 0;
-                font-size: 0.875rem;
-                font-weight: 500;
-                color: var(--ink-700);
-            }
-
-            .hero .hero-trust li:hover {
-                transform: none;
-                background: none;
-            }
-
-            .hero .hero-trust i {
-                color: #16a34a;
-            }
-
-            /* Frosted glass card on the light hero. */
-            .hero-panel {
-                position: relative;
-                padding: 1.75rem;
-                border-radius: 24px;
-                background: rgb(255 255 255 / 0.72);
-                border: 1px solid rgb(255 255 255 / 0.9);
-                box-shadow:
-                    0 0 0 1px rgb(15 23 42 / 0.04),
-                    0 30px 60px -28px rgb(30 64 175 / 0.35);
-            }
-
-            @supports (backdrop-filter: blur(1px)) {
-                .hero-panel {
-                    backdrop-filter: blur(18px) saturate(160%);
-                    -webkit-backdrop-filter: blur(18px) saturate(160%);
-                }
-            }
-
-            .hero-panel-eyebrow {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                font-size: 0.72rem;
-                font-weight: 700;
-                letter-spacing: 0.14em;
-                text-transform: uppercase;
-                color: var(--brand);
-            }
-
-            .hero-panel-eyebrow::before {
-                content: "";
-                width: 18px;
-                height: 2px;
-                border-radius: 2px;
-                background: var(--brand-gradient);
-            }
-
-            .hero-facts {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 0.6rem;
-                margin: 1rem 0 1.25rem;
-            }
-
-            .hero-facts > div {
-                padding: 0.85rem 1rem;
-                border-radius: var(--radius);
-                background: #fff;
-                border: 1px solid var(--line);
-            }
-
-            .hero-facts dt {
-                font-size: 0.75rem;
-                color: var(--ink-500);
-            }
-
-            .hero-facts dd {
-                margin: 0.15rem 0 0;
-                font-weight: 600;
-                color: var(--ink-950);
-            }
-
-            .hero-panel-label {
-                font-size: 0.8rem;
-                font-weight: 500;
-                color: var(--ink-500);
-                margin-bottom: 0.5rem;
-            }
-
-            .hero-panel-phones {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 0.5rem;
-            }
-
-            .hero-panel-phones a,
-            .hero-panel-wa {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.5rem;
-                min-height: 44px;
-                padding: 0.6rem 0.75rem;
-                border-radius: var(--radius-sm);
-                font-weight: 600;
-                font-size: 0.9rem;
-                white-space: nowrap;
-                transition: background-color 0.2s ease;
-            }
-
-            .hero-panel-phones a {
-                background: #fff;
-                border: 1px solid var(--line-strong);
-                color: var(--ink-900);
-            }
-
-            .hero-panel-phones a:hover {
-                border-color: var(--brand-600);
-                color: var(--brand);
-            }
-
-            .hero-panel-phones i {
-                font-size: 0.75rem;
-                color: var(--brand-600);
-            }
-
-            .hero-panel-wa {
-                margin-top: 0.5rem;
-                background: var(--wa);
-                color: #fff;
-            }
-
-            .hero-panel-wa:hover {
-                background: var(--wa-700);
-            }
-
-            @media (max-width: 380px) {
-                .hero-panel-phones {
-                    grid-template-columns: 1fr;
-                }
-            }
-
-            /* ---------- Highlights strip ---------- */
-            /* Highlight cards float over the hero's bottom edge. */
-            .highlights {
-                position: relative;
-                z-index: 11;
-                margin-top: -2.5rem;
-            }
-
-            .highlights-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
-                gap: 1rem;
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
-
-            .highlights-grid li {
-                display: flex;
-                align-items: center;
-                gap: 0.9rem;
-                padding: 1.15rem 1.25rem;
-                border-radius: var(--radius-lg);
-                background: #fff;
-                border: 1px solid var(--line);
-                box-shadow: var(--shadow-md);
-                transition:
-                    transform 0.3s var(--ease-out),
-                    box-shadow 0.3s var(--ease-out);
-            }
-
-            .highlights-grid li:hover {
-                transform: translateY(-3px);
-                box-shadow: var(--shadow-lg);
-            }
-
-            .highlight-icon {
-                display: grid;
-                place-items: center;
-                flex: none;
-                width: 44px;
-                height: 44px;
-                border-radius: 12px;
-                background: var(--brand-gradient);
-                color: #fff;
-                box-shadow: 0 8px 16px -8px rgb(37 99 235 / 0.7);
-            }
-
-            .highlights-grid li:last-child .highlight-icon {
-                background: linear-gradient(135deg, #16a34a, #22c55e);
-                box-shadow: 0 8px 16px -8px rgb(22 163 74 / 0.7);
-            }
-
-            .highlights-grid strong {
-                display: block;
-                font-size: 0.95rem;
-                color: var(--ink-950);
-            }
-
-            .highlights-grid span:not(.highlight-icon) {
-                display: block;
-                font-size: 0.825rem;
-                color: var(--ink-500);
-            }
-
-            /* ---------- Sections ---------- */
-            .section {
-                padding-block: clamp(4rem, 3rem + 4vw, 6.5rem);
-            }
-
-            .section-alt {
-                background: var(--surface);
-                border-block: 1px solid var(--line);
-            }
-
-            .section-head {
-                max-width: 44rem;
-                margin: 0 auto 3rem;
-                text-align: center;
-            }
-
-            .section-eyebrow {
-                gap: 0;
-                margin-bottom: 0.75rem;
-                padding: 0;
-                border: 0;
-                background: none;
-                font-size: 0.75rem;
-                font-weight: 600;
-                letter-spacing: 0.14em;
-                color: var(--brand);
-            }
-
-            .section-eyebrow::before {
-                content: none;
-            }
-
-            .section-title {
-                font-family: var(--font-display);
-                font-weight: 700;
-                font-size: clamp(1.85rem, 1.4rem + 1.8vw, 2.6rem);
-                line-height: 1.15;
-                letter-spacing: -0.03em;
-                color: var(--ink-950);
-            }
-
-            .section-sub {
-                margin-top: 0.9rem;
-                font-size: 1.05rem;
-                line-height: 1.65;
-                color: var(--ink-600);
-            }
-
-            /* ---------- Products ---------- */
-            .product-toolbar {
-                max-width: 36rem;
-                margin: 0 auto 2.5rem;
-            }
-
-            .search-field {
-                position: relative;
-            }
-
-            .search-icon {
-                position: absolute;
-                left: 1rem;
-                top: 50%;
-                translate: 0 -50%;
-                color: var(--ink-500);
-                pointer-events: none;
-            }
-
-            #productSearch.search-input {
-                width: 100%;
-                height: 52px;
-                padding: 0 3.25rem 0 2.75rem;
-                border: 1px solid var(--line-strong);
-                border-radius: 999px;
-                background: var(--surface);
-                font-size: 0.95rem;
-                color: var(--ink-900);
-                box-shadow: var(--shadow-xs);
-                transition:
-                    border-color 0.2s ease,
-                    box-shadow 0.2s ease;
-            }
-
-            #productSearch.search-input:focus {
-                outline: none;
-                border-color: var(--brand-600);
-                box-shadow: 0 0 0 4px rgb(37 99 235 / 0.14);
-            }
-
-            .search-field .voice-btn {
-                right: 8px;
-            }
-
-            .products-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
-                gap: 1.5rem;
-            }
-
-            .product-card {
-                display: flex;
-                flex-direction: column;
-                container-type: inline-size;
-                border-radius: var(--radius-lg);
-                background: var(--surface);
-                border: 1px solid var(--line);
-                box-shadow: var(--shadow-sm);
-                transition:
-                    transform 0.3s var(--ease-out),
-                    box-shadow 0.3s var(--ease-out),
-                    border-color 0.3s ease;
-            }
-
-            .product-card:hover,
-            .product-card.is-tilting {
-                transform: translateY(-4px);
-                border-color: var(--line-strong);
-                box-shadow: var(--shadow-md);
-            }
-
-            .product-card .product-image-container {
-                height: 220px;
-                background: linear-gradient(180deg, #f8fafc, #f1f5f9);
-                border-bottom: 1px solid var(--line);
-            }
-
-            .product-card .product-image {
-                background: transparent;
-                padding: 1.25rem;
-                transition:
-                    transform 0.5s var(--ease-out),
-                    opacity 0.3s ease;
-            }
-
-            .product-card:hover .product-image {
-                transform: scale(1.04);
-            }
-
-            .product-body {
-                display: flex;
-                flex-direction: column;
-                flex: 1;
-                padding: 1.25rem;
-            }
-
-            .product-title {
-                font-family: var(--font-display);
-                font-size: 1.1rem;
-                font-weight: 600;
-                letter-spacing: -0.015em;
-                color: var(--ink-950);
-            }
-
-            .product-desc {
-                margin-top: 0.35rem;
-                font-size: 0.9rem;
-                line-height: 1.55;
-                color: var(--ink-600);
-            }
-
-            .product-price {
-                margin-top: 0.9rem;
-                font-family: var(--font-display);
-                font-size: 1.4rem;
-                font-weight: 700;
-                letter-spacing: -0.02em;
-                color: var(--ink-950);
-            }
-
-            .product-price span {
-                margin-left: 0.15rem;
-                font-family: "Inter", sans-serif;
-                font-size: 0.85rem;
-                font-weight: 500;
-                letter-spacing: 0;
-                color: var(--ink-500);
-            }
-
-            .product-card .qty-section {
-                margin-top: 0.9rem;
-            }
-
-            .product-card .qty-section p {
-                font-size: 0.75rem;
-                font-weight: 600;
-                color: var(--ink-500);
-                margin-bottom: 0.5rem;
-            }
-
-            .qty-btn {
-                border: 1px solid var(--line-strong);
-                padding: 0.35rem 0.8rem;
-                font-size: 0.8rem;
-                font-weight: 600;
-                color: var(--ink-700);
-                background: var(--surface);
-            }
-
-            .qty-btn:hover {
-                border-color: var(--brand-600);
-                color: var(--brand);
-            }
-
-            .qty-btn.active,
-            .enquiry-qty-btn.active,
-            .qty-btn.active:hover,
-            .enquiry-qty-btn.active:hover {
-                background: var(--brand-tint);
-                border-color: var(--brand-600);
-                color: var(--brand);
-                box-shadow: 0 0 0 1px var(--brand-600) inset;
-            }
-
-            .product-actions {
-                display: grid;
-                grid-template-columns: 1fr auto auto;
-                gap: 0.5rem;
-                margin-top: auto;
-                padding-top: 1.1rem;
-            }
-
-            .product-card .add-to-cart-btn,
-            .product-card .enquiry-trigger-btn,
-            .card-call-btn {
-                height: 42px;
-                margin: 0;
-                border-radius: var(--radius-sm);
-                font-size: 0.85rem;
-                font-weight: 600;
-                box-shadow: none;
-                transition:
-                    background-color 0.2s ease,
-                    border-color 0.2s ease,
-                    color 0.2s ease;
-            }
-
-            .product-card .add-to-cart-btn {
-                width: auto;
-                padding: 0 0.9rem;
-                background: var(--brand-600);
-                color: #fff;
-            }
-
-            .product-card .add-to-cart-btn:hover {
-                background: var(--brand);
-                transform: none;
-                box-shadow: none;
-            }
-
-            .product-card .enquiry-trigger-btn {
-                padding: 0 0.85rem;
-                background: var(--surface);
-                color: var(--ink-900);
-                border: 1px solid var(--line-strong);
-            }
-
-            .product-card .enquiry-trigger-btn:hover {
-                background: var(--surface-2);
-                border-color: var(--ink-500);
-                transform: none;
-                box-shadow: none;
-            }
-
-            .card-call-btn {
-                display: grid;
-                place-items: center;
-                width: 42px;
-                color: var(--ink-700);
-                border: 1px solid var(--line-strong);
-                background: var(--surface);
-            }
-
-            .card-call-btn:hover {
-                color: var(--brand);
-                border-color: var(--brand-600);
-            }
-
-            /* Narrow cards: stack the primary action on its own row. */
-            @container (max-width: 300px) {
-                .product-actions {
-                    grid-template-columns: 1fr auto;
-                }
-
-                .product-card .add-to-cart-btn {
-                    grid-column: 1 / -1;
-                }
-
-                .product-card .enquiry-trigger-btn {
-                    justify-content: center;
-                }
-            }
-
-            /* ---------- Company profile ---------- */
-            .profile-layout {
-                display: grid;
-                gap: 1.5rem;
-                max-width: 72rem;
-                margin-inline: auto;
-            }
-
-            @media (min-width: 1024px) {
-                .profile-layout {
-                    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
-                    align-items: stretch;
-                }
-            }
-
-            .feature-card,
-            .feature-card:hover {
-                transform: none;
-            }
-
-            .profile-card,
-            .reg-card {
-                border-radius: var(--radius-lg);
-                background: var(--surface);
-                border: 1px solid var(--line);
-                box-shadow: var(--shadow-sm);
-                transition:
-                    border-color 0.25s ease,
-                    box-shadow 0.25s ease;
-            }
-
-            .profile-card:hover,
-            .reg-card:hover {
-                border-color: var(--line-strong);
-                box-shadow: var(--shadow-md);
-            }
-
-            .profile-card {
-                padding: 1.75rem;
-                background: linear-gradient(180deg, var(--surface-2), var(--surface) 40%);
-            }
-
-            .profile-head {
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-                padding-bottom: 1.25rem;
-                border-bottom: 1px solid var(--line);
-            }
-
-            .profile-avatar {
-                display: grid;
-                place-items: center;
-                width: 52px;
-                height: 52px;
-                border-radius: 14px;
-                background: var(--brand-gradient);
-                color: #fff;
-                font-size: 1.25rem;
-                box-shadow: 0 10px 20px -10px rgb(37 99 235 / 0.7);
-            }
-
-            .profile-label {
-                font-size: 0.75rem;
-                font-weight: 600;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                color: var(--ink-500);
-            }
-
-            .profile-name {
-                font-family: var(--font-display);
-                font-size: 1.35rem;
-                font-weight: 700;
-                letter-spacing: -0.02em;
-                color: var(--ink-950);
-            }
-
-            .profile-list {
-                display: grid;
-                margin: 0;
-            }
-
-            .profile-list > div {
-                display: grid;
-                grid-template-columns: 130px 1fr;
-                gap: 1rem;
-                padding: 0.85rem 0;
-                border-bottom: 1px dashed var(--line);
-            }
-
-            .profile-list > div:last-child {
-                border-bottom: 0;
-                padding-bottom: 0;
-            }
-
-            .profile-list dt {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                font-size: 0.875rem;
-                color: var(--ink-500);
-            }
-
-            .profile-list dt i {
-                width: 14px;
-                color: var(--ink-500);
-            }
-
-            .profile-list dd {
-                margin: 0;
-                font-weight: 500;
-                color: var(--ink-900);
-                min-width: 0;
-            }
-
-            .profile-list a,
-            .contact-card a,
-            #faq .faq-item a {
-                color: var(--brand);
-                text-decoration: underline;
-                text-decoration-color: color-mix(in oklab, var(--brand) 30%, transparent);
-                text-underline-offset: 3px;
-            }
-
-            .profile-list a:hover,
-            .contact-card a:hover,
-            #faq .faq-item a:hover {
-                text-decoration-color: currentColor;
-            }
-
-            @media (max-width: 420px) {
-                .profile-list > div {
-                    grid-template-columns: 1fr;
-                    gap: 0.2rem;
-                }
-            }
-
-            .reg-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-                gap: 1rem;
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
-
-            .reg-card {
-                display: flex;
-                flex-direction: column;
-                padding: 1.5rem;
-            }
-
-            .reg-icon {
-                display: grid;
-                place-items: center;
-                width: 40px;
-                height: 40px;
-                margin-bottom: 1rem;
-                border-radius: var(--radius-sm);
-                background: var(--brand-tint);
-                color: var(--brand);
-            }
-
-            .reg-label {
-                font-family: "Inter", sans-serif;
-                font-size: 0.75rem;
-                font-weight: 600;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                color: var(--ink-500);
-            }
-
-            .reg-value {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 0.5rem;
-                margin-top: 0.3rem;
-                font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-                font-size: 1rem;
-                font-weight: 600;
-                color: var(--ink-950);
-                word-break: break-all;
-            }
-
-            .copy-btn {
-                display: grid;
-                place-items: center;
-                flex: none;
-                width: 32px;
-                height: 32px;
-                border-radius: 8px;
-                color: var(--ink-500);
-                background: transparent;
-                transition:
-                    background-color 0.2s ease,
-                    color 0.2s ease;
-            }
-
-            .copy-btn:hover {
-                background: var(--surface-2);
-                color: var(--brand);
-            }
-
-            /* ---------- FAQ ---------- */
-            .faq-list {
-                display: grid;
-                gap: 0.75rem;
-                max-width: 48rem;
-                margin-inline: auto;
-            }
-
-            #faq .faq-item {
-                border-radius: var(--radius);
-                background: var(--surface);
-                border: 1px solid var(--line);
-                box-shadow: var(--shadow-xs);
-                overflow: hidden;
-                transition:
-                    border-color 0.2s ease,
-                    box-shadow 0.2s ease;
-            }
-
-            #faq .faq-item:hover {
-                transform: none;
-                border-color: var(--line-strong);
-                box-shadow: var(--shadow-sm);
-            }
-
-            #faq .faq-item[open] {
-                border-color: color-mix(in oklab, var(--brand-600) 35%, var(--line));
-                box-shadow: var(--shadow-md);
-            }
-
-            #faq .faq-item summary {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 1rem;
-                padding: 1.1rem 1.35rem;
-                list-style: none;
-                cursor: pointer;
-                font-weight: 600;
-                font-size: 1rem;
-                color: var(--ink-950);
-            }
-
-            #faq .faq-item summary::-webkit-details-marker {
-                display: none;
-            }
-
-            #faq .faq-item summary i {
-                display: grid;
-                place-items: center;
-                flex: none;
-                width: 28px;
-                height: 28px;
-                border-radius: 50%;
-                font-size: 0.75rem;
-                color: var(--ink-600);
-                background: var(--surface-2);
-                border: 1px solid var(--line);
-                transition:
-                    rotate 0.3s var(--ease-out),
-                    background-color 0.2s ease,
-                    color 0.2s ease;
-            }
-
-            #faq .faq-item[open] summary i {
-                rotate: 45deg;
-                color: #fff;
-                background: var(--brand-600);
-                border-color: var(--brand-600);
-            }
-
-            #faq .faq-item p {
-                padding: 0 1.35rem 1.25rem;
-                line-height: 1.7;
-                color: var(--ink-600);
-            }
-
-            /* ---------- Contact ---------- */
-            .contact-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
-                gap: 1rem;
-                max-width: 72rem;
-                margin-inline: auto;
-            }
-
-            .glass-card.contact-card {
-                padding: 1.5rem;
-                border-radius: var(--radius-lg);
-                background: var(--surface-2);
-                border: 1px solid var(--line);
-                box-shadow: none;
-                transition:
-                    border-color 0.25s ease,
-                    background-color 0.25s ease;
-            }
-
-            .glass-card.contact-card:hover {
-                transform: none;
-                background: var(--surface);
-                border-color: var(--line-strong);
-                box-shadow: var(--shadow-sm);
-            }
-
-            .contact-card .contact-icon {
-                display: grid;
-                place-items: center;
-                width: 44px;
-                height: 44px;
-                margin-bottom: 1rem;
-                border-radius: var(--radius-sm);
-                background: var(--brand-tint);
-                color: var(--brand);
-                font-size: 1.05rem;
-            }
-
-            .contact-card .contact-icon:hover {
-                transform: none;
-            }
-
-            .contact-card .contact-icon-wa {
-                background: color-mix(in oklab, var(--wa) 12%, white);
-                color: var(--wa);
-            }
-
-            .contact-card h3 {
-                font-family: "Inter", sans-serif;
-                font-size: 0.8rem;
-                font-weight: 600;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                color: var(--ink-500);
-                margin-bottom: 0.35rem;
-            }
-
-            .contact-card p {
-                font-weight: 500;
-                line-height: 1.6;
-                color: var(--ink-900);
-            }
-
-            .cta-band {
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
-                justify-content: space-between;
-                gap: 1.5rem;
-                max-width: 72rem;
-                margin: 2.5rem auto 0;
-                padding: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
-                border-radius: 24px;
-                color: #fff;
-                background:
-                    radial-gradient(500px 220px at 100% 0%, rgb(255 255 255 / 0.22), transparent 60%),
-                    radial-gradient(400px 200px at 0% 100%, rgb(14 165 233 / 0.5), transparent 60%),
-                    linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #0ea5e9 100%);
-                box-shadow: 0 30px 60px -30px rgb(29 78 216 / 0.7);
-            }
-
-            .cta-title {
-                font-family: var(--font-display);
-                font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
-                font-weight: 700;
-                letter-spacing: -0.02em;
-            }
-
-            .cta-text {
-                margin-top: 0.4rem;
-                max-width: 36rem;
-                color: rgb(255 255 255 / 0.88);
-            }
-
-            .cta-band .btn-wa {
-                box-shadow: 0 8px 20px -10px rgb(0 0 0 / 0.4);
-            }
-
-            .cta-actions {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.75rem;
-            }
-
-            /* ---------- Footer ---------- */
-            .site-footer {
-                padding-block: 4rem 2rem;
-                background:
-                    radial-gradient(700px 260px at 100% 0%, rgb(14 165 233 / 0.07), transparent 60%),
-                    linear-gradient(180deg, #f8fafc, #eef3fa);
-                border-top: 1px solid var(--line);
-                color: var(--ink-600);
-            }
-
-            .footer-grid {
-                display: grid;
-                gap: 2.5rem;
-                grid-template-columns: 1fr;
-            }
-
-            @media (min-width: 640px) {
-                .footer-grid {
-                    grid-template-columns: 1fr 1fr;
-                }
-            }
-
-            @media (min-width: 1024px) {
-                .footer-grid {
-                    grid-template-columns: 1.5fr 0.8fr 1.2fr 1.1fr;
-                }
-            }
-
-            .footer-brand-row {
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-            }
-
-            .footer-brand-row img {
-                width: 40px;
-                height: 40px;
-                border-radius: 10px;
-                object-fit: cover;
-            }
-
-            .site-footer .footer-brand-name {
-                font-family: var(--font-display);
-                font-size: 1.25rem;
-                font-weight: 700;
-                letter-spacing: -0.02em;
-                color: var(--ink-950);
-                background: none;
-                -webkit-text-fill-color: currentColor;
-                animation: none;
-                filter: none;
-            }
-
-            .footer-about {
-                margin-top: 1rem;
-                max-width: 24rem;
-                line-height: 1.7;
-                color: var(--ink-600);
-            }
-
-            .footer-heading {
-                margin-bottom: 1rem;
-                font-family: "Inter", sans-serif;
-                font-size: 0.75rem;
-                font-weight: 600;
-                letter-spacing: 0.14em;
-                text-transform: uppercase;
-                color: var(--ink-950);
-            }
-
-            .footer-links {
-                display: grid;
-                gap: 0.65rem;
-                margin: 0;
-                padding: 0;
-                list-style: none;
-                font-size: 0.925rem;
-                color: var(--ink-600);
-            }
-
-            .footer-links i {
-                width: 16px;
-                margin-right: 0.4rem;
-                color: var(--brand-600);
-            }
-
-            .site-footer a,
-            .site-footer a:hover {
-                transform: none;
-            }
-
-            .footer-links a {
-                color: var(--ink-700);
-                transition: color 0.2s ease;
-            }
-
-            .footer-links a:hover {
-                color: var(--brand);
-            }
-
-            .footer-mono li {
-                font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-                font-size: 0.85rem;
-                color: var(--ink-900);
-            }
-
-            .footer-mono span {
-                display: inline-block;
-                min-width: 3.5rem;
-                font-family: "Inter", sans-serif;
-                color: var(--ink-500);
-            }
-
-            .footer-bottom {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: space-between;
-                gap: 0.5rem 1.5rem;
-                margin-top: 3rem;
-                padding-top: 1.5rem;
-                border-top: 1px solid var(--line-strong);
-                font-size: 0.85rem;
-                color: var(--ink-500);
-            }
-
-            .site-footer .footer-credentials {
-                background: none;
-                -webkit-text-fill-color: currentColor;
-                color: var(--ink-500);
-                font-weight: 500;
-                letter-spacing: 0;
-                animation: none;
-            }
-
-            /* ---------- Floating UI ---------- */
-            #scrollToTop {
-                position: fixed;
-                right: 1.25rem;
-                bottom: 1.25rem;
-                width: 46px;
-                height: 46px;
-                border-radius: 14px;
-                color: var(--brand);
-                background: rgb(255 255 255 / 0.9);
-                border: 1px solid var(--line);
-                box-shadow: var(--shadow-md);
-            }
-
-            #scrollToTop:hover {
-                color: #fff;
-                background: var(--brand-600);
-                border-color: var(--brand-600);
-                box-shadow: var(--shadow-lg);
-            }
-
-            .ai-assistant-btn {
-                left: 1.25rem;
-                bottom: 1.25rem;
-                width: 54px;
-                height: 54px;
-                font-size: 1.25rem;
-                background: var(--brand-600);
-                box-shadow: 0 10px 24px -8px rgb(37 99 235 / 0.6);
-            }
-
-            .ai-assistant-btn:hover {
-                background: var(--brand);
-                box-shadow: 0 14px 28px -8px rgb(37 99 235 / 0.65);
-            }
-
-            .ai-assistant-btn-ring {
-                display: none;
-            }
-
-            .cart-panel {
-                top: calc(var(--header-h, 72px) + 8px);
-                border: 1px solid var(--line);
-                border-radius: var(--radius-lg);
-                background: var(--surface);
-                box-shadow: var(--shadow-lg);
-                transform-origin: top right;
-            }
-
-            .assistant-panel {
-                border: 1px solid var(--line);
-                border-radius: var(--radius-lg);
-                background: var(--surface);
-                box-shadow: var(--shadow-lg);
-            }
-
-            .cart-panel-header,
-            .assistant-panel-header,
-            .enquiry-modal-header {
-                background: var(--brand-gradient);
-            }
-
-            .ai-assistant-btn {
-                background: var(--brand-gradient);
-            }
-
-            .assistant-msg.user {
-                background: var(--brand-600);
-            }
-
-            .assistant-chip:hover,
-            .voice-btn-inline:hover {
-                border-color: var(--brand-600);
-                color: var(--brand);
-            }
-
-            .cart-action-btn,
-            .enquiry-submit-btn {
-                background: var(--wa);
-                border-radius: var(--radius-sm);
-            }
-
-            .cart-action-btn:hover,
-            .enquiry-submit-btn:hover {
-                background: var(--wa-700);
-                transform: none;
-            }
-
-            .enquiry-product-preview {
-                background: var(--surface-2);
-                border-color: var(--line);
-            }
-
-            .enquiry-input:focus,
-            .enquiry-textarea:focus {
-                border-color: var(--brand-600);
-                box-shadow: 0 0 0 4px rgb(37 99 235 / 0.12);
-            }
-
-            .link-btn {
-                color: var(--brand);
-                text-decoration-color: color-mix(in oklab, var(--brand) 35%, transparent);
-            }
-
-            .remove-confirm-msg b {
-                color: var(--ink-950);
-            }
-
-            .remove-confirm-box,
-            #addedCartModal .added-cart-box,
-            .enquiry-modal-box {
-                border-radius: var(--radius-lg);
-            }
-
-            .enquiry-modal-header {
-                border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-            }
-
-            #addedCartModal .added-cart-product-name {
-                color: var(--ink-950);
-                text-decoration: none;
-            }
-
-            #addedCartModal .added-cart-viewcart-btn {
-                background: var(--brand-600);
-            }
-
-            #addedCartModal .added-cart-viewcart-btn:hover {
-                background: var(--brand);
-            }
-
-            #addedCartModal .added-cart-line .link-btn {
-                color: var(--brand);
-            }
-
-            /* Scroll-driven reveal: shorter travel, no scale, so content feels anchored. */
-            @supports (animation-timeline: view()) {
-                @keyframes reveal-in {
-                    from {
-                        opacity: 0;
-                        translate: 0 16px;
-                    }
-
-                    to {
-                        opacity: 1;
-                        translate: 0 0;
-                    }
-                }
-            }
-
-            /* ---------- Modern finishing touches ---------- */
-            .product-card .add-to-cart-btn {
-                background: var(--brand-gradient);
-                box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.2);
-            }
-
-            .product-card .add-to-cart-btn:hover {
-                background: var(--brand-gradient);
-                filter: brightness(1.07);
-            }
-
-            .product-card .product-image-container {
-                background:
-                    radial-gradient(70% 80% at 50% 100%, rgb(37 99 235 / 0.07), transparent 70%),
-                    linear-gradient(180deg, #fbfdff, #f3f7fc);
-            }
-
-            .product-card:hover {
-                border-color: color-mix(in oklab, var(--brand-600) 30%, var(--line));
-            }
-
-            .reg-icon,
-            .contact-card .contact-icon:not(.contact-icon-wa) {
-                background: var(--brand-gradient);
-                color: #fff;
-                box-shadow: 0 8px 16px -8px rgb(37 99 235 / 0.6);
-            }
-
-            .section-alt {
-                background: linear-gradient(180deg, #fff, #f8fbff);
-            }
-
-            @media (prefers-reduced-motion: reduce) {
-                #primaryNav {
-                    transition: none;
-                }
-            }
-
-            /* ================================================================
-               2026 refresh (Nov 2026). Final layer - wins by source order.
-               Dark premium hero + footer as bookends, compact mobile layout,
-               "How ordering works" steps. Delete this block to roll back.
-               ================================================================ */
-            :root {
-                --ink-hero: #070d1c;
-                --hero-line: rgb(255 255 255 / 0.1);
-                interpolate-size: allow-keywords; /* lets <details> animate to height:auto */
-            }
-
-            /* ---------- Header ---------- */
-            .brand-name {
-                white-space: nowrap;
-                font-size: clamp(1rem, 0.9rem + 0.5vw, 1.2rem);
-            }
-
-            .nav-call-btn.header-call {
-                border-radius: 999px;
-            }
-
-            /* ---------- Dark premium hero ---------- */
-            .hero-gradient.hero {
-                color: #fff;
-                background:
-                    radial-gradient(900px 520px at 88% -5%, rgb(14 165 233 / 0.32), transparent 62%),
-                    radial-gradient(760px 520px at -8% 10%, rgb(37 99 235 / 0.35), transparent 60%),
-                    radial-gradient(620px 360px at 55% 115%, rgb(234 88 12 / 0.22), transparent 62%),
-                    linear-gradient(180deg, #0a1226 0%, var(--ink-hero) 100%);
-                border-bottom: 0;
-                padding-bottom: 2.5rem; /* room for the overlapping highlight cards */
-            }
-
-            .hero .hero-grid {
-                background-image:
-                    linear-gradient(var(--hero-line) 1px, transparent 1px),
-                    linear-gradient(90deg, var(--hero-line) 1px, transparent 1px);
-                background-size: 56px 56px;
-                opacity: 0.45;
-                mask-image: radial-gradient(ellipse 75% 70% at 50% 30%, #000 10%, transparent 72%);
-                -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 30%, #000 10%, transparent 72%);
-            }
-
-            .hero-orbs span {
-                opacity: 0.4;
-                mix-blend-mode: screen;
-            }
-
-            .hero .hero-chip {
-                color: #e2e8f0;
-                background: rgb(255 255 255 / 0.06);
-                border-color: rgb(255 255 255 / 0.14);
-                box-shadow: none;
-            }
-
-            .hero-title {
-                color: #fff;
-            }
-
-            .hero .hero-shine-text {
-                background: linear-gradient(100deg, #60a5fa 0%, #38bdf8 45%, #67e8f9 80%, #a5f3fc 100%);
-                -webkit-background-clip: text;
-                background-clip: text;
-            }
-
-            .hero .hero-lead {
-                color: #cbd5e1;
-            }
-
-            .hero .btn-outline {
-                color: #fff;
-                background: rgb(255 255 255 / 0.06);
-                border-color: rgb(255 255 255 / 0.22);
-                box-shadow: none;
-            }
-
-            .hero .btn-outline:hover {
-                color: #fff;
-                background: rgb(255 255 255 / 0.12);
-                border-color: rgb(255 255 255 / 0.4);
-            }
-
-            .hero .btn-outline i {
-                transition: translate 0.25s var(--ease-out);
-            }
-
-            .hero .btn-outline:hover i {
-                translate: 3px 0;
-            }
-
-            .hero .hero-trust li {
-                color: #cbd5e1;
-            }
-
-            .hero .hero-trust i {
-                color: #4ade80;
-            }
-
-            /* Panel: dark glass with a hairline gradient edge. */
-            .hero-panel {
-                color: #fff;
-                background: linear-gradient(180deg, rgb(255 255 255 / 0.09), rgb(255 255 255 / 0.04));
-                border: 1px solid rgb(255 255 255 / 0.14);
-                box-shadow:
-                    inset 0 1px 0 rgb(255 255 255 / 0.1),
-                    0 40px 80px -30px rgb(0 0 0 / 0.6);
-            }
-
-            .hero-panel-eyebrow {
-                color: #93c5fd;
-            }
-
-            .hero-facts > div {
-                background: rgb(255 255 255 / 0.05);
-                border-color: rgb(255 255 255 / 0.1);
-            }
-
-            .hero-facts dt,
-            .hero-panel-label {
-                color: #94a3b8;
-            }
-
-            .hero-facts dd {
-                color: #fff;
-            }
-
-            .hero-panel-phones a {
-                color: #fff;
-                background: rgb(255 255 255 / 0.06);
-                border-color: rgb(255 255 255 / 0.16);
-            }
-
-            .hero-panel-phones a:hover {
-                color: #fff;
-                background: rgb(255 255 255 / 0.12);
-                border-color: #60a5fa;
-            }
-
-            .hero-panel-phones i {
-                color: #60a5fa;
-            }
-
-            .hero-panel-wa {
-                background: #22c55e;
-                color: #052e16;
-                font-weight: 700;
-            }
-
-            .hero-panel-wa:hover {
-                background: #4ade80;
-            }
-
-            @media (max-width: 639.98px) {
-                .hero-actions .btn {
-                    flex: 1 1 100%;
-                }
-            }
-
-            /* ---------- Highlights: compact 2x2 on phones ---------- */
-            .highlights {
-                margin-top: -3rem;
-            }
-
-            @media (max-width: 639.98px) {
-                .highlights-grid {
-                    grid-template-columns: 1fr 1fr;
-                    gap: 0.6rem;
-                }
-
-                .highlights-grid li {
-                    flex-direction: column;
-                    align-items: flex-start;
-                    gap: 0.6rem;
-                    padding: 0.95rem;
-                    border-radius: var(--radius);
-                }
-
-                .highlight-icon {
-                    width: 36px;
-                    height: 36px;
-                    border-radius: 10px;
-                    font-size: 0.85rem;
-                }
-
-                .highlights-grid strong {
-                    font-size: 0.875rem;
-                }
-
-                .highlights-grid span:not(.highlight-icon) {
-                    font-size: 0.75rem;
-                    line-height: 1.45;
-                }
-            }
-
-            /* ---------- Section rhythm ---------- */
-            .section-eyebrow {
-                display: inline-flex;
-                padding: 0.3rem 0.75rem;
-                border-radius: 999px;
-                background: var(--brand-tint);
-                border: 1px solid color-mix(in oklab, var(--brand-600) 18%, white);
-            }
-
-            .section-head {
-                margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem);
-            }
-
-            /* ---------- Product cards ---------- */
-            .product-card {
-                border-radius: var(--radius-lg);
-                container-type: inline-size;
-            }
-
-            .product-card .product-image-container {
-                border-bottom: 1px solid var(--line);
-            }
-
-            /* ---------- How ordering works ---------- */
-            .process-steps {
-                display: grid;
-                gap: 1rem;
-                grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-                margin: 0;
-                padding: 0;
-                list-style: none;
-                counter-reset: step;
-            }
-
-            .process-step {
-                position: relative;
-                padding: 1.75rem 1.5rem 1.5rem;
-                border-radius: var(--radius-lg);
-                background: #fff;
-                border: 1px solid var(--line);
-                box-shadow: var(--shadow-sm);
-                counter-increment: step;
-                transition:
-                    border-color 0.25s ease,
-                    box-shadow 0.25s ease;
-            }
-
-            .process-step:hover {
-                border-color: color-mix(in oklab, var(--brand-600) 30%, var(--line));
-                box-shadow: var(--shadow-md);
-            }
-
-            .process-step::after {
-                content: "0" counter(step);
-                position: absolute;
-                top: 1.25rem;
-                right: 1.5rem;
-                font-family: var(--font-display);
-                font-size: 2.25rem;
-                font-weight: 700;
-                line-height: 1;
-                letter-spacing: -0.04em;
-                color: color-mix(in oklab, var(--brand-600) 14%, white);
-            }
-
-            .process-icon {
-                display: grid;
-                place-items: center;
-                width: 44px;
-                height: 44px;
-                margin-bottom: 1.1rem;
-                border-radius: 12px;
-                background: var(--brand-gradient);
-                color: #fff;
-                box-shadow: 0 8px 16px -8px rgb(37 99 235 / 0.6);
-            }
-
-            .process-step:last-child .process-icon {
-                background: linear-gradient(135deg, #16a34a, #22c55e);
-                box-shadow: 0 8px 16px -8px rgb(22 163 74 / 0.6);
-            }
-
-            .process-step h3 {
-                font-family: var(--font-display);
-                font-size: 1.1rem;
-                font-weight: 700;
-                letter-spacing: -0.02em;
-                color: var(--ink-950);
-            }
-
-            .process-step p {
-                margin-top: 0.4rem;
-                font-size: 0.925rem;
-                line-height: 1.6;
-                color: var(--ink-600);
-            }
-
-            .process-cta {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 0.75rem;
-                margin-top: 2.25rem;
-            }
-
-            @media (max-width: 639.98px) {
-                .process-cta .btn {
-                    flex: 1 1 100%;
-                }
-            }
-
-            /* ---------- Dark footer (bookends the hero) ---------- */
-            .site-footer {
-                color: #94a3b8;
-                background:
-                    radial-gradient(700px 300px at 100% 0%, rgb(14 165 233 / 0.12), transparent 60%),
-                    radial-gradient(600px 300px at 0% 100%, rgb(37 99 235 / 0.14), transparent 60%),
-                    var(--ink-hero);
-                border-top: 0;
-            }
-
-            .site-footer .footer-brand-name,
-            .site-footer .footer-heading {
-                color: #fff;
-            }
-
-            .site-footer .footer-about,
-            .site-footer .footer-links,
-            .site-footer .footer-links li,
-            .site-footer .footer-links a,
-            .site-footer .footer-bottom,
-            .site-footer .footer-credentials {
-                color: #94a3b8;
-            }
-
-            .site-footer .footer-links a:hover {
-                color: #fff;
-            }
-
-            .site-footer .footer-links i {
-                color: #60a5fa;
-            }
-
-            .site-footer .footer-mono li {
-                color: #e2e8f0;
-            }
-
-            .site-footer .footer-mono span {
-                color: #64748b;
-            }
-
-            .site-footer .footer-bottom {
-                border-top-color: rgb(255 255 255 / 0.1);
-            }
-
-            .footer-brand-row img {
-                background: #fff;
-            }
-
-            /* Long email: wrap only when it truly doesn't fit, never mid-word by default. */
-            :is(.contact-card, .profile-list) a.break-all {
-                word-break: normal;
-                overflow-wrap: anywhere;
-                font-size: 0.925rem;
-            }
-
-            @supports (animation-timeline: view()) {
-                .process-step {
-                    animation: reveal-in linear both;
-                    animation-timeline: view();
-                    animation-range: entry 0% cover 25%;
-                }
-            }
-
-            @media (prefers-reduced-motion: reduce) {
-                .process-step {
-                    animation: none;
                 }
             }
         </style>
@@ -4917,415 +3022,388 @@
             </div>
         </noscript>
 
-        <header class="site-header sticky top-0 z-50 nav-blur">
-            <div class="container mx-auto px-4 header-bar">
-                <a href="#hero" class="brand" aria-label="Swapnil Chemicals - back to top">
-                    <img
-                        src="SC Logo.webp"
-                        alt=""
-                        fetchpriority="high"
-                        class="brand-logo"
-                        width="48"
-                        height="48"
-                        decoding="async"
-                    />
-                    <span class="brand-text">
-                        <span class="brand-name">Swapnil Chemicals</span>
-                        <span class="brand-tagline">Automobile cleaning products &middot; Jaipur</span>
-                    </span>
-                </a>
-
-                <nav class="primary-nav" aria-label="Primary">
-                    <ul id="primaryNav" class="primary-nav-list" popover>
-                        <li><a href="#business-details" class="nav-link">Company</a></li>
-                        <li><a href="#products" class="nav-link">Products</a></li>
-                        <li><a href="#faq" class="nav-link">FAQ</a></li>
-                        <li><a href="#contact" class="nav-link">Contact</a></li>
-                        <li class="nav-mobile-call">
-                            <a href="tel:9352470085" class="nav-call-btn"
-                                ><i class="fas fa-phone" aria-hidden="true"></i> Call 9352470085</a
+        <header class="sticky top-0 z-50 nav-blur">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                        <div class="relative">
+                            <div
+                                class="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden ring-2 ring-blue-500/20"
                             >
-                        </li>
-                    </ul>
-                </nav>
+                                <img
+                                    src="SC Logo.webp"
+                                    alt="SC Logo"
+                                    fetchpriority="high"
+                                    class="w-full h-full object-cover"
+                                    width="56"
+                                    height="56"
+                                    decoding="async"
+                                />
+                            </div>
+                            <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full pulse-ring"></div>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold gradient-text">Swapnil Chemicals</h1>
+                            <p class="text-sm text-gray-600">
+                                Manufacturers & marketers of automobile cleaning products
+                            </p>
+                        </div>
+                    </div>
 
-                <div class="header-actions">
-                    <a href="tel:9352470085" class="nav-call-btn header-call">
-                        <i class="fas fa-phone" aria-hidden="true"></i>
-                        <span>93524 70085</span>
-                    </a>
-                    <button
-                        type="button"
-                        class="cart-icon-btn"
-                        data-action="toggle-cart"
-                        aria-label="Open cart"
-                        aria-expanded="false"
-                    >
-                        <i class="fas fa-cart-shopping" aria-hidden="true"></i>
-                        <span class="cart-badge" id="cartBadge" style="display: none" aria-live="polite">0</span>
-                    </button>
-                    <button
-                        type="button"
-                        class="nav-toggle"
-                        popovertarget="primaryNav"
-                        aria-expanded="false"
-                        aria-label="Open menu"
-                    >
-                        <i class="fas fa-bars" aria-hidden="true"></i>
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <div class="glass-card px-4 py-2 rounded-lg">
+                            <p class="text-gray-700 font-medium">
+                                <i class="fas fa-map-marker-alt text-blue-600 mr-2" aria-hidden="true"></i>Jaipur • Bulk
+                                & Retail
+                            </p>
+                        </div>
+                        <button
+                            class="cart-icon-btn"
+                            data-action="toggle-cart"
+                            aria-label="Open cart"
+                            aria-expanded="false"
+                        >
+                            <i class="fas fa-shopping-cart text-base" aria-hidden="true"></i>
+                            <span class="cart-badge" id="cartBadge" style="display: none" aria-live="polite">0</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
 
         <main id="main-content" tabindex="-1">
-            <section class="hero-gradient hero relative" id="hero">
+            <section class="hero-gradient text-white min-h-[88vh] flex items-center relative" id="hero">
+                <div class="hero-aurora" aria-hidden="true">
+                    <span class="aurora-orb orb-1"></span>
+                    <span class="aurora-orb orb-2"></span>
+                    <span class="aurora-orb orb-3"></span>
+                </div>
                 <div class="hero-grid" aria-hidden="true"></div>
-                <div class="hero-orbs" aria-hidden="true"><span></span><span></span><span></span></div>
+                <div class="hero-bubbles" id="heroBubbles" aria-hidden="true"></div>
 
-                <div class="container mx-auto px-4 relative z-10 hero-inner">
-                    <div class="hero-copy hero-content-in">
+                <div class="container mx-auto px-4 relative z-10 py-16 md:py-24">
+                    <div class="max-w-5xl mx-auto text-center hero-content-in">
                         <span class="hero-chip">
                             <span class="hero-chip-dot" aria-hidden="true"></span>
-                            Jaipur-based manufacturer &middot; Since 2020
+                            Jaipur-based manufacturer &bull; Since 2020
                         </span>
-                        <h1 class="hero-title">
-                            Premium automobile <span class="hero-shine-text">cleaning solutions</span>
-                        </h1>
-                        <p class="hero-lead">
-                            Swapnil Chemicals manufactures dashboard polish, tyre polish, car foaming wash, glass
-                            cleaner and more, supplying bulk and retail customers across India with consistent
-                            quality.
+                        <h2 class="font-bold leading-tight mt-6 mb-6">
+                            Premium Automobile <br /><span class="hero-shine-text">Cleaning Solutions</span>
+                        </h2>
+                        <p class="text-lg md:text-xl mb-10 opacity-90 max-w-3xl mx-auto leading-relaxed hero-lead">
+                            Swapnil Chemicals is a Jaipur-based manufacturer of Premium Automobile Cleaning Products,
+                            trusted by bulk and retail customers since 2020. We produce our own Dashboard Polish, Tyre
+                            Polish, Car Foaming Wash, Glass Cleaner and more, ensuring consistent quality. As a GST
+                            registered, MSME and Udyam certified business, we supply orders across India. Call us at
+                            9352470085 or 9024598298 for bulk orders or pricing.
                         </p>
-                        <div class="hero-actions">
-                            <a href="#products" class="btn btn-primary">
-                                <i class="fas fa-boxes-stacked" aria-hidden="true"></i> View products
-                            </a>
-                            <a href="#contact" class="btn btn-outline">
-                                Get bulk pricing <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                        <ul class="hero-trust" aria-label="Business credentials">
-                            <li><i class="fas fa-circle-check" aria-hidden="true"></i> GST registered</li>
-                            <li><i class="fas fa-circle-check" aria-hidden="true"></i> MSME &amp; Udyam certified</li>
-                            <li><i class="fas fa-circle-check" aria-hidden="true"></i> Bulk &amp; retail supply</li>
-                        </ul>
-                    </div>
-
-                    <aside class="hero-panel hero-content-in" aria-labelledby="heroPanelTitle">
-                        <p class="hero-panel-eyebrow" id="heroPanelTitle">Company at a glance</p>
-                        <dl class="hero-facts">
-                            <div>
-                                <dt>Established</dt>
-                                <dd>2020</dd>
-                            </div>
-                            <div>
-                                <dt>Based in</dt>
-                                <dd>Jaipur, Rajasthan</dd>
-                            </div>
-                            <div>
-                                <dt>Supply</dt>
-                                <dd>Bulk &amp; retail</dd>
-                            </div>
-                            <div>
-                                <dt>Coverage</dt>
-                                <dd>Across India</dd>
-                            </div>
-                        </dl>
-                        <div class="hero-panel-contact">
-                            <p class="hero-panel-label">Bulk orders &amp; pricing</p>
-                            <div class="hero-panel-phones">
-                                <a href="tel:9352470085"><i class="fas fa-phone" aria-hidden="true"></i> 93524 70085</a>
-                                <a href="tel:9024598298"><i class="fas fa-phone" aria-hidden="true"></i> 90245 98298</a>
-                            </div>
+                        <div class="flex flex-wrap justify-center gap-4 md:gap-6">
                             <a
-                                href="https://wa.me/919352470085"
-                                class="hero-panel-wa"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                ><i class="fab fa-whatsapp" aria-hidden="true"></i> Chat on WhatsApp</a
+                                href="#products"
+                                class="btn-primary btn-shine magnetic text-white px-10 py-4 rounded-xl font-semibold text-lg"
+                                ><i class="fas fa-boxes mr-3" aria-hidden="true"></i>View Products</a
+                            ><a
+                                href="#contact"
+                                class="btn-secondary btn-shine magnetic text-white px-10 py-4 rounded-xl font-semibold text-lg"
+                                ><i class="fas fa-phone-alt fa-flip-horizontal mr-3" aria-hidden="true"></i>Contact
+                                Now</a
                             >
                         </div>
-                    </aside>
-                </div>
-            </section>
-
-            <section class="highlights" aria-label="Why customers choose us">
-                <div class="container mx-auto px-4">
-                    <ul class="highlights-grid">
-                        <li>
-                            <span class="highlight-icon"><i class="fas fa-flask" aria-hidden="true"></i></span>
-                            <div>
-                                <strong>Made by us</strong>
-                                <span>Our own production for consistent quality</span>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="highlight-icon"><i class="fas fa-boxes-stacked" aria-hidden="true"></i></span>
-                            <div>
-                                <strong>Bulk &amp; retail</strong>
-                                <span>From single units to wholesale orders</span>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="highlight-icon"><i class="fas fa-truck-fast" aria-hidden="true"></i></span>
-                            <div>
-                                <strong>Pan-India supply</strong>
-                                <span>Orders supplied across India</span>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="highlight-icon"><i class="fab fa-whatsapp" aria-hidden="true"></i></span>
-                            <div>
-                                <strong>Easy ordering</strong>
-                                <span>Enquire on WhatsApp, no login needed</span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </section>
-
-            <section id="business-details" class="section section-alt relative">
-                <div class="container mx-auto px-4">
-                    <div class="section-head">
-                        <span class="section-eyebrow">Company profile</span>
-                        <h2 class="section-title">A registered, trusted supplier</h2>
-                        <p class="section-sub">
-                            Our registration details are listed below for dealers, workshops and procurement teams.
-                        </p>
-                    </div>
-
-                    <div class="profile-layout">
-                        <div class="profile-card feature-card">
-                            <div class="profile-head">
-                                <span class="profile-avatar"><i class="fas fa-user-tie" aria-hidden="true"></i></span>
-                                <div>
-                                    <p class="profile-label">Proprietor</p>
-                                    <p class="profile-name">Gajendra Jain</p>
-                                </div>
-                            </div>
-                            <dl class="profile-list">
-                                <div>
-                                    <dt><i class="fas fa-location-dot" aria-hidden="true"></i> Location</dt>
-                                    <dd>Jaipur, Rajasthan</dd>
-                                </div>
-                                <div>
-                                    <dt><i class="fas fa-calendar" aria-hidden="true"></i> Established</dt>
-                                    <dd>2020</dd>
-                                </div>
-                                <div>
-                                    <dt><i class="fas fa-phone" aria-hidden="true"></i> Phone</dt>
-                                    <dd>
-                                        <a href="tel:9352470085">9352470085</a>,
-                                        <a href="tel:9024598298">9024598298</a>
-                                    </dd>
-                                </div>
-                                <div>
-                                    <dt><i class="fas fa-envelope" aria-hidden="true"></i> Email</dt>
-                                    <dd>
-                                        <a href="mailto:swapnilchemicals10@gmail.com" class="break-all"
-                                            >swapnilchemicals10@gmail.com</a
-                                        >
-                                    </dd>
-                                </div>
-                            </dl>
-                        </div>
-
-                        <ul class="reg-grid" aria-label="Business registrations">
-                            <li class="reg-card feature-card">
-                                <span class="reg-icon"><i class="fas fa-file-invoice" aria-hidden="true"></i></span>
-                                <h3 class="reg-label">GST number</h3>
-                                <p class="reg-value">
-                                    08CIJPS1734A1ZE
-                                    <button
-                                        type="button"
-                                        class="copy-btn"
-                                        data-action="copy"
-                                        data-copy-text="08CIJPS1734A1ZE"
-                                        aria-label="Copy GST number"
-                                    >
-                                        <i class="fas fa-copy" aria-hidden="true"></i>
-                                    </button>
-                                </p>
-                            </li>
-                            <li class="reg-card feature-card">
-                                <span class="reg-icon"><i class="fas fa-award" aria-hidden="true"></i></span>
-                                <h3 class="reg-label">MSME</h3>
-                                <p class="reg-value">
-                                    MSME/2020/6194
-                                    <button
-                                        type="button"
-                                        class="copy-btn"
-                                        data-action="copy"
-                                        data-copy-text="MSME/2020/6194"
-                                        aria-label="Copy MSME number"
-                                    >
-                                        <i class="fas fa-copy" aria-hidden="true"></i>
-                                    </button>
-                                </p>
-                            </li>
-                            <li class="reg-card feature-card">
-                                <span class="reg-icon"><i class="fas fa-certificate" aria-hidden="true"></i></span>
-                                <h3 class="reg-label">Udyam</h3>
-                                <p class="reg-value">
-                                    UDYAM-RJ-17-0022468
-                                    <button
-                                        type="button"
-                                        class="copy-btn"
-                                        data-action="copy"
-                                        data-copy-text="UDYAM-RJ-17-0022468"
-                                        aria-label="Copy Udyam number"
-                                    >
-                                        <i class="fas fa-copy" aria-hidden="true"></i>
-                                    </button>
-                                </p>
-                            </li>
-                            <li class="reg-card feature-card">
-                                <span class="reg-icon"><i class="fas fa-building" aria-hidden="true"></i></span>
-                                <h3 class="reg-label">BRN</h3>
-                                <p class="reg-value">
-                                    8005220072000968
-                                    <button
-                                        type="button"
-                                        class="copy-btn"
-                                        data-action="copy"
-                                        data-copy-text="8005220072000968"
-                                        aria-label="Copy BRN"
-                                    >
-                                        <i class="fas fa-copy" aria-hidden="true"></i>
-                                    </button>
-                                </p>
-                            </li>
+                        <ul class="hero-trust" aria-label="Business credentials">
+                            <!-- <li><i class="fas fa-industry" aria-hidden="true"></i> In-house manufacturing</li> -->
+                            <li><i class="fas fa-file-invoice" aria-hidden="true"></i> GST registered</li>
+                            <li><i class="fas fa-award" aria-hidden="true"></i> MSME &amp; Udyam certified</li>
+                            <li><i class="fas fa-truck-fast" aria-hidden="true"></i> Bulk &amp; retail</li>
                         </ul>
                     </div>
                 </div>
+
+                <a href="#business-details" class="hero-scroll-cue" aria-label="Scroll to business details">
+                    <span class="hero-scroll-mouse" aria-hidden="true"><span></span></span>
+                </a>
+                <svg class="hero-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M0,40 C240,90 480,0 720,30 C960,60 1200,10 1440,45 L1440,90 L0,90 Z" fill="currentColor" />
+                </svg>
             </section>
 
-            <section id="products" class="section relative">
+            <div class="product-marquee" aria-hidden="true">
+                <div class="product-marquee-track">
+                    <span>Dashboard Polish</span><i class="fas fa-star"></i><span>Tyre Polish</span
+                    ><i class="fas fa-droplet"></i><span>Car Foaming Wash</span><i class="fas fa-star"></i
+                    ><span>Glass Cleaner</span><i class="fas fa-droplet"></i><span>Interior Cleaner</span
+                    ><i class="fas fa-star"></i><span>Foaming Gun</span><i class="fas fa-droplet"></i
+                    ><span>Micro Towel</span><i class="fas fa-star"></i> <span>Dashboard Polish</span
+                    ><i class="fas fa-star"></i><span>Tyre Polish</span><i class="fas fa-droplet"></i
+                    ><span>Car Foaming Wash</span><i class="fas fa-star"></i><span>Glass Cleaner</span
+                    ><i class="fas fa-droplet"></i><span>Interior Cleaner</span><i class="fas fa-star"></i
+                    ><span>Foaming Gun</span><i class="fas fa-droplet"></i><span>Micro Towel</span
+                    ><i class="fas fa-star"></i>
+                </div>
+            </div>
+
+            <section id="business-details" class="pt-6 pb-0 relative">
                 <div class="container mx-auto px-4">
-                    <div class="section-head">
-                        <span class="section-eyebrow">Product range</span>
-                        <h2 class="section-title">Our products</h2>
-                        <p class="section-sub">
-                            Automobile cleaning solutions for workshops, detailers, dealers and car owners.
-                        </p>
+                    <div class="text-center mb-6 mt-8">
+                        <span class="section-eyebrow">Who we are</span>
+                        <h2 class="text-4xl font-bold gradient-text mb-4">Business Details</h2>
+                        <div class="section-divider max-w-xs mx-auto"></div>
                     </div>
-                    <div class="product-toolbar">
-                        <div class="search-field">
-                            <i class="fas fa-magnifying-glass search-icon" aria-hidden="true"></i>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                        <div class="feature-card p-8 rounded-2xl">
+                            <div class="flex items-center mb-6">
+                                <div
+                                    class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
+                                >
+                                    <i class="fas fa-user-tie text-white text-2xl" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <p class="text-2xl font-bold text-gray-800">Gajendra Jain</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card p-8 rounded-2xl">
+                            <div class="flex items-center mb-6">
+                                <div
+                                    class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
+                                >
+                                    <i
+                                        class="fas fa-phone-alt text-white text-2xl"
+                                        style="transform: rotate(-270deg)"
+                                        aria-hidden="true"
+                                    ></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">Phone</h3>
+                                    <p class="text-lg font-bold">
+                                        <a href="tel:9352470085" class="text-blue-600 block">9352470085</a
+                                        ><a href="tel:9024598298" class="text-blue-600 block">9024598298</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card p-8 rounded-2xl">
+                            <div class="flex items-center mb-6">
+                                <div
+                                    class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
+                                >
+                                    <i class="fas fa-file-invoice-dollar text-white text-2xl" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">
+                                        GST Number
+                                    </h3>
+                                    <p class="text-lg font-bold text-gray-800 font-mono flex items-center gap-2">
+                                        08CIJPS1734A1ZE<button
+                                            type="button"
+                                            class="text-gray-400 hover:text-blue-600"
+                                            data-action="copy"
+                                            data-copy-text="08CIJPS1734A1ZE"
+                                            aria-label="Copy GST number"
+                                        >
+                                            <i class="fas fa-copy text-sm" aria-hidden="true"></i>
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card p-8 rounded-2xl">
+                            <div class="flex items-center mb-6">
+                                <div
+                                    class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
+                                >
+                                    <i class="fas fa-envelope text-white text-2xl" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">Email</h3>
+                                    <a href="mailto:swapnilchemicals10@gmail.com" class="text-blue-600 break-all"
+                                        >swapnilchemicals10@gmail.com</a
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card p-8 rounded-2xl">
+                            <div class="flex items-center mb-6">
+                                <div
+                                    class="w-16 h-16 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
+                                >
+                                    <i class="fas fa-award text-white text-2xl" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">MSME</h3>
+                                    <p class="text-lg font-bold text-gray-800 font-mono">MSME/2020/6194</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card p-8 rounded-2xl">
+                            <div class="flex items-center mb-6">
+                                <div
+                                    class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
+                                >
+                                    <i class="fas fa-certificate text-white text-2xl" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">Udyam</h3>
+                                    <p class="text-lg font-bold text-gray-800 font-mono">UDYAM-RJ-17-0022468</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card p-8 rounded-2xl">
+                            <div class="flex items-center mb-6">
+                                <div
+                                    class="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center mr-6 shadow-lg"
+                                >
+                                    <i class="fas fa-building text-white text-2xl" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">BRN</h3>
+                                    <p class="text-lg font-bold text-gray-800 font-mono">8005220072000968</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="products" class="pt-2 pb-8 relative">
+                <div class="container mx-auto px-4">
+                    <div class="text-center mb-8">
+                        <span class="section-eyebrow">Shop the range</span>
+                        <h2 class="text-4xl font-bold gradient-text mb-4">Our Premium Products</h2>
+                        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                            Discover our range of high-quality automobile cleaning solutions designed for professional
+                            results.
+                        </p>
+                        <div class="section-divider max-w-xs mx-auto"></div>
+                    </div>
+                    <div class="max-w-xl mx-auto mb-8">
+                        <div class="relative">
+                            <i
+                                class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                                aria-hidden="true"
+                            ></i>
                             <input
                                 type="search"
                                 id="productSearch"
-                                class="search-input"
-                                placeholder="Search products, e.g. tyre polish, micro towel"
+                                class="w-full pl-11 pr-12 py-3 rounded-xl border border-gray-200 bg-white focus:border-blue-500 focus:outline-none focus:shadow-[0_0_0_4px_rgba(139,92,246,0.15)] transition-shadow text-sm"
+                                placeholder="Search products (e.g. tyre polish, micro towel)..."
                                 aria-label="Search products"
-                                enterkeyhint="search"
                             />
                             <button type="button" id="voiceSearchBtn" class="voice-btn" aria-label="Search by voice">
                                 <i class="fas fa-microphone" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="products-grid" id="productsGrid"></div>
+                    <div
+                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+                        id="productsGrid"
+                    ></div>
                 </div>
             </section>
 
-            <section id="how-to-order" class="section section-alt relative" aria-labelledby="processTitle">
+            <section id="faq" class="py-8 relative">
                 <div class="container mx-auto px-4">
-                    <div class="section-head">
-                        <span class="section-eyebrow">How ordering works</span>
-                        <h2 class="section-title" id="processTitle">Order in three simple steps</h2>
-                        <p class="section-sub">
-                            No account or login needed. Your request goes straight to us on WhatsApp.
-                        </p>
-                    </div>
-                    <ol class="process-steps">
-                        <li class="process-step">
-                            <span class="process-icon"><i class="fas fa-boxes-stacked" aria-hidden="true"></i></span>
-                            <h3>Pick your products</h3>
-                            <p>Browse the range and choose the cleaning products your workshop or vehicle needs.</p>
-                        </li>
-                        <li class="process-step">
-                            <span class="process-icon"><i class="fas fa-cart-plus" aria-hidden="true"></i></span>
-                            <h3>Choose a quantity</h3>
-                            <p>Select a pack size, then add items to your cart or tap "Enquire" on a product.</p>
-                        </li>
-                        <li class="process-step">
-                            <span class="process-icon"><i class="fab fa-whatsapp" aria-hidden="true"></i></span>
-                            <h3>Send on WhatsApp</h3>
-                            <p>Your enquiry reaches us directly on WhatsApp, and we get back to you on pricing.</p>
-                        </li>
-                    </ol>
-                    <div class="process-cta">
-                        <a href="#products" class="btn btn-primary">
-                            <i class="fas fa-boxes-stacked" aria-hidden="true"></i> Browse products
-                        </a>
-                        <a href="tel:9352470085" class="btn btn-outline">
-                            <i class="fas fa-phone" aria-hidden="true"></i> Call 93524 70085
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <section id="faq" class="section relative">
-                <div class="container mx-auto px-4">
-                    <div class="section-head">
+                    <div class="text-center mb-8">
                         <span class="section-eyebrow">Good to know</span>
-                        <h2 class="section-title">Frequently asked questions</h2>
-                        <p class="section-sub">Quick answers about ordering, payment and our products.</p>
+                        <h2 class="text-4xl font-bold gradient-text mb-4">Frequently Asked Questions</h2>
+                        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                            Quick answers about ordering, payment and our products.
+                        </p>
+                        <div class="section-divider max-w-xs mx-auto"></div>
                     </div>
-                    <div class="faq-list">
-                        <details name="faq" class="faq-item">
-                            <summary>
+                    <div class="max-w-3xl mx-auto space-y-4">
+                        <details
+                            name="faq"
+                            class="group rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm"
+                        >
+                            <summary
+                                class="font-semibold text-lg cursor-pointer list-none flex justify-between items-center gap-4 px-6 py-4 bg-slate-100 text-gray-800 group-open:text-white group-open:bg-gradient-to-r group-open:from-orange-500 group-open:to-orange-600 transition-colors"
+                            >
                                 Do you supply bulk or only retail orders?
-                                <i class="fas fa-plus" aria-hidden="true"></i>
+                                <i class="fas fa-plus flex-shrink-0 group-open:hidden" aria-hidden="true"></i>
+                                <i class="fas fa-minus flex-shrink-0 hidden group-open:inline" aria-hidden="true"></i>
                             </summary>
-                            <p>
-                                We supply both bulk and retail quantities. For wholesale pricing, call
-                                <a href="tel:9352470085">9352470085</a> or <a href="tel:9024598298">9024598298</a>,
-                                or use the "Enquire" button on any product.
+                            <p class="text-gray-600 px-6 py-4">
+                                Yes — we supply both bulk and retail quantities. For wholesale pricing, call
+                                <a href="tel:9352470085" class="text-blue-600">9352470085</a> or
+                                <a href="tel:9024598298" class="text-blue-600">9024598298</a>, or use the "Enquiry"
+                                button on any product.
                             </p>
                         </details>
-                        <details name="faq" class="faq-item">
-                            <summary>
+                        <details
+                            name="faq"
+                            class="group rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm"
+                        >
+                            <summary
+                                class="font-semibold text-lg cursor-pointer list-none flex justify-between items-center gap-4 px-6 py-4 bg-slate-100 text-gray-800 group-open:text-white group-open:bg-gradient-to-r group-open:from-orange-500 group-open:to-orange-600 transition-colors"
+                            >
                                 What payment methods do you accept?
-                                <i class="fas fa-plus" aria-hidden="true"></i>
+                                <i class="fas fa-plus flex-shrink-0 group-open:hidden" aria-hidden="true"></i>
+                                <i class="fas fa-minus flex-shrink-0 hidden group-open:inline" aria-hidden="true"></i>
                             </summary>
-                            <p>Please call us on 9352470085 or 9024598298 to discuss payment options for your order.</p>
+                            <p class="text-gray-600 px-6 py-4">
+                                Please call us on 9352470085 or 9024598298 to discuss payment options for your order.
+                            </p>
                         </details>
-                        <details name="faq" class="faq-item">
-                            <summary>
+                        <details
+                            name="faq"
+                            class="group rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm"
+                        >
+                            <summary
+                                class="font-semibold text-lg cursor-pointer list-none flex justify-between items-center gap-4 px-6 py-4 bg-slate-100 text-gray-800 group-open:text-white group-open:bg-gradient-to-r group-open:from-orange-500 group-open:to-orange-600 transition-colors"
+                            >
                                 Is Swapnil Chemicals a registered business?
-                                <i class="fas fa-plus" aria-hidden="true"></i>
+                                <i class="fas fa-plus flex-shrink-0 group-open:hidden" aria-hidden="true"></i>
+                                <i class="fas fa-minus flex-shrink-0 hidden group-open:inline" aria-hidden="true"></i>
                             </summary>
-                            <p>
+                            <p class="text-gray-600 px-6 py-4">
                                 Yes. We are GST registered (08CIJPS1734A1ZE), MSME certified (MSME/2020/6194), Udyam
                                 registered (UDYAM-RJ-17-0022468), and hold other applicable business registrations and
                                 certifications.
                             </p>
                         </details>
-                        <details name="faq" class="faq-item">
-                            <summary>
+                        <details
+                            name="faq"
+                            class="group rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm"
+                        >
+                            <summary
+                                class="font-semibold text-lg cursor-pointer list-none flex justify-between items-center gap-4 px-6 py-4 bg-slate-100 text-gray-800 group-open:text-white group-open:bg-gradient-to-r group-open:from-orange-500 group-open:to-orange-600 transition-colors"
+                            >
                                 How do I place an order?
-                                <i class="fas fa-plus" aria-hidden="true"></i>
+                                <i class="fas fa-plus flex-shrink-0 group-open:hidden" aria-hidden="true"></i>
+                                <i class="fas fa-minus flex-shrink-0 hidden group-open:inline" aria-hidden="true"></i>
                             </summary>
-                            <p>
-                                Pick a product, choose a quantity, and tap "Add to cart" or "Enquire". Your request is
-                                sent directly to us on WhatsApp, with no account or login needed.
+                            <p class="text-gray-600 px-6 py-4">
+                                Pick a product, choose a quantity, and tap "Add to Cart" or "Enquiry." Your request is
+                                sent directly to us on WhatsApp — no account or login needed.
                             </p>
                         </details>
-                        <details name="faq" class="faq-item">
-                            <summary>
+                        <details
+                            name="faq"
+                            class="group rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm"
+                        >
+                            <summary
+                                class="font-semibold text-lg cursor-pointer list-none flex justify-between items-center gap-4 px-6 py-4 bg-slate-100 text-gray-800 group-open:text-white group-open:bg-gradient-to-r group-open:from-orange-500 group-open:to-orange-600 transition-colors"
+                            >
                                 Where is Swapnil Chemicals based?
-                                <i class="fas fa-plus" aria-hidden="true"></i>
+                                <i class="fas fa-plus flex-shrink-0 group-open:hidden" aria-hidden="true"></i>
+                                <i class="fas fa-minus flex-shrink-0 hidden group-open:inline" aria-hidden="true"></i>
                             </summary>
-                            <p>We are based in Jaipur, Rajasthan, and support both bulk and retail customers.</p>
+                            <p class="text-gray-600 px-6 py-4">
+                                We are based in Jaipur, Rajasthan, and support both bulk and retail customers.
+                            </p>
                         </details>
-                        <details name="faq" class="faq-item">
-                            <summary>
+                        <details
+                            name="faq"
+                            class="group rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm"
+                        >
+                            <summary
+                                class="font-semibold text-lg cursor-pointer list-none flex justify-between items-center gap-4 px-6 py-4 bg-slate-100 text-gray-800 group-open:text-white group-open:bg-gradient-to-r group-open:from-orange-500 group-open:to-orange-600 transition-colors"
+                            >
                                 Do you offer custom quantities or packaging?
-                                <i class="fas fa-plus" aria-hidden="true"></i>
+                                <i class="fas fa-plus flex-shrink-0 group-open:hidden" aria-hidden="true"></i>
+                                <i class="fas fa-minus flex-shrink-0 hidden group-open:inline" aria-hidden="true"></i>
                             </summary>
-                            <p>
+                            <p class="text-gray-600 px-6 py-4">
                                 For requirements outside the listed options, contact us directly by phone or WhatsApp
                                 and we'll get back to you.
                             </p>
@@ -5334,133 +3412,101 @@
                 </div>
             </section>
 
-            <section id="contact" class="section section-alt relative">
+            <section id="contact" class="py-8 relative">
                 <div class="container mx-auto px-4">
-                    <div class="section-head">
-                        <span class="section-eyebrow">Contact</span>
-                        <h2 class="section-title">Get in touch</h2>
-                        <p class="section-sub">
-                            Questions about products, bulk pricing or delivery? Reach us by phone, WhatsApp or email.
+                    <div class="text-center mb-8">
+                        <span class="section-eyebrow">Let's talk</span>
+                        <h2 class="text-4xl font-bold gradient-text mb-4">Get In Touch</h2>
+                        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                            Ready to experience premium automobile cleaning solutions? Contact us today.
                         </p>
+                        <div class="section-divider max-w-xs mx-auto"></div>
                     </div>
-
-                    <div class="contact-grid">
-                        <div class="contact-card glass-card">
-                            <span class="contact-icon"><i class="fas fa-phone" aria-hidden="true"></i></span>
-                            <h3>Phone</h3>
-                            <p>
-                                <a href="tel:9352470085">9352470085</a><br />
-                                <a href="tel:9024598298">9024598298</a>
-                            </p>
-                        </div>
-                        <div class="contact-card glass-card">
-                            <span class="contact-icon contact-icon-wa"
-                                ><i class="fab fa-whatsapp" aria-hidden="true"></i
-                            ></span>
-                            <h3>WhatsApp</h3>
-                            <p>
-                                <a href="https://wa.me/919352470085" target="_blank" rel="noopener noreferrer"
-                                    >Chat with us</a
-                                >
-                            </p>
-                        </div>
-                        <div class="contact-card glass-card">
-                            <span class="contact-icon"><i class="fas fa-envelope" aria-hidden="true"></i></span>
-                            <h3>Email</h3>
-                            <p>
-                                <a href="mailto:swapnilchemicals10@gmail.com" class="break-all"
-                                    >swapnilchemicals10@gmail.com</a
-                                >
-                            </p>
-                        </div>
-                        <div class="contact-card glass-card">
-                            <span class="contact-icon"><i class="fas fa-location-dot" aria-hidden="true"></i></span>
-                            <h3>Location</h3>
-                            <p>Jaipur, Rajasthan<br />Supplying across India</p>
-                        </div>
-                    </div>
-
-                    <div class="cta-band">
-                        <div>
-                            <h3 class="cta-title">Looking for wholesale pricing?</h3>
-                            <p class="cta-text">
-                                Tell us the products and quantities you need and we'll get back to you with a quote.
-                            </p>
-                        </div>
-                        <div class="cta-actions">
-                            <a href="tel:9352470085" class="btn btn-white">
-                                <i class="fas fa-phone" aria-hidden="true"></i> Call now
-                            </a>
-                            <a
-                                href="https://wa.me/919352470085"
-                                class="btn btn-wa"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp
-                            </a>
+                    <div class="max-w-6xl mx-auto">
+                        <div class="grid grid-cols-1 gap-12">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="glass-card p-8 rounded-2xl">
+                                    <div class="flex items-center space-x-6">
+                                        <div
+                                            class="contact-icon w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg"
+                                        >
+                                            <i
+                                                class="fas fa-phone-alt text-white text-2xl"
+                                                style="transform: rotate(-270deg)"
+                                                aria-hidden="true"
+                                            ></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-xl text-gray-800 mb-2">Phone</h3>
+                                            <a href="tel:9352470085" class="text-blue-600 block">9352470085</a
+                                            ><a href="tel:9024598298" class="text-blue-600 block">9024598298</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="glass-card p-8 rounded-2xl">
+                                    <div class="flex items-center space-x-6">
+                                        <div
+                                            class="contact-icon w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg"
+                                        >
+                                            <i class="fas fa-envelope text-white text-2xl" aria-hidden="true"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-xl text-gray-800 mb-2">Email</h3>
+                                            <a
+                                                href="mailto:swapnilchemicals10@gmail.com"
+                                                class="text-blue-600 break-all"
+                                                >swapnilchemicals10@gmail.com</a
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
         </main>
 
-        <button id="scrollToTop" class="text-white hidden z-50" aria-label="Scroll to top">
-            <i class="fas fa-arrow-up" aria-hidden="true"></i>
+        <button id="scrollToTop" class="fixed bottom-6 right-6 text-white hidden z-50" aria-label="Scroll to top">
+            <i class="fas fa-arrow-up text-lg" aria-hidden="true"></i>
         </button>
 
-        <footer class="site-footer">
+        <footer class="site-footer text-white py-12">
             <div class="container mx-auto px-4">
-                <div class="footer-grid">
-                    <div class="footer-brand">
-                        <div class="footer-brand-row">
-                            <img src="SC Logo.webp" alt="" width="40" height="40" loading="lazy" decoding="async" />
-                            <p class="footer-brand-name">Swapnil Chemicals</p>
-                        </div>
-                        <p class="footer-about">
-                            Manufacturers and marketers of automobile cleaning products. Jaipur-based, supplying bulk
-                            and retail customers across India.
-                        </p>
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-8 md:mb-0 text-center md:text-left">
+                        <h3 class="text-3xl font-bold mb-3 footer-brand-name">Swapnil Chemicals</h3>
+                        <p class="text-slate-300 text-lg">Manufacturers & marketers of automobile cleaning products</p>
+                        <span class="footer-chip mt-3">
+                            <span class="footer-chip-dot" aria-hidden="true"></span>
+                            Jaipur • Bulk & Retail
+                        </span>
                     </div>
-                    <nav aria-label="Footer">
-                        <h3 class="footer-heading">Explore</h3>
-                        <ul class="footer-links">
-                            <li><a href="#business-details">Company</a></li>
-                            <li><a href="#products">Products</a></li>
-                            <li><a href="#how-to-order">How to order</a></li>
-                            <li><a href="#faq">FAQ</a></li>
-                            <li><a href="#contact">Contact</a></li>
-                        </ul>
-                    </nav>
-                    <div>
-                        <h3 class="footer-heading">Contact</h3>
-                        <ul class="footer-links">
-                            <li>
-                                <a href="tel:9352470085"><i class="fas fa-phone" aria-hidden="true"></i> 9352470085</a>
-                            </li>
-                            <li>
-                                <a href="tel:9024598298"><i class="fas fa-phone" aria-hidden="true"></i> 9024598298</a>
-                            </li>
-                            <li>
-                                <a href="mailto:swapnilchemicals10@gmail.com" class="break-all"
-                                    ><i class="fas fa-envelope" aria-hidden="true"></i> swapnilchemicals10@gmail.com</a
-                                >
-                            </li>
-                            <li><i class="fas fa-location-dot" aria-hidden="true"></i> Jaipur, Rajasthan</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="footer-heading">Registrations</h3>
-                        <ul class="footer-links footer-mono">
-                            <li><span>GST</span> 08CIJPS1734A1ZE</li>
-                            <li><span>MSME</span> MSME/2020/6194</li>
-                            <li><span>Udyam</span> UDYAM-RJ-17-0022468</li>
-                        </ul>
+                    <div class="flex space-x-6">
+                        <a
+                            href="tel:9352470085"
+                            class="social-icon-link w-12 h-12 rounded-xl flex items-center justify-center transition"
+                            aria-label="Call Swapnil Chemicals"
+                            ><i
+                                class="fas fa-phone-alt text-lg"
+                                style="transform: rotate(-270deg)"
+                                aria-hidden="true"
+                            ></i></a
+                        ><a
+                            href="mailto:swapnilchemicals10@gmail.com"
+                            class="social-icon-link w-12 h-12 rounded-xl flex items-center justify-center transition"
+                            aria-label="Email Swapnil Chemicals"
+                            ><i class="fas fa-envelope text-lg" aria-hidden="true"></i
+                        ></a>
                     </div>
                 </div>
-                <div class="footer-bottom">
-                    <p>&copy; <span id="copyrightYear">2026</span> Swapnil Chemicals. All rights reserved.</p>
-                    <p class="footer-credentials">MSME registered &middot; GST certified &middot; Jaipur, India</p>
+                <div class="border-t border-slate-700 mt-8 pt-8 text-center">
+                    <p class="text-slate-300">
+                        © <span id="copyrightYear">2026</span> Swapnil Chemicals. All rights reserved.
+                    </p>
+                    <p class="footer-credentials text-sm mt-2">
+                        MSME Registered • GST Certified • Quality Assured Products
+                    </p>
                 </div>
             </div>
         </footer>
@@ -6835,9 +4881,9 @@
                 const qtyOpts = product.qtyOptions || LT_OPTIONS;
                 const qtyLabel = escapeHtml(product.qtyLabel || "Lt");
                 const qtyBtnsHtml = product.hasLtOptions
-                    ? `<div class="qty-section" role="group" aria-label="Select quantity for ${name}">
-                           <p>Select quantity</p>
-                           <div class="flex gap-2 flex-wrap">${qtyOpts
+                    ? `<div class="qty-section mt-3" role="group" aria-label="Select quantity for ${name}">
+                           <p class="text-xs font-semibold text-gray-500 mb-2">Select Quantity</p>
+                           <div class="flex gap-2 flex-wrap mb-3">${qtyOpts
                                .map(
                                    (qty, i) =>
                                        `<button type="button" class="qty-btn ${i === 0 ? "active" : ""}" data-action="select-qty" data-lt="${qty}" aria-pressed="${i === 0}">${qty} ${qtyLabel}</button>`
@@ -6846,21 +4892,24 @@
                        </div>`
                     : "";
 
-                return `<article class="product-card overflow-hidden group" data-product-id="${product.id}">
+                return `<article class="product-card rounded-2xl overflow-hidden group" data-product-id="${product.id}">
+                    <span class="product-spotlight" aria-hidden="true"></span>
                     <div class="product-image-container">
                         <img src="${escapeHtml(product.image)}" alt="${name}" class="product-image" ${imgLoading} decoding="async" width="400" height="250">
                         <div class="product-image-fallback"><i class="fas fa-image text-4xl mb-2" aria-hidden="true"></i><p>Image not available</p></div>
                     </div>
-                    <div class="product-body">
-                        <h3 class="product-title">${name}</h3>
-                        <p class="product-desc">${escapeHtml(product.description)}</p>
-                        <p class="product-price">${formatCurrency(product.price)}<span>/ ${escapeHtml(product.unit)}</span></p>
-                        ${qtyBtnsHtml}
-                        <div class="product-actions">
-                            <button type="button" class="add-to-cart-btn" data-action="add-to-cart" data-product-id="${product.id}"><i class="fas fa-cart-plus" aria-hidden="true"></i> Add to cart</button>
-                            <button type="button" class="enquiry-trigger-btn" data-action="open-enquiry" data-product-id="${product.id}" aria-label="Send an enquiry for ${name}">Enquire</button>
-                            <a href="tel:9352470085" class="card-call-btn" aria-label="Call about ${name}"><i class="fas fa-phone" aria-hidden="true"></i></a>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600">${name}</h3>
+                        <p class="text-gray-600 mb-4">${escapeHtml(product.description)}</p>
+                        <div class="flex justify-between items-center">
+                            <div class="text-2xl font-bold gradient-text">${formatCurrency(product.price)}<span class="text-lg text-gray-500 ml-1">/${escapeHtml(product.unit)}</span></div>
+                            <div class="flex space-x-2">
+                                <a href="tel:9352470085" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm" aria-label="Call about ${name}"><i class="fas fa-phone" aria-hidden="true"></i></a>
+                                <button type="button" class="enquiry-trigger-btn" data-action="open-enquiry" data-product-id="${product.id}" aria-label="Send an enquiry for ${name}"><i class="fas fa-clipboard-list" aria-hidden="true"></i> Enquiry</button>
+                            </div>
                         </div>
+                        ${qtyBtnsHtml}
+                        <button type="button" class="add-to-cart-btn" data-action="add-to-cart" data-product-id="${product.id}"><i class="fas fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button>
                     </div>
                 </article>`;
             }
@@ -7983,43 +6032,107 @@
                 return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
             }
 
+            function hasFinePointer() {
+                return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+            }
+
+            // Decorative foam bubbles rising through the hero; skipped for reduced motion.
+            function initHeroBubbles() {
+                const wrap = document.getElementById("heroBubbles");
+                if (!wrap || prefersReducedMotion()) return;
+                const count = window.innerWidth < 768 ? 6 : 12;
+                const frag = document.createDocumentFragment();
+                for (let i = 0; i < count; i++) {
+                    const bubble = document.createElement("span");
+                    bubble.className = "bubble";
+                    bubble.style.setProperty("--s", `${8 + Math.random() * 38}px`);
+                    bubble.style.setProperty("--x", `${Math.random() * 100}%`);
+                    bubble.style.setProperty("--dur", `${9 + Math.random() * 10}s`);
+                    bubble.style.setProperty("--delay", `${-Math.random() * 18}s`);
+                    bubble.style.setProperty("--drift", `${(Math.random() - 0.5) * 120}px`);
+                    frag.appendChild(bubble);
+                }
+                wrap.appendChild(frag);
+            }
 
             // Infinite decorative animations keep the GPU busy even when off-screen; pause them there.
             function initOffscreenAnimationPause() {
                 if (!("IntersectionObserver" in window)) return;
-                const targets = document.querySelectorAll(".hero-gradient, .site-footer");
+                const targets = document.querySelectorAll(".hero-gradient, .product-marquee, .site-footer");
                 const obs = new IntersectionObserver((entries) =>
                     entries.forEach((entry) => entry.target.classList.toggle("anim-paused", !entry.isIntersecting))
                 );
                 targets.forEach((el) => obs.observe(el));
             }
 
-            // Highlights the nav link for the section in view and closes the mobile menu after a tap.
-            function initPrimaryNav() {
-                const menu = document.getElementById("primaryNav");
-                if (!menu) return;
-                const links = [...menu.querySelectorAll('a.nav-link[href^="#"]')];
-                menu.addEventListener("click", (e) => {
-                    if (e.target.closest("a") && menu.matches(":popover-open")) menu.hidePopover();
+            // Delegated on the grid so it keeps working after search re-renders the cards.
+            function initCardTilt() {
+                const grid = document.getElementById("productsGrid");
+                if (!grid || prefersReducedMotion() || !hasFinePointer()) return;
+                const MAX_TILT_DEG = 5;
+                let pending = null;
+                grid.addEventListener("pointermove", (e) => {
+                    const card = e.target.closest(".product-card");
+                    if (!card) return;
+                    const first = !pending;
+                    pending = { card, x: e.clientX, y: e.clientY };
+                    if (first) requestAnimationFrame(applyTilt);
                 });
-                const toggle = document.querySelector(".nav-toggle");
-                menu.addEventListener("toggle", (e) => {
-                    toggle?.setAttribute("aria-expanded", String(e.newState === "open"));
+                function applyTilt() {
+                    if (!pending) return;
+                    const { card, x, y } = pending;
+                    pending = null;
+                    if (!card.isConnected) return;
+                    const rect = card.getBoundingClientRect();
+                    const px = (x - rect.left) / rect.width;
+                    const py = (y - rect.top) / rect.height;
+                    card.style.setProperty("--mx", `${px * 100}%`);
+                    card.style.setProperty("--my", `${py * 100}%`);
+                    card.style.setProperty("--ry", `${(px - 0.5) * MAX_TILT_DEG * 2}deg`);
+                    card.style.setProperty("--rx", `${(0.5 - py) * MAX_TILT_DEG * 2}deg`);
+                    card.classList.add("is-tilting");
+                }
+                grid.addEventListener("pointerout", (e) => {
+                    const card = e.target.closest(".product-card");
+                    if (!card || card.contains(e.relatedTarget)) return;
+                    pending = null;
+                    card.classList.remove("is-tilting");
+                    card.style.setProperty("--rx", "0deg");
+                    card.style.setProperty("--ry", "0deg");
                 });
-                if (!("IntersectionObserver" in window)) return;
-                const byId = new Map(links.map((a) => [a.getAttribute("href").slice(1), a]));
-                const obs = new IntersectionObserver(
-                    (entries) =>
-                        entries.forEach((entry) => {
-                            if (!entry.isIntersecting) return;
-                            links.forEach((a) => a.removeAttribute("aria-current"));
-                            byId.get(entry.target.id)?.setAttribute("aria-current", "true");
-                        }),
-                    { rootMargin: "-45% 0px -50% 0px" }
-                );
-                byId.forEach((_, id) => {
-                    const section = document.getElementById(id);
-                    if (section) obs.observe(section);
+            }
+
+            function initMagneticButtons() {
+                if (prefersReducedMotion() || !hasFinePointer()) return;
+                document.querySelectorAll(".magnetic").forEach((el) => {
+                    el.addEventListener("pointermove", (e) => {
+                        const rect = el.getBoundingClientRect();
+                        el.style.setProperty("--tx", `${(e.clientX - rect.left - rect.width / 2) * 0.18}px`);
+                        el.style.setProperty("--ty", `${(e.clientY - rect.top - rect.height / 2) * 0.25}px`);
+                    });
+                    el.addEventListener("pointerleave", () => {
+                        el.style.setProperty("--tx", "0px");
+                        el.style.setProperty("--ty", "0px");
+                    });
+                });
+            }
+
+            const RIPPLE_SELECTOR =
+                ".btn-shine, .add-to-cart-btn, .enquiry-trigger-btn, .enquiry-submit-btn, .added-cart-viewcart-btn";
+
+            function initRipples() {
+                if (prefersReducedMotion()) return;
+                document.addEventListener("pointerdown", (e) => {
+                    const btn = e.target.closest(RIPPLE_SELECTOR);
+                    if (!btn) return;
+                    const rect = btn.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height) * 2;
+                    const ripple = document.createElement("span");
+                    ripple.className = "ripple";
+                    ripple.setAttribute("aria-hidden", "true");
+                    ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size / 2}px;top:${e.clientY - rect.top - size / 2}px`;
+                    btn.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 700);
                 });
             }
 
@@ -8144,8 +6257,11 @@
                 initScrollEffects();
                 initHeaderHeightVar();
                 initCardReveal();
-                initPrimaryNav();
+                initHeroBubbles();
                 initOffscreenAnimationPause();
+                initCardTilt();
+                initMagneticButtons();
+                initRipples();
                 const yearEl = document.getElementById("copyrightYear");
                 if (yearEl) yearEl.textContent = String(new Date().getFullYear());
                 cart = restoreCart(storage.get(APP.CART_STORAGE_KEY, {}));
