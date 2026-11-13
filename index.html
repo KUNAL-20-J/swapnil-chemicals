@@ -36,6 +36,8 @@
             content="Manufacturers of premium automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner & more. Bulk & retail."
         />
         <meta property="og:image" content="SC Logo.webp" />
+        <meta property="og:image:type" content="image/webp" />
+        <meta property="og:image:alt" content="Swapnil Chemicals logo" />
         <meta property="og:locale" content="en_IN" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="Swapnil Chemicals | Automobile Cleaning Products Manufacturer, Jaipur" />
@@ -44,12 +46,23 @@
             content="Manufacturers of premium automobile cleaning products in Jaipur - dashboard polish, tyre polish, car wash, glass cleaner & more."
         />
         <meta name="twitter:image" content="SC Logo.webp" />
+        <meta name="twitter:image:alt" content="Swapnil Chemicals logo" />
 
         <meta
             http-equiv="Content-Security-Policy"
             content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
         />
-        <!-- frame-ancestors is ignored by browsers when set via <meta>; real clickjacking protection needs an X-Frame-Options/CSP response header from the server -->
+        <!--
+            frame-ancestors above is ignored by browsers when set via <meta>; real clickjacking
+            protection needs this enforced as an HTTP response header by the server/host instead.
+            Recommended server-level headers (e.g. in an Apache .htaccess, Nginx config, or the
+            hosting panel's "custom headers" screen) once this file is deployed:
+              X-Frame-Options: DENY
+              X-Content-Type-Options: nosniff
+              Referrer-Policy: strict-origin-when-cross-origin
+              Permissions-Policy: camera=(), microphone=(), geolocation=()
+              Strict-Transport-Security: max-age=63072000; includeSubDomains  (only once served over HTTPS)
+        -->
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -2943,7 +2956,13 @@
                         "image": "Dashboard Polish.webp",
                         "description": "Premium dashboard polish for long-lasting shine",
                         "brand": { "@type": "Brand", "name": "Swapnil Chemicals" },
-                        "offers": { "@type": "Offer", "price": "200", "priceCurrency": "INR", "url": "#products" }
+                        "offers": {
+                            "@type": "Offer",
+                            "price": "200",
+                            "priceCurrency": "INR",
+                            "availability": "https://schema.org/InStock",
+                            "url": "#products"
+                        }
                     },
                     {
                         "@type": "Product",
@@ -2951,7 +2970,13 @@
                         "image": "Tyre Polish.webp",
                         "description": "High-gloss tyre polish for enhanced appearance",
                         "brand": { "@type": "Brand", "name": "Swapnil Chemicals" },
-                        "offers": { "@type": "Offer", "price": "150", "priceCurrency": "INR", "url": "#products" }
+                        "offers": {
+                            "@type": "Offer",
+                            "price": "150",
+                            "priceCurrency": "INR",
+                            "availability": "https://schema.org/InStock",
+                            "url": "#products"
+                        }
                     },
                     {
                         "@type": "Product",
@@ -2959,7 +2984,13 @@
                         "image": "Car Foaming Wash.webp",
                         "description": "Advanced foaming wash for thorough cleaning",
                         "brand": { "@type": "Brand", "name": "Swapnil Chemicals" },
-                        "offers": { "@type": "Offer", "price": "70", "priceCurrency": "INR", "url": "#products" }
+                        "offers": {
+                            "@type": "Offer",
+                            "price": "70",
+                            "priceCurrency": "INR",
+                            "availability": "https://schema.org/InStock",
+                            "url": "#products"
+                        }
                     },
                     {
                         "@type": "Product",
@@ -2967,7 +2998,13 @@
                         "image": "Glass Cleaner.webp",
                         "description": "Streak-free glass cleaner for crystal clear visibility",
                         "brand": { "@type": "Brand", "name": "Swapnil Chemicals" },
-                        "offers": { "@type": "Offer", "price": "70", "priceCurrency": "INR", "url": "#products" }
+                        "offers": {
+                            "@type": "Offer",
+                            "price": "70",
+                            "priceCurrency": "INR",
+                            "availability": "https://schema.org/InStock",
+                            "url": "#products"
+                        }
                     },
                     {
                         "@type": "Product",
@@ -2975,7 +3012,13 @@
                         "image": "Interior Cleaner.webp",
                         "description": "Effective interior cleaner for all surfaces",
                         "brand": { "@type": "Brand", "name": "Swapnil Chemicals" },
-                        "offers": { "@type": "Offer", "price": "130", "priceCurrency": "INR", "url": "#products" }
+                        "offers": {
+                            "@type": "Offer",
+                            "price": "130",
+                            "priceCurrency": "INR",
+                            "availability": "https://schema.org/InStock",
+                            "url": "#products"
+                        }
                     },
                     {
                         "@type": "Product",
@@ -2983,7 +3026,13 @@
                         "image": "Foaming Gun.webp",
                         "description": "Professional foaming gun for car wash",
                         "brand": { "@type": "Brand", "name": "Swapnil Chemicals" },
-                        "offers": { "@type": "Offer", "price": "2000", "priceCurrency": "INR", "url": "#products" }
+                        "offers": {
+                            "@type": "Offer",
+                            "price": "2000",
+                            "priceCurrency": "INR",
+                            "availability": "https://schema.org/InStock",
+                            "url": "#products"
+                        }
                     },
                     {
                         "@type": "Product",
@@ -2991,7 +3040,13 @@
                         "image": "Micro Towel.webp",
                         "description": "Ultra soft Micro Towel",
                         "brand": { "@type": "Brand", "name": "Swapnil Chemicals" },
-                        "offers": { "@type": "Offer", "price": "70", "priceCurrency": "INR", "url": "#products" }
+                        "offers": {
+                            "@type": "Offer",
+                            "price": "70",
+                            "priceCurrency": "INR",
+                            "availability": "https://schema.org/InStock",
+                            "url": "#products"
+                        }
                     },
                     {
                         "@type": "Product",
@@ -2999,7 +3054,13 @@
                         "image": "Micro Towel 2.webp",
                         "description": "Ultra soft Micro Towel",
                         "brand": { "@type": "Brand", "name": "Swapnil Chemicals" },
-                        "offers": { "@type": "Offer", "price": "110", "priceCurrency": "INR", "url": "#products" }
+                        "offers": {
+                            "@type": "Offer",
+                            "price": "110",
+                            "priceCurrency": "INR",
+                            "availability": "https://schema.org/InStock",
+                            "url": "#products"
+                        }
                     },
                     {
                         "@type": "Product",
@@ -3007,7 +3068,13 @@
                         "image": "Micro Towel 3.webp",
                         "description": "Ultra soft Micro Towel",
                         "brand": { "@type": "Brand", "name": "Swapnil Chemicals" },
-                        "offers": { "@type": "Offer", "price": "130", "priceCurrency": "INR", "url": "#products" }
+                        "offers": {
+                            "@type": "Offer",
+                            "price": "130",
+                            "priceCurrency": "INR",
+                            "availability": "https://schema.org/InStock",
+                            "url": "#products"
+                        }
                     }
                 ]
             }
