@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Swapnil Chemicals — Automobile cleaning products | UI refresh 2026 -->
+<!-- Swapnil Chemicals — Automobile cleaning products | UI refresh 2027 -->
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -20,7 +20,7 @@
             content="automobile cleaning, car cleaning, dashboard polish, tyre polish, car wash, glass cleaner, Jaipur manufacturer"
         />
         <meta name="robots" content="index, follow" />
-        <meta name="color-scheme" content="light" />
+        <meta name="color-scheme" content="light dark" />
         <meta name="theme-color" content="#1e3a8a" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -47,10 +47,22 @@
 
         <meta
             http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
+            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; manifest-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
         />
         <!-- frame-ancestors is ignored by browsers when set via <meta>; real clickjacking protection needs an X-Frame-Options/CSP response header from the server -->
 
+        <script>
+            (function () {
+                var t = null;
+                try {
+                    t = JSON.parse(localStorage.getItem("sc_theme"));
+                } catch (e) {}
+                if (t !== "light" && t !== "dark") {
+                    t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+                }
+                document.documentElement.dataset.theme = t;
+            })();
+        </script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
@@ -3708,6 +3720,1000 @@
                     }
                 }
             }
+
+            /* =====================================================================
+               2027 layer — dark theme, command palette, quick view, bulk estimator,
+               care routine, scroll-driven motion. Declared last, so it wins over
+               every earlier layer without !important.
+               ===================================================================== */
+            @view-transition {
+                navigation: auto;
+            }
+
+            @layer y2027 {
+                /* ---------------------------------------------------- typography polish */
+                h1, h2, h3, .section-title, .hero-title {
+                    text-wrap: balance;
+                }
+                p, li, .section-lead {
+                    text-wrap: pretty;
+                }
+                ::selection {
+                    background: oklch(0.63 0.18 252 / 0.28);
+                }
+                textarea {
+                    field-sizing: content;
+                    min-height: 3lh;
+                }
+                :focus-visible {
+                    outline: 2px solid var(--focus);
+                    outline-offset: 3px;
+                }
+
+                /* ---------------------------------------------------- header extras */
+                .site-nav a,
+                .header-call {
+                    white-space: nowrap;
+                }
+                .site-nav a {
+                    padding-inline: 12px;
+                }
+                @media (max-width: 1360px) {
+                    .header-call span {
+                        display: none;
+                    }
+                    .header-call {
+                        width: 44px;
+                        padding: 0;
+                        justify-content: center;
+                    }
+                }
+                .est-panel > *,
+                .est-form > * {
+                    min-width: 0;
+                }
+                .site-nav a[aria-current="true"] {
+                    background: var(--brand-50);
+                    color: var(--brand-700);
+                    box-shadow: inset 0 0 0 1px var(--brand-200);
+                }
+                .cmdk-trigger {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 10px;
+                    min-height: 44px;
+                    padding: 0 8px 0 14px;
+                    border-radius: var(--radius-pill);
+                    border: 1px solid var(--border);
+                    background: var(--surface);
+                    color: var(--text-muted);
+                    font-size: var(--fs-sm);
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: border-color var(--dur-fast), color var(--dur-fast), background-color var(--dur-fast);
+                }
+                .cmdk-trigger:hover {
+                    border-color: var(--brand-200);
+                    color: var(--brand-600);
+                }
+                .cmdk-trigger kbd,
+                .cmdk-foot kbd {
+                    white-space: nowrap;
+                    font: 600 11px/1 var(--font-sans);
+                    padding: 5px 7px;
+                    border-radius: 7px;
+                    background: var(--surface-2);
+                    border: 1px solid var(--border);
+                    color: var(--ink-600);
+                }
+                /* Font Awesome's stylesheet is unlayered, so toggle icons via its own --fa-display hook */
+                .theme-toggle .fa-sun {
+                    --fa-display: none;
+                }
+                :root[data-theme="dark"] .theme-toggle .fa-sun {
+                    --fa-display: inline-block;
+                }
+                :root[data-theme="dark"] .theme-toggle .fa-moon {
+                    --fa-display: none;
+                }
+                @media (max-width: 1280px) {
+                    .cmdk-trigger .cmdk-label,
+                    .cmdk-trigger kbd {
+                        display: none;
+                    }
+                    .cmdk-trigger {
+                        width: 44px;
+                        padding: 0;
+                        justify-content: center;
+                    }
+                }
+                @media (max-width: 380px) {
+                    .header-actions .cmdk-trigger {
+                        display: none;
+                    }
+                }
+                @media (max-width: 640px) {
+                    .header-actions .header-call {
+                        display: none;
+                    }
+                    .header-actions {
+                        gap: 6px;
+                    }
+                }
+
+                /* ---------------------------------------------------- theme switch animation */
+                /* Freeze per-element colour transitions while the theme flips */
+                :root.theme-switching *,
+                :root.theme-switching *::before,
+                :root.theme-switching *::after {
+                    transition: none !important;
+                }
+                ::view-transition-old(root),
+                ::view-transition-new(root) {
+                    animation: none;
+                    mix-blend-mode: normal;
+                }
+                :root.theme-switching::view-transition-new(root) {
+                    animation: theme-reveal 0.6s var(--ease-out) both;
+                }
+                @keyframes theme-reveal {
+                    from {
+                        clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0));
+                    }
+                    to {
+                        clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 0));
+                    }
+                }
+                ::view-transition-group(*) {
+                    animation-duration: 0.38s;
+                    animation-timing-function: var(--ease-out);
+                }
+
+                /* ---------------------------------------------------- product card: quick view */
+                .product-image-container {
+                    position: relative;
+                }
+                .qv-btn {
+                    position: absolute;
+                    right: 12px;
+                    bottom: 12px;
+                    z-index: 2;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 8px 12px;
+                    border: 1px solid oklch(1 0 0 / 0.6);
+                    border-radius: var(--radius-pill);
+                    background: oklch(1 0 0 / 0.78);
+                    backdrop-filter: blur(10px) saturate(1.4);
+                    -webkit-backdrop-filter: blur(10px) saturate(1.4);
+                    color: var(--brand-700);
+                    font: 600 12px/1 var(--font-sans);
+                    cursor: pointer;
+                    opacity: 0;
+                    translate: 0 6px;
+                    transition: opacity var(--dur) var(--ease-out), translate var(--dur) var(--ease-out);
+                }
+                .product-card:hover .qv-btn,
+                .product-card:focus-within .qv-btn,
+                .qv-btn:focus-visible {
+                    opacity: 1;
+                    translate: 0 0;
+                }
+                @media (hover: none) {
+                    .qv-btn {
+                        opacity: 1;
+                        translate: 0 0;
+                    }
+                }
+
+                /* ---------------------------------------------------- shared dialog shell */
+                .y-dialog {
+                    padding: 0;
+                    border: 0;
+                    background: transparent;
+                    max-width: min(960px, calc(100vw - 24px));
+                    width: 100%;
+                    max-height: calc(100dvh - 24px);
+                    color: var(--text);
+                    overflow: visible;
+                    opacity: 0;
+                    scale: 0.96;
+                    transition:
+                        opacity 0.25s var(--ease-out),
+                        scale 0.3s var(--ease-out),
+                        overlay 0.3s allow-discrete,
+                        display 0.3s allow-discrete;
+                }
+                .y-dialog[open] {
+                    opacity: 1;
+                    scale: 1;
+                }
+                @starting-style {
+                    .y-dialog[open] {
+                        opacity: 0;
+                        scale: 0.96;
+                    }
+                }
+                .y-dialog::backdrop {
+                    background: oklch(0.16 0.03 262 / 0.55);
+                    backdrop-filter: blur(6px);
+                    -webkit-backdrop-filter: blur(6px);
+                }
+                .y-dialog-box {
+                    position: relative;
+                    background: var(--surface);
+                    border: 1px solid var(--border);
+                    border-radius: var(--radius-xl);
+                    box-shadow: var(--shadow-lg);
+                    overflow: hidden;
+                }
+                .y-close {
+                    position: absolute;
+                    top: 14px;
+                    right: 14px;
+                    z-index: 3;
+                    width: 40px;
+                    height: 40px;
+                    display: grid;
+                    place-items: center;
+                    border-radius: 50%;
+                    border: 1px solid var(--border);
+                    background: var(--surface);
+                    color: var(--ink-700);
+                    cursor: pointer;
+                }
+                .y-close:hover {
+                    color: var(--danger-500);
+                }
+
+                /* ---------------------------------------------------- quick view */
+                .qv-box {
+                    display: grid;
+                    grid-template-columns: 1fr 1.1fr;
+                    max-height: calc(100dvh - 24px);
+                }
+                .qv-media {
+                    position: relative;
+                    display: grid;
+                    place-items: center;
+                    padding: 32px;
+                    background:
+                        radial-gradient(circle at 50% 55%, oklch(1 0 0 / 0.9), transparent 70%),
+                        linear-gradient(160deg, var(--brand-50), oklch(0.93 0.05 210));
+                    min-height: 320px;
+                }
+                .qv-media img {
+                    width: 100%;
+                    max-width: 380px;
+                    aspect-ratio: 1;
+                    object-fit: contain;
+                    filter: drop-shadow(0 24px 30px oklch(0.3 0.1 262 / 0.25));
+                }
+                .qv-media .qv-fallback {
+                    --fa-display: none;
+                    color: var(--ink-400);
+                    font-size: 56px;
+                }
+                .qv-media.is-broken img {
+                    display: none;
+                }
+                .qv-media.is-broken .qv-fallback {
+                    --fa-display: block;
+                }
+                .qv-body {
+                    padding: 36px 32px 28px;
+                    overflow-y: auto;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                }
+                .qv-kicker {
+                    font: 700 11px/1 var(--font-sans);
+                    letter-spacing: 0.12em;
+                    text-transform: uppercase;
+                    color: var(--brand-600);
+                }
+                .qv-title {
+                    font: 800 clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem) / 1.1 var(--font-display);
+                    color: var(--text);
+                    padding-right: 40px;
+                }
+                .qv-desc {
+                    color: var(--text-muted);
+                }
+                .qv-price {
+                    font: 800 1.8rem/1 var(--font-display);
+                    color: var(--brand-600);
+                }
+                .qv-price small {
+                    font: 500 0.95rem var(--font-sans);
+                    color: var(--text-muted);
+                }
+                .pack-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                    gap: 10px;
+                    border: 0;
+                    padding: 0;
+                    margin: 0;
+                }
+                .pack-grid legend {
+                    font: 600 var(--fs-sm) var(--font-sans);
+                    color: var(--ink-700);
+                    margin-bottom: 8px;
+                }
+                .pack-opt {
+                    position: relative;
+                    display: grid;
+                    gap: 2px;
+                    padding: 12px 14px;
+                    border: 1.5px solid var(--border);
+                    border-radius: var(--radius-md);
+                    background: var(--surface);
+                    cursor: pointer;
+                    transition: border-color var(--dur-fast), background-color var(--dur-fast), box-shadow var(--dur-fast);
+                }
+                .pack-opt input {
+                    position: absolute;
+                    opacity: 0;
+                    pointer-events: none;
+                }
+                .pack-opt b {
+                    font: 700 1rem var(--font-display);
+                    color: var(--text);
+                }
+                .pack-opt span {
+                    font-size: var(--fs-xs);
+                    color: var(--text-muted);
+                    font-variant-numeric: tabular-nums;
+                }
+                .pack-opt:hover {
+                    border-color: var(--brand-200);
+                }
+                .pack-opt:has(input:checked) {
+                    border-color: var(--brand-600);
+                    background: var(--brand-50);
+                    box-shadow: 0 0 0 3px oklch(0.55 0.2 260 / 0.15);
+                }
+                .pack-opt:has(input:focus-visible) {
+                    outline: 2px solid var(--focus);
+                    outline-offset: 2px;
+                }
+                .qv-actions {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    margin-top: auto;
+                }
+                .qv-actions .btn {
+                    flex: 1 1 auto;
+                }
+                .btn-outline {
+                    background: var(--surface);
+                    color: var(--ink-800);
+                    border: 1px solid var(--border);
+                }
+                .btn-outline:hover {
+                    border-color: var(--brand-200);
+                    color: var(--brand-600);
+                }
+                .qv-note {
+                    font-size: var(--fs-xs);
+                    color: var(--text-muted);
+                }
+                @media (max-width: 760px) {
+                    .qv-box {
+                        grid-template-columns: 1fr;
+                        overflow-y: auto;
+                    }
+                    .qv-media {
+                        min-height: 220px;
+                        padding: 20px;
+                    }
+                    .qv-media img {
+                        max-width: 220px;
+                    }
+                    .qv-body {
+                        padding: 24px 20px 20px;
+                        overflow: visible;
+                    }
+                    .y-dialog {
+                        margin-block: auto 0;
+                        max-width: 100vw;
+                    }
+                    .y-dialog .y-dialog-box {
+                        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+                    }
+                }
+
+                /* ---------------------------------------------------- command palette */
+                .cmdk {
+                    max-width: min(640px, calc(100vw - 24px));
+                    margin-top: 12vh;
+                }
+                .cmdk-search {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 16px 20px;
+                    border-bottom: 1px solid var(--border);
+                    color: var(--text-muted);
+                }
+                .cmdk-search input {
+                    flex: 1;
+                    border: 0;
+                    background: transparent;
+                    font: 500 1.05rem var(--font-sans);
+                    color: var(--text);
+                    outline: none;
+                }
+                .cmdk-list {
+                    max-height: min(56vh, 440px);
+                    overflow-y: auto;
+                    padding: 8px;
+                    margin: 0;
+                    list-style: none;
+                    overscroll-behavior: contain;
+                }
+                .cmdk-group {
+                    padding: 10px 12px 6px;
+                    font: 700 11px/1 var(--font-sans);
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                    color: var(--ink-500);
+                }
+                .cmdk-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 10px 12px;
+                    border-radius: var(--radius-md);
+                    cursor: pointer;
+                    color: var(--text);
+                }
+                .cmdk-item .cmdk-ico {
+                    width: 36px;
+                    height: 36px;
+                    flex-shrink: 0;
+                    display: grid;
+                    place-items: center;
+                    border-radius: 10px;
+                    background: var(--brand-50);
+                    color: var(--brand-600);
+                    overflow: hidden;
+                }
+                .cmdk-item .cmdk-ico img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                }
+                .cmdk-item .cmdk-text {
+                    flex: 1;
+                    min-width: 0;
+                }
+                .cmdk-item .cmdk-text b {
+                    display: block;
+                    font-weight: 600;
+                    font-size: var(--fs-sm);
+                }
+                .cmdk-item .cmdk-text small {
+                    color: var(--text-muted);
+                    font-size: var(--fs-xs);
+                }
+                .cmdk-item .cmdk-go {
+                    color: var(--ink-400);
+                    font-size: 12px;
+                    opacity: 0;
+                }
+                .cmdk-item[aria-selected="true"] {
+                    background: var(--brand-50);
+                    box-shadow: inset 0 0 0 1px var(--brand-200);
+                }
+                .cmdk-item[aria-selected="true"] .cmdk-go {
+                    opacity: 1;
+                }
+                .cmdk-empty {
+                    padding: 28px 12px;
+                    text-align: center;
+                    color: var(--text-muted);
+                }
+                .cmdk-foot {
+                    display: flex;
+                    gap: 16px;
+                    flex-wrap: wrap;
+                    padding: 10px 16px;
+                    border-top: 1px solid var(--border);
+                    font-size: var(--fs-xs);
+                    color: var(--text-muted);
+                    background: var(--surface-2);
+                }
+
+                /* ---------------------------------------------------- bulk estimator */
+                .est-panel {
+                    display: grid;
+                    grid-template-columns: 0.9fr 1.1fr;
+                    gap: clamp(24px, 4vw, 56px);
+                    align-items: start;
+                    padding: clamp(24px, 4vw, 48px);
+                    border-radius: var(--radius-xl);
+                    border: 1px solid var(--border);
+                    background:
+                        radial-gradient(600px 300px at 0% 0%, var(--brand-50), transparent 70%),
+                        var(--surface);
+                    box-shadow: var(--shadow-md);
+                }
+                .est-points {
+                    display: grid;
+                    gap: 12px;
+                    margin-top: 24px;
+                    padding: 0;
+                    list-style: none;
+                }
+                .est-points li {
+                    display: flex;
+                    gap: 12px;
+                    align-items: flex-start;
+                    color: var(--ink-700);
+                    font-size: var(--fs-sm);
+                }
+                .est-points i {
+                    color: var(--brand-600);
+                    margin-top: 3px;
+                }
+                .est-form {
+                    display: grid;
+                    gap: 20px;
+                    container-type: inline-size;
+                }
+                .est-field > label,
+                .est-field > span {
+                    display: block;
+                    margin-bottom: 8px;
+                    font: 600 var(--fs-sm) var(--font-sans);
+                    color: var(--ink-700);
+                }
+                .est-products {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                }
+                .est-prod {
+                    flex: 0 0 auto;
+                    scroll-snap-align: start;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 8px 14px 8px 8px;
+                    border: 1.5px solid var(--border);
+                    border-radius: var(--radius-pill);
+                    background: var(--surface);
+                    color: var(--ink-800);
+                    font: 600 var(--fs-sm) var(--font-sans);
+                    cursor: pointer;
+                    white-space: nowrap;
+                }
+                .est-prod img {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 50%;
+                    object-fit: contain;
+                    background: var(--brand-50);
+                }
+                .est-prod[aria-pressed="true"] {
+                    border-color: var(--brand-600);
+                    background: var(--brand-50);
+                    color: var(--brand-700);
+                }
+                .stepper {
+                    display: inline-flex;
+                    align-items: center;
+                    border: 1.5px solid var(--border);
+                    border-radius: var(--radius-pill);
+                    background: var(--surface);
+                    overflow: hidden;
+                }
+                .stepper button {
+                    width: 44px;
+                    height: 44px;
+                    border: 0;
+                    background: transparent;
+                    font-size: 1.2rem;
+                    color: var(--ink-700);
+                    cursor: pointer;
+                }
+                .stepper button:hover {
+                    background: var(--brand-50);
+                    color: var(--brand-600);
+                }
+                .stepper input {
+                    width: 64px;
+                    height: 44px;
+                    border: 0;
+                    text-align: center;
+                    font: 700 1rem var(--font-sans);
+                    background: transparent;
+                    color: var(--text);
+                    font-variant-numeric: tabular-nums;
+                    -moz-appearance: textfield;
+                }
+                .stepper input::-webkit-inner-spin-button,
+                .stepper input::-webkit-outer-spin-button {
+                    -webkit-appearance: none;
+                }
+                .est-result {
+                    display: grid;
+                    gap: 6px;
+                    padding: 20px 22px;
+                    border-radius: var(--radius-lg);
+                    background: var(--gloss-soft), var(--grad-ink);
+                    color: #fff;
+                    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.25), 0 18px 40px oklch(0.45 0.17 260 / 0.25);
+                }
+                .est-result small {
+                    color: oklch(1 0 0 / 0.75);
+                    font-size: var(--fs-xs);
+                    text-transform: uppercase;
+                    letter-spacing: 0.1em;
+                    font-weight: 700;
+                }
+                .est-total {
+                    font: 800 clamp(2rem, 1.5rem + 2vw, 2.8rem) / 1 var(--font-display);
+                    font-variant-numeric: tabular-nums;
+                }
+                .est-breakdown {
+                    color: oklch(1 0 0 / 0.82);
+                    font-size: var(--fs-sm);
+                    font-variant-numeric: tabular-nums;
+                }
+                .est-actions {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                }
+                .est-actions .btn {
+                    flex: 1 1 200px;
+                }
+                @media (max-width: 900px) {
+                    .est-panel {
+                        grid-template-columns: 1fr;
+                    }
+                }
+                @media (max-width: 640px) {
+                    .est-products {
+                        flex-wrap: nowrap;
+                        overflow-x: auto;
+                        scroll-snap-type: x proximity;
+                        scrollbar-width: none;
+                        padding-bottom: 4px;
+                    }
+                    .est-prod {
+                        flex: 0 0 auto;
+                        scroll-snap-align: start;
+                    }
+                }
+
+                /* ---------------------------------------------------- care routine */
+                .routine {
+                    position: relative;
+                    display: grid;
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    gap: 18px;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                    counter-reset: routine;
+                }
+                .routine-step {
+                    counter-increment: routine;
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    padding: 24px;
+                    border-radius: var(--radius-lg);
+                    border: 1px solid var(--border);
+                    background: var(--surface);
+                    box-shadow: var(--shadow-sm);
+                    transition: translate var(--dur) var(--ease-out), box-shadow var(--dur), border-color var(--dur);
+                }
+                .routine-step:hover {
+                    translate: 0 -4px;
+                    border-color: var(--brand-200);
+                    box-shadow: var(--shadow-md);
+                }
+                .routine-step::before {
+                    content: counter(routine, decimal-leading-zero);
+                    position: absolute;
+                    top: 18px;
+                    right: 22px;
+                    font: 800 2.4rem/1 var(--font-display);
+                    color: transparent;
+                    -webkit-text-stroke: 1px var(--ink-300);
+                }
+                .routine-step h3 {
+                    font: 700 1.1rem var(--font-display);
+                    color: var(--text);
+                }
+                .routine-step p {
+                    color: var(--text-muted);
+                    font-size: var(--fs-sm);
+                    flex: 1;
+                }
+                .routine-links {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                }
+                .routine-link {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 6px 12px;
+                    border-radius: var(--radius-pill);
+                    border: 1px solid var(--brand-200);
+                    background: var(--brand-50);
+                    color: var(--brand-700);
+                    font: 600 12px var(--font-sans);
+                    cursor: pointer;
+                }
+                .routine-link:hover {
+                    background: var(--brand-600);
+                    border-color: var(--brand-600);
+                    color: #fff;
+                }
+                @media (max-width: 1000px) {
+                    .routine {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+                }
+                @media (max-width: 640px) {
+                    .routine {
+                        display: flex;
+                        overflow-x: auto;
+                        scroll-snap-type: x mandatory;
+                        scrollbar-width: none;
+                        margin-inline: calc(var(--gutter) * -1);
+                        padding: 4px var(--gutter) 12px;
+                        scroll-padding-inline: var(--gutter);
+                        anchor-name: --routine;
+                    }
+                    .routine-step {
+                        flex: 0 0 84%;
+                        scroll-snap-align: start;
+                    }
+                    /* CSS-only carousel dots where supported (Chrome 135+) */
+                    @supports selector(::scroll-marker) {
+                        .routine {
+                            scroll-marker-group: after;
+                        }
+                        .routine::scroll-marker-group {
+                            display: flex;
+                            justify-content: center;
+                            gap: 8px;
+                            padding-top: 8px;
+                        }
+                        .routine-step::scroll-marker {
+                            content: "";
+                            width: 8px;
+                            height: 8px;
+                            border-radius: 99px;
+                            background: var(--ink-300);
+                            transition: width var(--dur), background-color var(--dur);
+                        }
+                        .routine-step::scroll-marker:target-current {
+                            width: 22px;
+                            background: var(--brand-600);
+                        }
+                    }
+                }
+
+                /* ---------------------------------------------------- scroll-driven reveals */
+                @supports (animation-timeline: view()) {
+                    @media (prefers-reduced-motion: no-preference) {
+                        .y-reveal {
+                            animation: y-rise linear both;
+                            animation-timeline: view();
+                            animation-range: entry 0% entry 60%;
+                        }
+                        .routine-step {
+                            animation: y-rise linear both;
+                            animation-timeline: view();
+                            animation-range: entry 5% entry 70%;
+                        }
+                    }
+                }
+                @keyframes y-rise {
+                    from {
+                        opacity: 0;
+                        translate: 0 40px;
+                        scale: 0.98;
+                    }
+                    to {
+                        opacity: 1;
+                        translate: 0 0;
+                        scale: 1;
+                    }
+                }
+
+                /* ---------------------------------------------------- toast */
+                .y-toast {
+                    position: fixed;
+                    left: 50%;
+                    bottom: 96px;
+                    translate: -50% 0;
+                    z-index: 9999;
+                    margin: 0;
+                    padding: 12px 18px;
+                    border: 0;
+                    border-radius: var(--radius-pill);
+                    background: var(--ink-900);
+                    color: var(--ink-50);
+                    font: 600 var(--fs-sm) var(--font-sans);
+                    box-shadow: var(--shadow-lg);
+                    inset: auto auto 96px 50%;
+                    opacity: 0;
+                    transition: opacity 0.25s, translate 0.25s var(--ease-out), display 0.25s allow-discrete, overlay 0.25s allow-discrete;
+                }
+                .y-toast:popover-open {
+                    opacity: 1;
+                }
+                @starting-style {
+                    .y-toast:popover-open {
+                        opacity: 0;
+                        translate: -50% 10px;
+                    }
+                }
+
+                /* ==================================================== DARK THEME */
+                :root[data-theme="dark"] {
+                    color-scheme: dark;
+                    --ink-950: oklch(0.985 0.004 262);
+                    --ink-900: oklch(0.95 0.008 262);
+                    --ink-800: oklch(0.9 0.012 262);
+                    --ink-700: oklch(0.82 0.016 262);
+                    --ink-600: oklch(0.74 0.02 262);
+                    --ink-500: oklch(0.68 0.022 262);
+                    --ink-400: oklch(0.56 0.025 262);
+                    --ink-300: oklch(0.42 0.03 262);
+                    --ink-200: oklch(0.32 0.03 262);
+                    --ink-100: oklch(0.25 0.03 262);
+                    --ink-50: oklch(0.17 0.028 262);
+                    --brand-50: oklch(0.27 0.06 262);
+                    --brand-100: oklch(0.3 0.08 262);
+                    --brand-200: oklch(0.45 0.12 258);
+                    --brand-600: oklch(0.68 0.17 252);
+                    --brand-700: oklch(0.8 0.12 250);
+                    --danger-50: oklch(0.3 0.08 25);
+                    --bg: oklch(0.15 0.028 262);
+                    --surface: oklch(0.21 0.03 262);
+                    --surface-2: oklch(0.25 0.03 262);
+                    --border: oklch(0.32 0.03 262);
+                    --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.3), 0 4px 12px oklch(0 0 0 / 0.25);
+                    --shadow-md: 0 2px 4px oklch(0 0 0 / 0.3), 0 12px 32px oklch(0 0 0 / 0.35);
+                    --shadow-lg: 0 4px 8px oklch(0 0 0 / 0.35), 0 24px 60px oklch(0 0 0 / 0.5);
+                }
+                :root[data-theme="dark"] body {
+                    background:
+                        radial-gradient(1100px 520px at 0% -5%, oklch(0.26 0.08 262), transparent 60%),
+                        radial-gradient(900px 480px at 100% 10%, oklch(0.24 0.06 215), transparent 60%),
+                        var(--bg);
+                    color: var(--text);
+                }
+                :root[data-theme="dark"] .site-header {
+                    background: oklch(0.18 0.03 262 / 0.72);
+                    box-shadow: inset 0 -1px 0 oklch(1 0 0 / 0.06);
+                }
+                :root[data-theme="dark"] .site-header.scrolled {
+                    background: oklch(0.18 0.03 262 / 0.88);
+                    box-shadow: inset 0 -1px 0 oklch(1 0 0 / 0.06), 0 8px 24px oklch(0 0 0 / 0.35);
+                }
+                :root[data-theme="dark"] .feature-card:not(.is-hero),
+                :root[data-theme="dark"] .product-card,
+                :root[data-theme="dark"] .trust-item,
+                :root[data-theme="dark"] .chip,
+                :root[data-theme="dark"] .btn-light,
+                :root[data-theme="dark"] .step,
+                :root[data-theme="dark"] .faq-item {
+                    background: linear-gradient(180deg, oklch(0.24 0.032 262), oklch(0.21 0.03 262));
+                    border-color: var(--border);
+                    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.05), var(--shadow-sm);
+                }
+                :root[data-theme="dark"] .feature-card:not(.is-hero):hover,
+                :root[data-theme="dark"] .product-card:hover,
+                :root[data-theme="dark"] .trust-item:hover {
+                    border-color: var(--brand-200);
+                    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.06), 0 22px 48px oklch(0 0 0 / 0.45);
+                }
+                :root[data-theme="dark"] .chip.is-active {
+                    background: var(--gloss-top), var(--grad-brand);
+                    color: #fff;
+                    border-color: transparent;
+                }
+                :root[data-theme="dark"] .product-image-container,
+                :root[data-theme="dark"] .qv-media {
+                    background:
+                        radial-gradient(circle at 50% 60%, oklch(0.32 0.04 255) 0%, transparent 70%),
+                        linear-gradient(160deg, oklch(0.25 0.05 262), oklch(0.22 0.04 230));
+                }
+                :root[data-theme="dark"] .product-badge,
+                :root[data-theme="dark"] .qv-btn {
+                    background: oklch(0.2 0.03 262 / 0.8);
+                    border-color: oklch(1 0 0 / 0.12);
+                    color: var(--ink-900);
+                }
+                :root[data-theme="dark"] .brand-logo,
+                :root[data-theme="dark"] .showcase-badge,
+                :root[data-theme="dark"] .enquiry-product-preview img {
+                    background: oklch(0.96 0.01 262);
+                }
+                :root[data-theme="dark"] .showcase-badge {
+                    color: oklch(0.21 0.035 262);
+                }
+                :root[data-theme="dark"] .cart-badge,
+                :root[data-theme="dark"] .brand-status {
+                    border-color: var(--surface);
+                }
+                :root[data-theme="dark"] .mobile-actionbar {
+                    background: oklch(0.18 0.03 262 / 0.88);
+                }
+                :root[data-theme="dark"] .enquiry-trigger-btn {
+                    background: var(--surface-2);
+                    color: var(--ink-800);
+                    box-shadow: none;
+                    border-color: var(--border);
+                }
+                :root[data-theme="dark"] .qty-btn:not(.active) {
+                    background: var(--surface-2);
+                    color: var(--ink-800);
+                    border-color: var(--border);
+                }
+                :root[data-theme="dark"] .added-cart-success {
+                    background: oklch(0.3 0.08 152);
+                }
+                :root[data-theme="dark"] .feature-icon {
+                    --icon-bg: oklch(0.28 0.05 262);
+                }
+                :root[data-theme="dark"] .feature-icon.tone-green { --icon-bg: oklch(0.28 0.06 152); }
+                :root[data-theme="dark"] .feature-icon.tone-violet { --icon-bg: oklch(0.28 0.06 295); }
+                :root[data-theme="dark"] .feature-icon.tone-amber { --icon-bg: oklch(0.3 0.06 85); }
+                :root[data-theme="dark"] .feature-icon.tone-teal { --icon-bg: oklch(0.28 0.05 195); }
+                :root[data-theme="dark"] .feature-icon.tone-red { --icon-bg: oklch(0.28 0.06 25); }
+                :root[data-theme="dark"] .feature-card.is-hero .feature-icon,
+                :root[data-theme="dark"] .contact-item .feature-icon {
+                    --icon-bg: oklch(1 0 0 / 0.14);
+                }
+                /* Tailwind utilities used inside JS-rendered templates */
+                :root[data-theme="dark"] .bg-white { background-color: var(--surface); }
+                :root[data-theme="dark"] .bg-slate-100,
+                :root[data-theme="dark"] .bg-sky-50 { background-color: var(--surface-2); }
+                :root[data-theme="dark"] .text-gray-800 { color: var(--ink-900); }
+                :root[data-theme="dark"] .text-gray-700 { color: var(--ink-800); }
+                :root[data-theme="dark"] .text-gray-600 { color: var(--ink-700); }
+                :root[data-theme="dark"] .text-gray-500,
+                :root[data-theme="dark"] .text-gray-400 { color: var(--ink-500); }
+                :root[data-theme="dark"] .text-blue-600 { color: var(--brand-600); }
+                :root[data-theme="dark"] .border-gray-200,
+                :root[data-theme="dark"] .border-sky-100,
+                :root[data-theme="dark"] .border-sky-200 { border-color: var(--border); }
+                :root[data-theme="dark"] .group:hover .group-hover\:text-blue-600 { color: var(--brand-600); }
+                :root[data-theme="dark"] input,
+                :root[data-theme="dark"] select,
+                :root[data-theme="dark"] textarea {
+                    color: var(--text);
+                }
+                :root[data-theme="dark"] .enquiry-input,
+                :root[data-theme="dark"] .enquiry-textarea,
+                :root[data-theme="dark"] .assistant-input,
+                :root[data-theme="dark"] .search-box input,
+                :root[data-theme="dark"] .search-box {
+                    background-color: var(--surface-2);
+                    border-color: var(--border);
+                }
+                :root[data-theme="dark"] .cart-item-row img {
+                    background: oklch(0.96 0.01 262) !important;
+                }
+            }
         </style>
         <script type="application/ld+json">
             {
@@ -3934,14 +4940,35 @@
                 <nav class="site-nav" aria-label="Primary">
                     <ul>
                         <li><a href="#products">Products</a></li>
+                        <li><a href="#estimator">Estimator</a></li>
+                        <li><a href="#routine">Care guide</a></li>
                         <li><a href="#business-details">Company</a></li>
-                        <li><a href="#how-to-order">How to order</a></li>
                         <li><a href="#faq">FAQ</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
                 </nav>
 
                 <div class="header-actions">
+                    <button
+                        type="button"
+                        class="cmdk-trigger"
+                        data-action="open-cmdk"
+                        aria-label="Search products and actions"
+                        aria-keyshortcuts="Control+K Meta+K"
+                    >
+                        <i class="fas fa-magnifying-glass" aria-hidden="true"></i><span class="cmdk-label">Search</span
+                        ><kbd>⌘K</kbd>
+                    </button>
+                    <button
+                        type="button"
+                        class="icon-btn theme-toggle"
+                        id="themeToggle"
+                        data-action="toggle-theme"
+                        aria-label="Switch to dark theme"
+                        aria-pressed="false"
+                    >
+                        <i class="fas fa-moon" aria-hidden="true"></i><i class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
                     <a href="tel:+919352470085" class="header-call" aria-label="Call 9352470085">
                         <i class="fas fa-phone" aria-hidden="true"></i><span>93524 70085</span>
                     </a>
@@ -3971,6 +4998,8 @@
         <nav id="mobileNav" class="mobile-nav" popover aria-label="Mobile">
             <ul>
                 <li><a href="#products"><i class="fas fa-boxes-stacked" aria-hidden="true"></i>Products</a></li>
+                <li><a href="#estimator"><i class="fas fa-calculator" aria-hidden="true"></i>Bulk estimator</a></li>
+                <li><a href="#routine"><i class="fas fa-list-ol" aria-hidden="true"></i>Care guide</a></li>
                 <li><a href="#business-details"><i class="fas fa-building" aria-hidden="true"></i>Company</a></li>
                 <li><a href="#how-to-order"><i class="fas fa-list-check" aria-hidden="true"></i>How to order</a></li>
                 <li><a href="#faq"><i class="fas fa-circle-question" aria-hidden="true"></i>FAQ</a></li>
@@ -4268,6 +5297,124 @@
                 </div>
             </section>
 
+
+            <!-- ============================== Bulk estimator (2027) ============================== -->
+            <section id="estimator" class="section" aria-labelledby="estTitle">
+                <div class="container">
+                    <div class="est-panel y-reveal">
+                        <div>
+                            <span class="section-eyebrow">Bulk planner</span>
+                            <h2 class="section-title" id="estTitle">Estimate your order in seconds</h2>
+                            <p class="section-lead">
+                                Pick a product, a pack size and how many packs you need. The estimate uses our list
+                                prices — we confirm the final price and delivery with you on WhatsApp.
+                            </p>
+                            <ul class="est-points">
+                                <li><i class="fas fa-calculator" aria-hidden="true"></i>Live total as you change pack size or count</li>
+                                <li><i class="fas fa-file-invoice" aria-hidden="true"></i>Add to cart to download a proforma PDF</li>
+                                <li><i class="fab fa-whatsapp" aria-hidden="true"></i>Send the exact quote request on WhatsApp in one tap</li>
+                            </ul>
+                        </div>
+
+                        <form class="est-form" id="estForm" novalidate>
+                            <div class="est-field">
+                                <span id="estProductLabel">Product</span>
+                                <div class="est-products" id="estProducts" role="group" aria-labelledby="estProductLabel"></div>
+                            </div>
+                            <fieldset class="pack-grid" id="estPacks">
+                                <legend>Pack size</legend>
+                            </fieldset>
+                            <div class="est-field">
+                                <label for="estCount">Number of packs</label>
+                                <div class="stepper">
+                                    <button type="button" data-est-step="-1" aria-label="Fewer packs">−</button>
+                                    <input type="number" id="estCount" min="1" max="999" value="1" inputmode="numeric" />
+                                    <button type="button" data-est-step="1" aria-label="More packs">+</button>
+                                </div>
+                            </div>
+                            <output class="est-result" id="estResult" for="estCount" aria-live="polite">
+                                <small>Estimated total (list price)</small>
+                                <span class="est-total" id="estTotal">₹0</span>
+                                <span class="est-breakdown" id="estBreakdown"></span>
+                            </output>
+                            <div class="est-actions">
+                                <button type="button" class="btn btn-lg btn-primary" id="estAddBtn">
+                                    <i class="fas fa-cart-plus" aria-hidden="true"></i>Add to cart
+                                </button>
+                                <button type="button" class="btn btn-lg btn-whatsapp" id="estQuoteBtn">
+                                    <i class="fab fa-whatsapp" aria-hidden="true"></i>Get quote
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================== Care routine (2027) ============================== -->
+            <section id="routine" class="section section-alt" aria-labelledby="routineTitle">
+                <div class="container">
+                    <div class="section-head">
+                        <span class="section-eyebrow">Care guide</span>
+                        <h2 class="section-title" id="routineTitle">A complete car-care routine, one range</h2>
+                        <p class="section-lead">
+                            A simple order of work for workshops and detailers — and which of our products fits each
+                            step. Always follow the usage directions on the pack label.
+                        </p>
+                    </div>
+                    <ol class="routine">
+                        <li class="routine-step">
+                            <span class="feature-icon"><i class="fas fa-soap" aria-hidden="true"></i></span>
+                            <h3>Foam wash</h3>
+                            <p>Cover the body in foam to loosen dust and road grime, then rinse off.</p>
+                            <div class="routine-links">
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="3">Car Foaming Wash</button>
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="6">Foaming Gun</button>
+                            </div>
+                        </li>
+                        <li class="routine-step">
+                            <span class="feature-icon tone-teal"><i class="fas fa-hand-sparkles" aria-hidden="true"></i></span>
+                            <h3>Dry gently</h3>
+                            <p>Wipe the car dry with a soft cloth before water can settle and leave marks.</p>
+                            <div class="routine-links">
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="7">Micro Towel</button>
+                            </div>
+                        </li>
+                        <li class="routine-step">
+                            <span class="feature-icon tone-violet"><i class="fas fa-car-side" aria-hidden="true"></i></span>
+                            <h3>Clear the glass</h3>
+                            <p>Clean windscreen, windows and mirrors for clear visibility.</p>
+                            <div class="routine-links">
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="5">Glass Cleaner</button>
+                            </div>
+                        </li>
+                        <li class="routine-step">
+                            <span class="feature-icon tone-green"><i class="fas fa-couch" aria-hidden="true"></i></span>
+                            <h3>Refresh the interior</h3>
+                            <p>Clean seats, door panels and other interior surfaces.</p>
+                            <div class="routine-links">
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="4">Interior Cleaner</button>
+                            </div>
+                        </li>
+                        <li class="routine-step">
+                            <span class="feature-icon tone-amber"><i class="fas fa-gauge-high" aria-hidden="true"></i></span>
+                            <h3>Shine the dashboard</h3>
+                            <p>Finish the dashboard and trim with a polish for a clean, shiny look.</p>
+                            <div class="routine-links">
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="1">Dashboard Polish</button>
+                            </div>
+                        </li>
+                        <li class="routine-step">
+                            <span class="feature-icon tone-red"><i class="fas fa-circle-notch" aria-hidden="true"></i></span>
+                            <h3>Dress the tyres</h3>
+                            <p>The final touch — a glossy finish on the tyres before handing the car back.</p>
+                            <div class="routine-links">
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="2">Tyre Polish</button>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
             <!-- ============================== How to order ============================== -->
             <section id="how-to-order" class="section" aria-labelledby="orderTitle">
                 <div class="container">
@@ -4452,6 +5599,8 @@
                         <h3 class="footer-heading">Explore</h3>
                         <ul class="footer-links">
                             <li><a href="#products">Products</a></li>
+                            <li><a href="#estimator">Bulk estimator</a></li>
+                            <li><a href="#routine">Care guide</a></li>
                             <li><a href="#business-details">Company</a></li>
                             <li><a href="#how-to-order">How to order</a></li>
                             <li><a href="#faq">FAQ</a></li>
@@ -4736,6 +5885,68 @@
                 </div>
             </div>
         </dialog>
+
+        <!-- ============================== Quick view (2027) ============================== -->
+        <dialog id="quickView" class="y-dialog" aria-labelledby="qvTitle">
+            <div class="y-dialog-box qv-box">
+                <button type="button" class="y-close" data-y-close aria-label="Close product details">
+                    <i class="fas fa-xmark" aria-hidden="true"></i>
+                </button>
+                <div class="qv-media" id="qvMedia">
+                    <img id="qvImg" src="" alt="" width="380" height="380" decoding="async" />
+                    <i class="fas fa-image qv-fallback" aria-hidden="true"></i>
+                </div>
+                <div class="qv-body">
+                    <span class="qv-kicker">Swapnil Chemicals</span>
+                    <h2 class="qv-title" id="qvTitle"></h2>
+                    <p class="qv-desc" id="qvDesc"></p>
+                    <p class="qv-price" id="qvPrice"></p>
+                    <fieldset class="pack-grid" id="qvPacks">
+                        <legend>Choose a pack</legend>
+                    </fieldset>
+                    <div class="qv-actions">
+                        <button type="button" class="btn btn-primary" id="qvAdd">
+                            <i class="fas fa-cart-plus" aria-hidden="true"></i>Add to cart
+                        </button>
+                        <button type="button" class="btn btn-outline" id="qvEnquire">
+                            <i class="fas fa-clipboard-list" aria-hidden="true"></i>Enquiry
+                        </button>
+                        <button type="button" class="btn btn-outline" id="qvShare" aria-label="Share this product">
+                            <i class="fas fa-share-nodes" aria-hidden="true"></i>Share
+                        </button>
+                    </div>
+                    <p class="qv-note">Prices shown are list prices. Final pricing and delivery are confirmed on WhatsApp.</p>
+                </div>
+            </div>
+        </dialog>
+
+        <!-- ============================== Command palette (2027) ============================== -->
+        <dialog id="cmdk" class="y-dialog cmdk" aria-label="Search products and actions">
+            <div class="y-dialog-box">
+                <div class="cmdk-search">
+                    <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+                    <input
+                        type="text"
+                        id="cmdkInput"
+                        placeholder="Search products, sections or actions…"
+                        autocomplete="off"
+                        spellcheck="false"
+                        role="combobox"
+                        aria-expanded="true"
+                        aria-controls="cmdkList"
+                        aria-autocomplete="list"
+                    />
+                </div>
+                <ul class="cmdk-list" id="cmdkList" role="listbox" aria-label="Results"></ul>
+                <div class="cmdk-foot" aria-hidden="true">
+                    <span><kbd>↑</kbd> <kbd>↓</kbd> to move</span>
+                    <span><kbd>Enter</kbd> to open</span>
+                    <span><kbd>Esc</kbd> to close</span>
+                </div>
+            </div>
+        </dialog>
+
+        <div id="yToast" class="y-toast" popover="manual" role="status"></div>
 
         <script>
             "use strict";
@@ -7333,6 +8544,533 @@
                     });
                     sync();
                 }
+            })();
+        </script>
+
+        <script>
+            // =====================================================================
+            // 2027 layer: theme switch, ⌘K command palette, product quick view,
+            // bulk estimator, scroll-spy, share links and app badge.
+            // Reuses the catalogue + cart helpers declared in the main script
+            // (products, cart, persistCart, updateCartUI, formatCurrency, …).
+            // =====================================================================
+            (function () {
+                "use strict";
+
+                const THEME_KEY = "sc_theme";
+                const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                const canTransition = () => typeof document.startViewTransition === "function" && !reduceMotion();
+                const byId = (id) => document.getElementById(id);
+                const productById = (id) => products.find((p) => p.id === Number(id));
+                const packSizes = (p) => (p.hasLtOptions ? p.qtyOptions || LT_OPTIONS : [1]);
+                const packLabel = (p, size) => {
+                    if (!p.hasLtOptions) return "1 piece";
+                    const label = (p.qtyLabel || "Lt").trim();
+                    return `${size} ${label}`;
+                };
+                const packTotal = (p, size, packs = 1) => p.price * size * packs;
+
+                // ------------------------------------------------------------ toast
+                const toastEl = byId("yToast");
+                let toastTimer;
+                function toast(message) {
+                    if (!toastEl || typeof toastEl.showPopover !== "function") return;
+                    toastEl.textContent = message;
+                    try {
+                        if (!toastEl.matches(":popover-open")) toastEl.showPopover();
+                    } catch {
+                        return;
+                    }
+                    clearTimeout(toastTimer);
+                    toastTimer = setTimeout(() => {
+                        try {
+                            toastEl.hidePopover();
+                        } catch {
+                            /* already hidden */
+                        }
+                    }, 2200);
+                }
+
+                // ------------------------------------------------------------ cart helper
+                function addPacksToCart(product, size, packs) {
+                    const count = Math.max(1, Math.min(999, Math.floor(Number(packs)) || 1));
+                    const key = `${product.id}_${size}`;
+                    if (cart[key]) cart[key].qty += count;
+                    else cart[key] = { product, qty: count, selectedQty: size };
+                    persistCart();
+                    updateCartUI();
+                    if (typeof openAddedCartModal === "function") openAddedCartModal(key);
+                }
+
+                // ------------------------------------------------------------ theme
+                const themeBtn = byId("themeToggle");
+                const themeMeta = document.querySelector('meta[name="theme-color"]');
+                function applyTheme(theme) {
+                    document.documentElement.dataset.theme = theme;
+                    if (themeMeta) themeMeta.content = theme === "dark" ? "#0f172a" : "#1e3a8a";
+                    if (themeBtn) {
+                        themeBtn.setAttribute("aria-pressed", String(theme === "dark"));
+                        themeBtn.setAttribute("aria-label", theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
+                    }
+                }
+                function toggleTheme(originEl) {
+                    const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+                    storage.set(THEME_KEY, next);
+                    const root = document.documentElement;
+                    if (!canTransition()) {
+                        root.classList.add("theme-switching");
+                        applyTheme(next);
+                        requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("theme-switching")));
+                        return;
+                    }
+                    const rect = originEl?.getBoundingClientRect();
+                    root.style.setProperty("--vt-x", rect ? `${rect.left + rect.width / 2}px` : "50%");
+                    root.style.setProperty("--vt-y", rect ? `${rect.top + rect.height / 2}px` : "0px");
+                    root.classList.add("theme-switching");
+                    const vt = document.startViewTransition(() => applyTheme(next));
+                    const done = () => root.classList.remove("theme-switching");
+                    vt.finished.finally(done);
+                    setTimeout(done, 1200); // safety net if the transition is skipped or stalls
+                }
+                applyTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+                // Follow the OS setting until the visitor picks a theme themselves.
+                window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", (e) => {
+                    if (!storage.get(THEME_KEY, null)) applyTheme(e.matches ? "dark" : "light");
+                });
+
+                // ------------------------------------------------------------ dialogs
+                function openY(dialog) {
+                    if (!dialog || dialog.open) return;
+                    dialog.showModal();
+                    document.documentElement.style.overflow = "hidden";
+                }
+                function closeY(dialog) {
+                    if (dialog?.open) dialog.close();
+                }
+                document.querySelectorAll(".y-dialog").forEach((dialog) => {
+                    dialog.addEventListener("close", () => {
+                        if (!document.querySelector("dialog[open]")) document.documentElement.style.overflow = "";
+                    });
+                    dialog.addEventListener("click", (e) => {
+                        if (e.target === dialog || e.target.closest("[data-y-close]")) closeY(dialog);
+                    });
+                });
+
+                // ------------------------------------------------------------ quick view
+                const qv = byId("quickView");
+                let qvProduct = null;
+
+                function renderPackOptions(fieldset, product, name, onChange) {
+                    if (!fieldset) return;
+                    const legend = fieldset.querySelector("legend")?.outerHTML || "";
+                    fieldset.innerHTML =
+                        legend +
+                        packSizes(product)
+                            .map(
+                                (size, i) => `<label class="pack-opt">
+                                    <input type="radio" name="${name}" value="${size}"${i === 0 ? " checked" : ""}>
+                                    <b>${escapeHtml(packLabel(product, size))}</b>
+                                    <span>${formatCurrency(packTotal(product, size))}</span>
+                                </label>`
+                            )
+                            .join("");
+                    if (onChange) fieldset.onchange = onChange;
+                }
+                const checkedPack = (fieldset) => Number(fieldset?.querySelector("input:checked")?.value) || 1;
+
+                function fillQuickView(product) {
+                    qvProduct = product;
+                    const media = byId("qvMedia");
+                    const img = byId("qvImg");
+                    media.classList.remove("is-broken");
+                    img.onerror = () => media.classList.add("is-broken");
+                    img.src = product.image;
+                    img.alt = product.name;
+                    byId("qvTitle").textContent = product.name;
+                    byId("qvDesc").textContent = product.description;
+                    byId("qvPrice").innerHTML = `${formatCurrency(product.price)} <small>/ ${escapeHtml(product.unit)}</small>`;
+                    renderPackOptions(byId("qvPacks"), product, "qvPack");
+                }
+
+                function openQuickView(productId, sourceEl) {
+                    const product = productById(productId);
+                    if (!product || !qv) return;
+                    const cardImg =
+                        sourceEl?.closest(".product-card")?.querySelector(".product-image") ||
+                        document.querySelector(`.product-card[data-product-id="${product.id}"] .product-image`);
+                    const qvImg = byId("qvImg");
+                    const show = () => {
+                        fillQuickView(product);
+                        openY(qv);
+                        if (history.replaceState) history.replaceState(null, "", `#product-${product.id}`);
+                    };
+                    // Morph the card image into the dialog image (View Transitions API).
+                    if (canTransition() && cardImg && cardImg.offsetParent && sourceEl?.closest(".product-card")) {
+                        cardImg.style.viewTransitionName = "qv-image";
+                        const vt = document.startViewTransition(() => {
+                            cardImg.style.viewTransitionName = "";
+                            qvImg.style.viewTransitionName = "qv-image";
+                            show();
+                        });
+                        vt.finished.finally(() => (qvImg.style.viewTransitionName = ""));
+                    } else {
+                        show();
+                    }
+                }
+
+                qv?.addEventListener("close", () => {
+                    if (location.hash.startsWith("#product-") && history.replaceState) {
+                        history.replaceState(null, "", location.pathname + location.search);
+                    }
+                });
+                byId("qvAdd")?.addEventListener("click", () => {
+                    if (!qvProduct) return;
+                    const size = checkedPack(byId("qvPacks"));
+                    closeY(qv);
+                    addPacksToCart(qvProduct, size, 1);
+                });
+                byId("qvEnquire")?.addEventListener("click", () => {
+                    if (!qvProduct) return;
+                    const id = qvProduct.id;
+                    closeY(qv);
+                    if (typeof openEnquiryModal === "function") openEnquiryModal(id);
+                });
+                byId("qvShare")?.addEventListener("click", async () => {
+                    if (!qvProduct) return;
+                    const url = `${location.origin}${location.pathname}#product-${qvProduct.id}`;
+                    const data = {
+                        title: `${qvProduct.name} — Swapnil Chemicals`,
+                        text: `${qvProduct.name}: ${qvProduct.description}. ${formatCurrency(qvProduct.price)}/${qvProduct.unit}`,
+                        url,
+                    };
+                    try {
+                        if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
+                            await navigator.share(data);
+                            return;
+                        }
+                        await navigator.clipboard.writeText(url);
+                        toast("Product link copied");
+                    } catch (err) {
+                        if (err?.name !== "AbortError") toast("Couldn't share — copy the address bar link instead");
+                    }
+                });
+
+                // Quick-view button on every product card. Cards are re-rendered by search,
+                // so the button is added after each render instead of editing the template.
+                const grid = byId("productsGrid");
+                function decorateCards() {
+                    grid?.querySelectorAll(".product-card").forEach((card) => {
+                        const box = card.querySelector(".product-image-container");
+                        if (!box || box.querySelector(".qv-btn")) return;
+                        const name = card.querySelector("h3")?.textContent || "product";
+                        box.insertAdjacentHTML(
+                            "beforeend",
+                            `<button type="button" class="qv-btn" data-action="quick-view" data-product-id="${card.dataset.productId}" aria-label="Quick view: ${escapeHtml(name)}"><i class="fas fa-expand" aria-hidden="true"></i>Quick view</button>`
+                        );
+                    });
+                }
+                if (grid) {
+                    decorateCards();
+                    new MutationObserver(decorateCards).observe(grid, { childList: true });
+                }
+
+                // Animate search/filter results with a view transition (cards glide into place).
+                if (typeof filterProducts === "function" && typeof document.startViewTransition === "function") {
+                    const originalFilter = filterProducts;
+                    const nameCards = () =>
+                        grid?.querySelectorAll(".product-card").forEach((c) => {
+                            c.style.viewTransitionName = `pc-${c.dataset.productId}`;
+                        });
+                    const unnameCards = () =>
+                        grid?.querySelectorAll(".product-card").forEach((c) => (c.style.viewTransitionName = ""));
+                    // eslint-disable-next-line no-global-assign
+                    filterProducts = function (query) {
+                        const inView = grid && grid.getBoundingClientRect().top < window.innerHeight;
+                        if (reduceMotion() || !inView) return originalFilter(query);
+                        nameCards();
+                        const vt = document.startViewTransition(() => {
+                            originalFilter(query);
+                            nameCards();
+                        });
+                        vt.finished.finally(unnameCards);
+                    };
+                }
+
+                // ------------------------------------------------------------ bulk estimator
+                const est = {
+                    products: byId("estProducts"),
+                    packs: byId("estPacks"),
+                    count: byId("estCount"),
+                    total: byId("estTotal"),
+                    breakdown: byId("estBreakdown"),
+                    product: products[0],
+                };
+                function estCount() {
+                    const n = Math.floor(Number(est.count?.value));
+                    return Math.max(1, Math.min(999, Number.isFinite(n) ? n : 1));
+                }
+                function updateEstimate() {
+                    const p = est.product;
+                    if (!p || !est.total) return;
+                    const size = checkedPack(est.packs);
+                    const packs = estCount();
+                    const total = packTotal(p, size, packs);
+                    est.total.textContent = formatCurrency(total);
+                    const unit = p.hasLtOptions ? (p.qtyLabel || "Lt").trim() : "pc";
+                    est.breakdown.textContent = p.hasLtOptions
+                        ? `${packs} × ${size} ${unit} = ${size * packs} ${unit} × ${formatCurrency(p.price)}/${unit === "pcs" ? "pc" : unit}`
+                        : `${packs} × ${formatCurrency(p.price)} per piece`;
+                }
+                function selectEstProduct(id) {
+                    const p = productById(id);
+                    if (!p) return;
+                    est.product = p;
+                    est.products?.querySelectorAll(".est-prod").forEach((b) =>
+                        b.setAttribute("aria-pressed", String(Number(b.dataset.id) === p.id))
+                    );
+                    renderPackOptions(est.packs, p, "estPack", updateEstimate);
+                    updateEstimate();
+                }
+                if (est.products) {
+                    est.products.innerHTML = products
+                        .map((p) => {
+                            const variant = products.filter((x) => x.name === p.name).length > 1 ? ` · ${formatCurrency(p.price)}` : "";
+                            return `<button type="button" class="est-prod" data-id="${p.id}" aria-pressed="false"><img src="${escapeHtml(p.image)}" alt="" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'">${escapeHtml(p.name)}${variant}</button>`;
+                        })
+                        .join("");
+                    est.products.addEventListener("click", (e) => {
+                        const b = e.target.closest(".est-prod");
+                        if (b) selectEstProduct(b.dataset.id);
+                    });
+                    selectEstProduct(products[0].id);
+                }
+                byId("estForm")?.addEventListener("click", (e) => {
+                    const step = e.target.closest("[data-est-step]");
+                    if (!step || !est.count) return;
+                    est.count.value = String(Math.max(1, Math.min(999, estCount() + Number(step.dataset.estStep))));
+                    updateEstimate();
+                });
+                est.count?.addEventListener("input", updateEstimate);
+                est.count?.addEventListener("blur", () => {
+                    est.count.value = String(estCount());
+                    updateEstimate();
+                });
+                byId("estForm")?.addEventListener("submit", (e) => e.preventDefault());
+                byId("estAddBtn")?.addEventListener("click", () => {
+                    if (est.product) addPacksToCart(est.product, checkedPack(est.packs), estCount());
+                });
+                byId("estQuoteBtn")?.addEventListener("click", () => {
+                    const p = est.product;
+                    if (!p) return;
+                    const size = checkedPack(est.packs);
+                    const packs = estCount();
+                    const lines = [
+                        "Hello Swapnil Chemicals, I'd like a quote:",
+                        "",
+                        `Product: ${p.name} (${formatCurrency(p.price)}/${p.unit})`,
+                        `Pack: ${packLabel(p, size)} × ${packs}`,
+                        `Estimated total (list price): ${formatCurrency(packTotal(p, size, packs))}`,
+                        "",
+                        "Please confirm final price and delivery.",
+                    ];
+                    safeOpenNewTab(buildWhatsAppUrl(lines.join("\n")));
+                });
+
+                // ------------------------------------------------------------ command palette
+                const cmdk = byId("cmdk");
+                const cmdkInput = byId("cmdkInput");
+                const cmdkList = byId("cmdkList");
+                let cmdkItems = [];
+                let cmdkIndex = 0;
+
+                const go = (hash) => () => {
+                    const el = document.querySelector(hash);
+                    el?.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth" });
+                };
+                const COMMANDS = [
+                    ...products.map((p) => ({
+                        group: "Products",
+                        title: p.name,
+                        sub: `${formatCurrency(p.price)} / ${p.unit} · ${p.description}`,
+                        img: p.image,
+                        icon: "fa-box",
+                        keywords: `${p.name} ${p.description} product`,
+                        run: () => openQuickView(p.id),
+                    })),
+                    { group: "Go to", title: "All products", icon: "fa-boxes-stacked", keywords: "shop catalogue range", run: go("#products") },
+                    { group: "Go to", title: "Bulk estimator", icon: "fa-calculator", keywords: "price calculator quote wholesale bulk", run: go("#estimator") },
+                    { group: "Go to", title: "Car-care routine", icon: "fa-list-ol", keywords: "guide steps how use", run: go("#routine") },
+                    { group: "Go to", title: "Company & registrations", icon: "fa-building", keywords: "gst msme udyam brn owner about", run: go("#business-details") },
+                    { group: "Go to", title: "FAQ", icon: "fa-circle-question", keywords: "questions help payment", run: go("#faq") },
+                    { group: "Go to", title: "Contact", icon: "fa-envelope", keywords: "address location jaipur", run: go("#contact") },
+                    { group: "Actions", title: "Open cart", icon: "fa-bag-shopping", keywords: "cart basket checkout invoice pdf", run: () => toggleCart() },
+                    { group: "Actions", title: "Chat on WhatsApp", icon: "fa-comment", keywords: "whatsapp message chat", run: () => safeOpenNewTab(`https://wa.me/${APP.WA_NUMBER}`) },
+                    { group: "Actions", title: "Call 93524 70085", icon: "fa-phone", keywords: "phone call mobile", run: () => (location.href = "tel:+919352470085") },
+                    { group: "Actions", title: "Email us", icon: "fa-at", keywords: "email mail", run: () => (location.href = "mailto:swapnilchemicals10@gmail.com") },
+                    { group: "Actions", title: "Toggle dark / light theme", icon: "fa-circle-half-stroke", keywords: "dark light theme mode night", run: () => toggleTheme(themeBtn) },
+                    { group: "Actions", title: "Ask the assistant", icon: "fa-robot", keywords: "ai assistant bot help", run: () => toggleAssistant() },
+                ];
+
+                function rankCommands(q) {
+                    const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+                    if (!words.length) return COMMANDS;
+                    return COMMANDS.map((c) => {
+                        const hay = `${c.title} ${c.keywords || ""}`.toLowerCase();
+                        let score = 0;
+                        for (const w of words) {
+                            if (c.title.toLowerCase().startsWith(w)) score += 5;
+                            else if (hay.includes(w)) score += 3;
+                            else if (hay.split(/\s+/).some((h) => fuzzyWordsMatch(h, w))) score += 1;
+                            else return null;
+                        }
+                        return { c, score };
+                    })
+                        .filter(Boolean)
+                        .sort((a, b) => b.score - a.score)
+                        .map((x) => x.c);
+                }
+
+                function renderCmdk() {
+                    const q = cmdkInput.value.trim();
+                    cmdkItems = rankCommands(q);
+                    cmdkIndex = 0;
+                    if (!cmdkItems.length) {
+                        cmdkList.innerHTML = `<li class="cmdk-empty">Nothing found for “${escapeHtml(q)}”. Try “polish”, “towel” or “GST”.</li>`;
+                        cmdkInput.removeAttribute("aria-activedescendant");
+                        return;
+                    }
+                    let lastGroup = "";
+                    cmdkList.innerHTML = cmdkItems
+                        .map((c, i) => {
+                            const header = !q && c.group !== lastGroup ? `<li class="cmdk-group" role="presentation">${c.group}</li>` : "";
+                            lastGroup = c.group;
+                            const ico = c.img
+                                ? `<img src="${escapeHtml(c.img)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('i'),{className:'fas ${c.icon}'}))">`
+                                : `<i class="fas ${c.icon}" aria-hidden="true"></i>`;
+                            return `${header}<li class="cmdk-item" role="option" id="cmdk-${i}" data-i="${i}" aria-selected="${i === 0}">
+                                <span class="cmdk-ico">${ico}</span>
+                                <span class="cmdk-text"><b>${escapeHtml(c.title)}</b>${c.sub ? `<small>${escapeHtml(c.sub)}</small>` : ""}</span>
+                                <i class="fas fa-arrow-turn-down fa-rotate-90 cmdk-go" aria-hidden="true"></i>
+                            </li>`;
+                        })
+                        .join("");
+                    cmdkInput.setAttribute("aria-activedescendant", "cmdk-0");
+                }
+                function moveCmdk(delta) {
+                    if (!cmdkItems.length) return;
+                    cmdkIndex = (cmdkIndex + delta + cmdkItems.length) % cmdkItems.length;
+                    cmdkList.querySelectorAll(".cmdk-item").forEach((el) => {
+                        const on = Number(el.dataset.i) === cmdkIndex;
+                        el.setAttribute("aria-selected", String(on));
+                        if (on) el.scrollIntoView({ block: "nearest" });
+                    });
+                    cmdkInput.setAttribute("aria-activedescendant", `cmdk-${cmdkIndex}`);
+                }
+                function runCmdk(i) {
+                    const c = cmdkItems[i];
+                    if (!c) return;
+                    closeY(cmdk);
+                    // Let the palette close before opening the next dialog/scrolling.
+                    requestAnimationFrame(() => c.run());
+                }
+                function openCmdk() {
+                    if (!cmdk) return;
+                    cmdkInput.value = "";
+                    renderCmdk();
+                    openY(cmdk);
+                    cmdkInput.focus();
+                }
+                cmdkInput?.addEventListener("input", renderCmdk);
+                cmdkInput?.addEventListener("keydown", (e) => {
+                    if (e.key === "ArrowDown") {
+                        e.preventDefault();
+                        moveCmdk(1);
+                    } else if (e.key === "ArrowUp") {
+                        e.preventDefault();
+                        moveCmdk(-1);
+                    } else if (e.key === "Enter") {
+                        e.preventDefault();
+                        runCmdk(cmdkIndex);
+                    }
+                });
+                cmdkList?.addEventListener("click", (e) => {
+                    const item = e.target.closest(".cmdk-item");
+                    if (item) runCmdk(Number(item.dataset.i));
+                });
+                cmdkList?.addEventListener("pointermove", (e) => {
+                    const item = e.target.closest(".cmdk-item");
+                    if (item && Number(item.dataset.i) !== cmdkIndex) moveCmdk(Number(item.dataset.i) - cmdkIndex);
+                });
+                document.addEventListener("keydown", (e) => {
+                    const typing = e.target.closest?.("input, textarea, select, [contenteditable='true']");
+                    if ((e.key === "k" || e.key === "K") && (e.metaKey || e.ctrlKey)) {
+                        e.preventDefault();
+                        cmdk?.open ? closeY(cmdk) : openCmdk();
+                    } else if (e.key === "/" && !typing && !document.querySelector("dialog[open]")) {
+                        e.preventDefault();
+                        openCmdk();
+                    }
+                });
+                const kbd = document.querySelector(".cmdk-trigger kbd");
+                if (kbd && !/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) kbd.textContent = "Ctrl K";
+
+                // ------------------------------------------------------------ delegated actions
+                document.addEventListener("click", (e) => {
+                    const t = e.target.closest("[data-action]");
+                    if (!t) return;
+                    switch (t.dataset.action) {
+                        case "quick-view":
+                            e.preventDefault();
+                            openQuickView(t.dataset.productId, t);
+                            break;
+                        case "open-cmdk":
+                            openCmdk();
+                            break;
+                        case "toggle-theme":
+                            toggleTheme(t);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+
+                // ------------------------------------------------------------ scroll-spy
+                const navLinks = Array.from(document.querySelectorAll(".site-nav a[href^='#']"));
+                const spyTargets = navLinks.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+                if ("IntersectionObserver" in window && spyTargets.length) {
+                    const visible = new Map();
+                    const spy = new IntersectionObserver(
+                        (entries) => {
+                            entries.forEach((en) => visible.set(en.target.id, en.isIntersecting));
+                            const current = spyTargets.find((s) => visible.get(s.id));
+                            navLinks.forEach((a) => {
+                                if (current && a.getAttribute("href") === `#${current.id}`) a.setAttribute("aria-current", "true");
+                                else a.removeAttribute("aria-current");
+                            });
+                        },
+                        { rootMargin: "-45% 0px -50% 0px" }
+                    );
+                    spyTargets.forEach((s) => spy.observe(s));
+                }
+
+                // ------------------------------------------------------------ app badge (installed PWA)
+                const badge = byId("cartBadge");
+                if (badge && "setAppBadge" in navigator) {
+                    const syncBadge = () => {
+                        const n = parseInt(badge.textContent, 10) || 0;
+                        (n > 0 ? navigator.setAppBadge(n) : navigator.clearAppBadge()).catch(() => {});
+                    };
+                    new MutationObserver(syncBadge).observe(badge, { childList: true, characterData: true, subtree: true });
+                }
+
+                // ------------------------------------------------------------ deep links (#product-3)
+                function openFromHash() {
+                    const m = /^#product-(\d+)$/.exec(location.hash);
+                    if (m && productById(m[1])) openQuickView(m[1]);
+                }
+                if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", openFromHash);
+                else openFromHash();
+                window.addEventListener("hashchange", openFromHash);
             })();
         </script>
     </body>
