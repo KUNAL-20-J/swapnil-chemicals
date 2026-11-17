@@ -3384,6 +3384,330 @@
                     }
                 }
             }
+
+            /* --------------------------------------------------------------- market
+               Storefront polish (Nov 2026): announcement bar, trust strip, category
+               chips, product badges, mobile action bar. Delete block to revert.
+               ---------------------------------------------------------------------- */
+            @layer market {
+                /* ---------- Announcement bar ---------- */
+                .announce-bar {
+                    background: linear-gradient(90deg, var(--deep-800), var(--brand-600) 55%, var(--aqua-500));
+                    color: #fff;
+                    font-size: var(--fs-xs);
+                    font-weight: 500;
+                }
+                .announce-inner {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 16px;
+                    min-height: 38px;
+                }
+                .announce-text {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin: 0;
+                    min-width: 0;
+                }
+                .announce-text span {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                .announce-links {
+                    display: flex;
+                    gap: 18px;
+                    flex-shrink: 0;
+                }
+                .announce-links a {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    color: #fff;
+                    opacity: 0.92;
+                    transition: opacity var(--dur-fast);
+                }
+                .announce-links a:hover {
+                    opacity: 1;
+                    text-decoration: underline;
+                    text-underline-offset: 3px;
+                }
+
+                /* ---------- Section headings: accent bar under titles ---------- */
+                .section-title {
+                    letter-spacing: -0.02em;
+                    line-height: 1.15;
+                }
+                .section-head:not(.is-split) .section-title::after,
+                .section-head.is-split .section-title::after,
+                .faq-aside .section-title::after {
+                    content: "";
+                    display: block;
+                    width: 56px;
+                    height: 4px;
+                    margin-top: 14px;
+                    border-radius: var(--radius-pill);
+                    background: var(--grad-brand);
+                }
+                .section-head:not(.is-split) {
+                    text-align: center;
+                    margin-inline: auto;
+                }
+                .section-head:not(.is-split) .section-title::after {
+                    margin-inline: auto;
+                }
+
+                /* ---------- Trust strip ---------- */
+                .trust-strip {
+                    position: relative;
+                    z-index: 2;
+                    margin-top: -1px;
+                    padding-block: 28px;
+                    background: var(--surface);
+                    border-bottom: 1px solid var(--border);
+                }
+                .trust-grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                    gap: 16px;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+                .trust-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+                    padding: 14px 16px;
+                    border-radius: var(--radius-md);
+                    background: linear-gradient(180deg, #fff, var(--brand-50));
+                    border: 1px solid var(--brand-100);
+                    box-shadow: inset 0 1px 0 #fff, var(--shadow-xs);
+                    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur);
+                }
+                .trust-item:hover {
+                    transform: translateY(-2px);
+                    box-shadow: inset 0 1px 0 #fff, 0 12px 28px oklch(0.55 0.2 260 / 0.12);
+                }
+                .trust-item b {
+                    display: block;
+                    font-size: var(--fs-sm);
+                    color: var(--ink-900);
+                }
+                .trust-item small {
+                    display: block;
+                    margin-top: 2px;
+                    font-size: var(--fs-xs);
+                    color: var(--text-muted);
+                }
+                .trust-icon {
+                    display: grid;
+                    place-items: center;
+                    flex-shrink: 0;
+                    width: 44px;
+                    height: 44px;
+                    border-radius: 12px;
+                    color: #fff;
+                    font-size: 18px;
+                    background: var(--gloss-top), var(--grad-brand);
+                    box-shadow: var(--gloss-edge), 0 6px 14px oklch(0.55 0.2 260 / 0.25);
+                }
+                .trust-icon.is-wa {
+                    background: var(--gloss-top), linear-gradient(135deg, var(--wa-500), var(--wa-600));
+                    box-shadow: var(--gloss-edge), 0 6px 14px oklch(0.6 0.16 152 / 0.25);
+                }
+
+                /* ---------- Category chips ---------- */
+                .category-chips {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    margin: 0 0 28px;
+                }
+                .chip {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    min-height: 40px;
+                    padding: 8px 18px;
+                    border-radius: var(--radius-pill);
+                    border: 1px solid var(--border);
+                    background: linear-gradient(180deg, #fff, var(--ink-50));
+                    color: var(--ink-700);
+                    font-size: var(--fs-sm);
+                    font-weight: 600;
+                    cursor: pointer;
+                    box-shadow: inset 0 1px 0 #fff, var(--shadow-xs);
+                    transition: color var(--dur-fast), border-color var(--dur-fast), box-shadow var(--dur), translate var(--dur) var(--ease-out);
+                }
+                .chip:hover {
+                    color: var(--brand-700);
+                    border-color: var(--brand-200);
+                    translate: 0 -1px;
+                }
+                .chip.is-active {
+                    color: #fff;
+                    border-color: transparent;
+                    background: var(--gloss-top), var(--grad-brand);
+                    box-shadow: var(--gloss-edge), 0 8px 20px oklch(0.55 0.2 260 / 0.28);
+                }
+                .chip:focus-visible {
+                    outline: 2px solid var(--focus);
+                    outline-offset: 2px;
+                }
+
+                /* ---------- Product cards: badge, price, buttons ---------- */
+                .product-badge {
+                    position: absolute;
+                    top: 12px;
+                    left: 12px;
+                    z-index: 3;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 5px 10px;
+                    border-radius: var(--radius-pill);
+                    background: oklch(1 0 0 / 0.85);
+                    backdrop-filter: blur(8px);
+                    -webkit-backdrop-filter: blur(8px);
+                    border: 1px solid oklch(1 0 0 / 0.9);
+                    color: var(--brand-700);
+                    font-size: 11px;
+                    font-weight: 700;
+                    letter-spacing: 0.02em;
+                    box-shadow: var(--shadow-sm);
+                }
+                .product-card h3 {
+                    letter-spacing: -0.01em;
+                }
+                .add-to-cart-btn {
+                    background: var(--gloss-top), var(--grad-brand);
+                    box-shadow: var(--gloss-edge), 0 8px 20px oklch(0.55 0.2 260 / 0.28);
+                }
+                .enquiry-trigger-btn {
+                    box-shadow: inset 0 1px 0 #fff, var(--shadow-xs);
+                }
+
+                /* ---------- Footer bottom line ---------- */
+                .footer-bottom {
+                    border-top-color: oklch(1 0 0 / 0.16);
+                }
+
+                /* ---------- Mobile action bar (phones only) ---------- */
+                .mobile-actionbar {
+                    display: none;
+                }
+                @media (max-width: 768px) {
+                    .mobile-actionbar {
+                        position: fixed;
+                        inset: auto 0 0 0;
+                        z-index: 45;
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+                        background: oklch(1 0 0 / 0.86);
+                        backdrop-filter: saturate(1.8) blur(16px);
+                        -webkit-backdrop-filter: saturate(1.8) blur(16px);
+                        border-top: 1px solid var(--border);
+                        box-shadow: 0 -8px 24px oklch(0.4 0.12 262 / 0.08);
+                    }
+                    .mobile-actionbar a,
+                    .mobile-actionbar button {
+                        position: relative;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 3px;
+                        min-height: 52px;
+                        border: 0;
+                        border-radius: 12px;
+                        background: none;
+                        color: var(--ink-700);
+                        font-size: 11px;
+                        font-weight: 600;
+                        cursor: pointer;
+                    }
+                    .mobile-actionbar i {
+                        font-size: 18px;
+                        color: var(--brand-600);
+                    }
+                    .mobile-actionbar .is-wa i {
+                        color: var(--wa-600);
+                    }
+                    .mobile-actionbar a:active,
+                    .mobile-actionbar button:active {
+                        background: var(--brand-50);
+                    }
+                    .actionbar-badge {
+                        position: absolute;
+                        top: 4px;
+                        left: calc(50% + 6px);
+                        min-width: 18px;
+                        height: 18px;
+                        padding: 0 5px;
+                        border-radius: var(--radius-pill);
+                        background: var(--danger-500);
+                        color: #fff;
+                        font-size: 10px;
+                        line-height: 18px;
+                        text-align: center;
+                    }
+                    .actionbar-badge[hidden] {
+                        display: none;
+                    }
+                    body {
+                        padding-bottom: calc(66px + env(safe-area-inset-bottom));
+                    }
+                    #scrollToTop {
+                        bottom: calc(82px + env(safe-area-inset-bottom));
+                    }
+                    .ai-assistant-btn {
+                        bottom: calc(138px + env(safe-area-inset-bottom));
+                    }
+                    body.cart-open .mobile-actionbar {
+                        display: none;
+                    }
+                    .trust-grid {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+                    .announce-mail {
+                        display: none;
+                    }
+                }
+                @media (max-width: 640px) {
+                    .announce-links {
+                        display: none;
+                    }
+                    .announce-inner {
+                        justify-content: center;
+                    }
+                    .trust-item {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 10px;
+                        padding: 12px;
+                    }
+                    .category-chips {
+                        flex-wrap: nowrap;
+                        overflow-x: auto;
+                        scrollbar-width: none;
+                        margin-inline: calc(var(--gutter) * -1);
+                        padding-inline: var(--gutter);
+                        padding-bottom: 4px;
+                    }
+                    .chip {
+                        flex-shrink: 0;
+                    }
+                }
+                @media (max-width: 1024px) and (min-width: 769px) {
+                    .trust-grid {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+                }
+            }
         </style>
         <script type="application/ld+json">
             {
@@ -3566,6 +3890,25 @@
                 <a href="tel:+919024598298" style="color: #991b1b; font-weight: 700">9024598298</a>.
             </div>
         </noscript>
+
+        <!-- ============================== Announcement bar ============================== -->
+        <div class="announce-bar">
+            <div class="container announce-inner">
+                <p class="announce-text">
+                    <i class="fas fa-truck-fast" aria-hidden="true"></i>
+                    <span>Pan-India supply &middot; Bulk packs 5&ndash;50 Lt &middot; GST &amp; MSME registered</span>
+                </p>
+                <div class="announce-links">
+                    <a href="tel:+919352470085"><i class="fas fa-phone" aria-hidden="true"></i>93524 70085</a>
+                    <a href="https://wa.me/919352470085" target="_blank" rel="noopener noreferrer"
+                        ><i class="fab fa-whatsapp" aria-hidden="true"></i>WhatsApp</a
+                    >
+                    <a href="mailto:swapnilchemicals10@gmail.com" class="announce-mail"
+                        ><i class="fas fa-envelope" aria-hidden="true"></i>Email us</a
+                    >
+                </div>
+            </div>
+        </div>
 
         <!-- ============================== Header ============================== -->
         <header class="site-header nav-blur">
@@ -3762,6 +4105,30 @@
                 </div>
             </div>
 
+            <!-- ============================== Trust strip ============================== -->
+            <section class="trust-strip" aria-label="Why buy from us">
+                <div class="container">
+                    <ul class="trust-grid">
+                        <li class="trust-item">
+                            <span class="trust-icon"><i class="fas fa-shield-halved" aria-hidden="true"></i></span>
+                            <div><b>Registered manufacturer</b><small>GST &middot; MSME &middot; Udyam</small></div>
+                        </li>
+                        <li class="trust-item">
+                            <span class="trust-icon"><i class="fas fa-flask" aria-hidden="true"></i></span>
+                            <div><b>Bulk pack sizes</b><small>5, 10, 35 &amp; 50 Lt</small></div>
+                        </li>
+                        <li class="trust-item">
+                            <span class="trust-icon"><i class="fas fa-truck-fast" aria-hidden="true"></i></span>
+                            <div><b>Pan-India supply</b><small>Bulk &amp; retail orders</small></div>
+                        </li>
+                        <li class="trust-item">
+                            <span class="trust-icon is-wa"><i class="fab fa-whatsapp" aria-hidden="true"></i></span>
+                            <div><b>Order on WhatsApp</b><small>No login needed</small></div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
             <!-- ============================== Company ============================== -->
             <section id="business-details" class="section" aria-labelledby="companyTitle">
                 <div class="container">
@@ -3879,6 +4246,23 @@
                                 <i class="fas fa-microphone" aria-hidden="true"></i>
                             </button>
                         </div>
+                    </div>
+                    <div class="category-chips" role="group" aria-label="Filter by category">
+                        <button type="button" class="chip is-active" data-chip-query="" aria-pressed="true">
+                            <i class="fas fa-border-all" aria-hidden="true"></i>All products
+                        </button>
+                        <button type="button" class="chip" data-chip-query="polish" aria-pressed="false">
+                            <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>Polish
+                        </button>
+                        <button type="button" class="chip" data-chip-query="wash" aria-pressed="false">
+                            <i class="fas fa-soap" aria-hidden="true"></i>Car wash
+                        </button>
+                        <button type="button" class="chip" data-chip-query="cleaner" aria-pressed="false">
+                            <i class="fas fa-spray-can-sparkles" aria-hidden="true"></i>Cleaners
+                        </button>
+                        <button type="button" class="chip" data-chip-query="gun towel" aria-pressed="false">
+                            <i class="fas fa-toolbox" aria-hidden="true"></i>Accessories
+                        </button>
                     </div>
                     <div class="products-grid" id="productsGrid" aria-live="polite"></div>
                 </div>
@@ -4099,6 +4483,19 @@
                 </div>
             </div>
         </footer>
+
+        <!-- ============================== Mobile action bar ============================== -->
+        <nav class="mobile-actionbar" aria-label="Quick actions">
+            <a href="tel:+919352470085"><i class="fas fa-phone" aria-hidden="true"></i><span>Call</span></a>
+            <a href="https://wa.me/919352470085" target="_blank" rel="noopener noreferrer" class="is-wa"
+                ><i class="fab fa-whatsapp" aria-hidden="true"></i><span>WhatsApp</span></a
+            >
+            <a href="#products"><i class="fas fa-boxes-stacked" aria-hidden="true"></i><span>Products</span></a>
+            <button type="button" data-action="toggle-cart" aria-label="Open cart">
+                <i class="fas fa-bag-shopping" aria-hidden="true"></i><span>Cart</span>
+                <span class="actionbar-badge" id="actionbarBadge" hidden>0</span>
+            </button>
+        </nav>
 
         <button id="scrollToTop" type="button" class="hidden" aria-label="Scroll to top">
             <i class="fas fa-arrow-up" aria-hidden="true"></i>
@@ -5506,6 +5903,9 @@
                 return `<article class="product-card rounded-2xl overflow-hidden group" data-product-id="${product.id}">
                     <span class="product-spotlight" aria-hidden="true"></span>
                     <div class="product-image-container">
+                        ${product.hasLtOptions
+                            ? `<span class="product-badge"><i class="fas fa-box" aria-hidden="true"></i>${escapeHtml(String(Math.min(...qtyOpts)))}&ndash;${escapeHtml(String(Math.max(...qtyOpts)))}${qtyLabel.trim() === "Lt" ? " Lt" : qtyLabel} packs</span>`
+                            : `<span class="product-badge"><i class="fas fa-tag" aria-hidden="true"></i>Per piece</span>`}
                         <img src="${escapeHtml(product.image)}" alt="${name}" class="product-image" ${imgLoading} decoding="async" width="400" height="250">
                         <div class="product-image-fallback"><i class="fas fa-image text-4xl mb-2" aria-hidden="true"></i><p>Image not available</p></div>
                     </div>
@@ -6888,6 +7288,52 @@
                 cart = restoreCart(storage.get(APP.CART_STORAGE_KEY, {}));
                 updateCartUI();
             });
+        </script>
+        <script>
+            // Market-style extras: category chips drive the existing search box; mobile bar mirrors the cart count.
+            (function () {
+                const input = document.getElementById("productSearch");
+                const chips = document.querySelectorAll(".category-chips .chip");
+                function setActive(chip) {
+                    chips.forEach((c) => {
+                        const on = c === chip;
+                        c.classList.toggle("is-active", on);
+                        c.setAttribute("aria-pressed", String(on));
+                    });
+                }
+                chips.forEach((chip) => {
+                    chip.addEventListener("click", () => {
+                        if (!input) return;
+                        input.value = chip.dataset.chipQuery || "";
+                        input.dispatchEvent(new Event("input", { bubbles: true }));
+                        setActive(chip);
+                    });
+                });
+                if (input) {
+                    input.addEventListener("input", () => {
+                        const match = Array.from(chips).find((c) => (c.dataset.chipQuery || "") === input.value.trim());
+                        setActive(match || null);
+                    });
+                }
+
+                const src = document.getElementById("cartBadge");
+                const dst = document.getElementById("actionbarBadge");
+                if (src && dst) {
+                    const sync = () => {
+                        const n = parseInt(src.textContent, 10) || 0;
+                        dst.textContent = String(n);
+                        dst.hidden = n === 0 || src.style.display === "none";
+                    };
+                    new MutationObserver(sync).observe(src, {
+                        childList: true,
+                        characterData: true,
+                        subtree: true,
+                        attributes: true,
+                        attributeFilter: ["style"],
+                    });
+                    sync();
+                }
+            })();
         </script>
     </body>
 </html>
