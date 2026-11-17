@@ -21,7 +21,7 @@
         />
         <meta name="robots" content="index, follow" />
         <meta name="color-scheme" content="light" />
-        <meta name="theme-color" content="#0f172a" />
+        <meta name="theme-color" content="#1e3a8a" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -137,7 +137,10 @@
                     --border: var(--ink-200);
                     --focus: var(--brand-500);
                     --grad-brand: linear-gradient(135deg, var(--brand-600) 0%, var(--aqua-500) 100%);
-                    --grad-ink: linear-gradient(160deg, var(--ink-950) 0%, oklch(0.24 0.06 262) 100%);
+                    /* Dark surfaces: rich brand blue instead of near-black */
+                    --deep-800: oklch(0.38 0.14 262);
+                    --deep-700: oklch(0.45 0.17 260);
+                    --grad-ink: linear-gradient(160deg, oklch(0.38 0.15 262) 0%, oklch(0.5 0.17 250) 60%, oklch(0.58 0.14 225) 100%);
 
                     /* Type */
                     --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -367,7 +370,7 @@
                     z-index: 1000;
                     padding: 10px 16px;
                     border-radius: var(--radius-sm);
-                    background: var(--ink-900);
+                    background: var(--deep-700);
                     color: #fff;
                     font-weight: 600;
                     translate: 0 -200%;
@@ -644,7 +647,7 @@
                     min-height: 44px;
                     padding: 0 16px;
                     border-radius: var(--radius-pill);
-                    background: var(--ink-900);
+                    background: var(--deep-700);
                     color: #fff;
                     font-size: var(--fs-sm);
                     font-weight: 600;
@@ -998,7 +1001,7 @@
                     display: flex;
                     flex-direction: column;
                     padding: 16px 18px;
-                    background: oklch(0.2 0.04 262 / 0.6);
+                    background: oklch(1 0 0 / 0.1);
                 }
                 .hero-stats dt {
                     font-size: var(--fs-xs);
@@ -1145,7 +1148,7 @@
                 /* ---------- Marquee ---------- */
                 .product-marquee {
                     overflow: hidden;
-                    background: var(--ink-950);
+                    background: var(--deep-800);
                     border-top: 1px solid oklch(1 0 0 / 0.08);
                     padding-block: 18px;
                     mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -1643,8 +1646,8 @@
                         background-color var(--dur-fast);
                 }
                 .enquiry-trigger-btn:hover {
-                    border-color: var(--ink-800);
-                    background: var(--ink-900);
+                    border-color: var(--deep-700);
+                    background: var(--deep-700);
                     color: #fff;
                 }
 
@@ -1688,8 +1691,8 @@
                 }
                 .qty-btn.active,
                 .enquiry-qty-btn.active {
-                    background: var(--ink-900);
-                    border-color: var(--ink-900);
+                    background: var(--deep-700);
+                    border-color: var(--deep-700);
                     color: #fff;
                 }
                 .qty-btn:active,
@@ -1903,7 +1906,7 @@
                     rotate: 90deg;
                 }
                 .faq-item[open] .faq-icon {
-                    background: var(--ink-900);
+                    background: var(--deep-700);
                     rotate: 180deg;
                 }
                 .faq-item[open] .faq-icon::before,
@@ -2026,7 +2029,7 @@
 
                 /* ---------- Footer ---------- */
                 .site-footer {
-                    background: var(--ink-950);
+                    background: var(--deep-800);
                     color: oklch(1 0 0 / 0.72);
                     padding-block: clamp(48px, 7vw, 80px) 28px;
                     font-size: var(--fs-sm);
@@ -2146,7 +2149,7 @@
                     height: 48px;
                     border: 0;
                     border-radius: 50%;
-                    background: var(--ink-900);
+                    background: var(--deep-700);
                     color: #fff;
                     box-shadow: var(--shadow-md);
                     cursor: pointer;
@@ -2484,7 +2487,7 @@
                 }
                 .assistant-msg.user {
                     align-self: flex-end;
-                    background: var(--ink-900);
+                    background: var(--deep-700);
                     color: #fff;
                     border-bottom-right-radius: 4px;
                 }
@@ -3016,7 +3019,7 @@
                 }
                 .added-cart-viewcart-btn {
                     border: 0;
-                    background: var(--ink-900);
+                    background: var(--deep-700);
                     color: #fff;
                 }
                 .added-cart-viewcart-btn:hover {
