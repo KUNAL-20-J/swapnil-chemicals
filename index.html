@@ -772,7 +772,7 @@
                     }
                 }
                 .mobile-nav::backdrop {
-                    background: oklch(0.16 0.03 262 / 0.3);
+                    background: oklch(0.3 0.1 262 / 0.3);
                 }
                 .mobile-nav ul {
                     list-style: none;
@@ -2661,7 +2661,7 @@
                     }
                 }
                 dialog.sc-modal::backdrop {
-                    background: oklch(0.16 0.03 262 / 0.55);
+                    background: oklch(0.3 0.1 262 / 0.55);
                     backdrop-filter: blur(6px);
                     transition:
                         background-color var(--dur),
@@ -2670,7 +2670,7 @@
                 }
                 @starting-style {
                     dialog.sc-modal[open]::backdrop {
-                        background: oklch(0.16 0.03 262 / 0);
+                        background: oklch(0.3 0.1 262 / 0);
                     }
                 }
                 /* Lock page scroll while any modal dialog (enquiry, quick view, ⌘K…) is open —
@@ -3980,7 +3980,7 @@
                     }
                 }
                 .y-dialog::backdrop {
-                    background: oklch(0.16 0.03 262 / 0.55);
+                    background: oklch(0.3 0.1 262 / 0.55);
                     backdrop-filter: blur(6px);
                     -webkit-backdrop-filter: blur(6px);
                 }
@@ -4591,8 +4591,8 @@
                     padding: 12px 18px;
                     border: 0;
                     border-radius: var(--radius-pill);
-                    background: var(--ink-900);
-                    color: var(--ink-50);
+                    background: var(--deep-700);
+                    color: #fff;
                     font: 600 var(--fs-sm) var(--font-sans);
                     box-shadow: var(--shadow-lg);
                     inset: auto auto 96px 50%;
@@ -4615,42 +4615,42 @@
                     --ink-950: oklch(0.985 0.004 262);
                     --ink-900: oklch(0.95 0.008 262);
                     --ink-800: oklch(0.9 0.012 262);
-                    --ink-700: oklch(0.82 0.016 262);
-                    --ink-600: oklch(0.74 0.02 262);
-                    --ink-500: oklch(0.68 0.022 262);
-                    --ink-400: oklch(0.56 0.025 262);
-                    --ink-300: oklch(0.42 0.03 262);
-                    --ink-200: oklch(0.32 0.03 262);
-                    --ink-100: oklch(0.25 0.03 262);
-                    --ink-50: oklch(0.17 0.028 262);
-                    --brand-50: oklch(0.27 0.06 262);
-                    --brand-100: oklch(0.3 0.08 262);
-                    --brand-200: oklch(0.45 0.12 258);
+                    --ink-700: oklch(0.86 0.016 262);
+                    --ink-600: oklch(0.8 0.02 262);
+                    --ink-500: oklch(0.76 0.03 262);
+                    --ink-400: oklch(0.66 0.05 262);
+                    --ink-300: oklch(0.54 0.08 262);
+                    --ink-200: oklch(0.46 0.09 262);
+                    --ink-100: oklch(0.37 0.09 262);
+                    --ink-50: oklch(0.29 0.09 262);
+                    --brand-50: oklch(0.38 0.12 262);
+                    --brand-100: oklch(0.41 0.13 262);
+                    --brand-200: oklch(0.56 0.14 258);
                     --brand-600: oklch(0.68 0.17 252);
                     --brand-700: oklch(0.8 0.12 250);
-                    --danger-50: oklch(0.3 0.08 25);
-                    --bg: oklch(0.15 0.028 262);
-                    --surface: oklch(0.21 0.03 262);
-                    --surface-2: oklch(0.25 0.03 262);
-                    --border: oklch(0.32 0.03 262);
-                    --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.3), 0 4px 12px oklch(0 0 0 / 0.25);
-                    --shadow-md: 0 2px 4px oklch(0 0 0 / 0.3), 0 12px 32px oklch(0 0 0 / 0.35);
-                    --shadow-lg: 0 4px 8px oklch(0 0 0 / 0.35), 0 24px 60px oklch(0 0 0 / 0.5);
+                    --danger-50: oklch(0.38 0.1 25);
+                    --bg: oklch(0.28 0.09 262);
+                    --surface: oklch(0.33 0.09 262);
+                    --surface-2: oklch(0.37 0.09 262);
+                    --border: oklch(0.46 0.09 262);
+                    --shadow-sm: 0 1px 2px oklch(0.2 0.08 262 / 0.3), 0 4px 12px oklch(0.2 0.08 262 / 0.25);
+                    --shadow-md: 0 2px 4px oklch(0.2 0.08 262 / 0.3), 0 12px 32px oklch(0.2 0.08 262 / 0.35);
+                    --shadow-lg: 0 4px 8px oklch(0.2 0.08 262 / 0.35), 0 24px 60px oklch(0.2 0.08 262 / 0.5);
                 }
                 :root[data-theme="dark"] body {
                     background:
-                        radial-gradient(1100px 520px at 0% -5%, oklch(0.26 0.08 262), transparent 60%),
-                        radial-gradient(900px 480px at 100% 10%, oklch(0.24 0.06 215), transparent 60%),
+                        radial-gradient(1100px 520px at 0% -5%, oklch(0.38 0.14 262), transparent 60%),
+                        radial-gradient(900px 480px at 100% 10%, oklch(0.36 0.1 215), transparent 60%),
                         var(--bg);
                     color: var(--text);
                 }
                 :root[data-theme="dark"] .site-header {
-                    background: oklch(0.18 0.03 262 / 0.72);
+                    background: oklch(0.3 0.09 262 / 0.72);
                     box-shadow: inset 0 -1px 0 oklch(1 0 0 / 0.06);
                 }
                 :root[data-theme="dark"] .site-header.scrolled {
-                    background: oklch(0.18 0.03 262 / 0.88);
-                    box-shadow: inset 0 -1px 0 oklch(1 0 0 / 0.06), 0 8px 24px oklch(0 0 0 / 0.35);
+                    background: oklch(0.3 0.09 262 / 0.88);
+                    box-shadow: inset 0 -1px 0 oklch(1 0 0 / 0.06), 0 8px 24px oklch(0.2 0.08 262 / 0.35);
                 }
                 :root[data-theme="dark"] .feature-card:not(.is-hero),
                 :root[data-theme="dark"] .product-card,
@@ -4659,7 +4659,7 @@
                 :root[data-theme="dark"] .btn-light,
                 :root[data-theme="dark"] .step,
                 :root[data-theme="dark"] .faq-item {
-                    background: linear-gradient(180deg, oklch(0.24 0.032 262), oklch(0.21 0.03 262));
+                    background: linear-gradient(180deg, oklch(0.36 0.09 262), oklch(0.33 0.09 262));
                     border-color: var(--border);
                     box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.05), var(--shadow-sm);
                 }
@@ -4667,7 +4667,7 @@
                 :root[data-theme="dark"] .product-card:hover,
                 :root[data-theme="dark"] .trust-item:hover {
                     border-color: var(--brand-200);
-                    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.06), 0 22px 48px oklch(0 0 0 / 0.45);
+                    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.06), 0 22px 48px oklch(0.2 0.08 262 / 0.45);
                 }
                 :root[data-theme="dark"] .chip.is-active {
                     background: var(--gloss-top), var(--grad-brand);
@@ -4677,12 +4677,12 @@
                 :root[data-theme="dark"] .product-image-container,
                 :root[data-theme="dark"] .qv-media {
                     background:
-                        radial-gradient(circle at 50% 60%, oklch(0.32 0.04 255) 0%, transparent 70%),
-                        linear-gradient(160deg, oklch(0.25 0.05 262), oklch(0.22 0.04 230));
+                        radial-gradient(circle at 50% 60%, oklch(0.44 0.08 255) 0%, transparent 70%),
+                        linear-gradient(160deg, oklch(0.37 0.1 262), oklch(0.34 0.08 230));
                 }
                 :root[data-theme="dark"] .product-badge,
                 :root[data-theme="dark"] .qv-btn {
-                    background: oklch(0.2 0.03 262 / 0.8);
+                    background: oklch(0.32 0.09 262 / 0.85);
                     border-color: oklch(1 0 0 / 0.12);
                     color: var(--ink-900);
                 }
@@ -4699,7 +4699,7 @@
                     border-color: var(--surface);
                 }
                 :root[data-theme="dark"] .mobile-actionbar {
-                    background: oklch(0.18 0.03 262 / 0.88);
+                    background: oklch(0.3 0.09 262 / 0.88);
                 }
                 :root[data-theme="dark"] .enquiry-trigger-btn {
                     background: var(--surface-2);
@@ -4713,16 +4713,16 @@
                     border-color: var(--border);
                 }
                 :root[data-theme="dark"] .added-cart-success {
-                    background: oklch(0.3 0.08 152);
+                    background: oklch(0.4 0.1 152);
                 }
                 :root[data-theme="dark"] .feature-icon {
-                    --icon-bg: oklch(0.28 0.05 262);
+                    --icon-bg: oklch(0.42 0.09 262);
                 }
-                :root[data-theme="dark"] .feature-icon.tone-green { --icon-bg: oklch(0.28 0.06 152); }
-                :root[data-theme="dark"] .feature-icon.tone-violet { --icon-bg: oklch(0.28 0.06 295); }
-                :root[data-theme="dark"] .feature-icon.tone-amber { --icon-bg: oklch(0.3 0.06 85); }
-                :root[data-theme="dark"] .feature-icon.tone-teal { --icon-bg: oklch(0.28 0.05 195); }
-                :root[data-theme="dark"] .feature-icon.tone-red { --icon-bg: oklch(0.28 0.06 25); }
+                :root[data-theme="dark"] .feature-icon.tone-green { --icon-bg: oklch(0.4 0.08 152); }
+                :root[data-theme="dark"] .feature-icon.tone-violet { --icon-bg: oklch(0.4 0.08 295); }
+                :root[data-theme="dark"] .feature-icon.tone-amber { --icon-bg: oklch(0.42 0.08 85); }
+                :root[data-theme="dark"] .feature-icon.tone-teal { --icon-bg: oklch(0.4 0.07 195); }
+                :root[data-theme="dark"] .feature-icon.tone-red { --icon-bg: oklch(0.4 0.08 25); }
                 :root[data-theme="dark"] .feature-card.is-hero .feature-icon,
                 :root[data-theme="dark"] .contact-item .feature-icon {
                     --icon-bg: oklch(1 0 0 / 0.14);
@@ -8694,7 +8694,7 @@
                 const themeMeta = document.querySelector('meta[name="theme-color"]');
                 function applyTheme(theme) {
                     document.documentElement.dataset.theme = theme;
-                    if (themeMeta) themeMeta.content = theme === "dark" ? "#0f172a" : "#1e3a8a";
+                    if (themeMeta) themeMeta.content = theme === "dark" ? "#1b2b5e" : "#1e3a8a";
                     if (themeBtn) {
                         themeBtn.setAttribute("aria-pressed", String(theme === "dark"));
                         themeBtn.setAttribute("aria-label", theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
