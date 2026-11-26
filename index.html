@@ -22,7 +22,7 @@
             content="automobile cleaning, car cleaning, dashboard polish, tyre polish, car wash, glass cleaner, Jaipur manufacturer"
         />
         <meta name="robots" content="index, follow" />
-        <meta name="color-scheme" content="light dark" />
+        <meta name="color-scheme" content="light" />
         <meta name="theme-color" content="#1e3a8a" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -55,24 +55,6 @@
              Clickjacking protection must be sent by the server as a response header, e.g.
              Content-Security-Policy: frame-ancestors 'none'   (or X-Frame-Options: DENY). -->
 
-        <script>
-            // Runs before first paint so the saved theme applies with no light/dark flash.
-            {
-                let theme = null;
-                try {
-                    theme = JSON.parse(localStorage.getItem("sc_theme"));
-                } catch {
-                    // Storage blocked or value corrupt: fall back to the OS preference below.
-                }
-                if (theme !== "light" && theme !== "dark") {
-                    theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-                }
-                document.documentElement.dataset.theme = theme;
-                // Keep the browser UI colour in step with the theme from the very first paint
-                // (same values the theme toggle uses later in applyTheme()).
-                document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "dark" ? "#1b2b5e" : "#1e3a8a");
-            }
-        </script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
@@ -2328,8 +2310,7 @@
                 .cart-item-row:last-child {
                     border-bottom: 0;
                 }
-                /* No !important needed now the row markup has no inline styles. (An !important here
-                   also beat the dark-theme override, because !important reverses @layer order.) */
+                /* No !important needed now the row markup has no inline styles. */
                 .cart-item-row img {
                     flex-shrink: 0;
                     width: 48px;
@@ -3723,7 +3704,7 @@
             }
 
             /* =====================================================================
-               2027 layer — dark theme, command palette, quick view, bulk estimator,
+               2027 layer — command palette, quick view, bulk estimator,
                care routine, scroll-driven motion. Declared last, so it wins over
                every earlier layer without !important.
                ===================================================================== */
@@ -3807,16 +3788,6 @@
                     border: 1px solid var(--border);
                     color: var(--ink-600);
                 }
-                /* Font Awesome's stylesheet is unlayered, so toggle icons via its own --fa-display hook */
-                .theme-toggle .fa-sun {
-                    --fa-display: none;
-                }
-                :root[data-theme="dark"] .theme-toggle .fa-sun {
-                    --fa-display: inline-block;
-                }
-                :root[data-theme="dark"] .theme-toggle .fa-moon {
-                    --fa-display: none;
-                }
                 @media (max-width: 1280px) {
                     .cmdk-trigger .cmdk-label,
                     .cmdk-trigger kbd {
@@ -3842,28 +3813,10 @@
                     }
                 }
 
-                /* ---------------------------------------------------- theme switch animation */
-                /* Freeze per-element colour transitions while the theme flips */
-                :root.theme-switching *,
-                :root.theme-switching *::before,
-                :root.theme-switching *::after {
-                    transition: none !important;
-                }
                 ::view-transition-old(root),
                 ::view-transition-new(root) {
                     animation: none;
                     mix-blend-mode: normal;
-                }
-                :root.theme-switching::view-transition-new(root) {
-                    animation: theme-reveal 0.6s var(--ease-out) both;
-                }
-                @keyframes theme-reveal {
-                    from {
-                        clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0));
-                    }
-                    to {
-                        clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 0));
-                    }
                 }
                 ::view-transition-group(*) {
                     animation-duration: 0.38s;
@@ -4306,42 +4259,6 @@
                     background: var(--brand-50);
                     color: var(--brand-700);
                 }
-                .stepper {
-                    display: inline-flex;
-                    align-items: center;
-                    border: 1.5px solid var(--border);
-                    border-radius: var(--radius-pill);
-                    background: var(--surface);
-                    overflow: hidden;
-                }
-                .stepper button {
-                    width: 44px;
-                    height: 44px;
-                    border: 0;
-                    background: transparent;
-                    font-size: 1.2rem;
-                    color: var(--ink-700);
-                    cursor: pointer;
-                }
-                .stepper button:hover {
-                    background: var(--brand-50);
-                    color: var(--brand-600);
-                }
-                .stepper input {
-                    width: 64px;
-                    height: 44px;
-                    border: 0;
-                    text-align: center;
-                    font: 700 1rem var(--font-sans);
-                    background: transparent;
-                    color: var(--text);
-                    font-variant-numeric: tabular-nums;
-                    -moz-appearance: textfield;
-                }
-                .stepper input::-webkit-inner-spin-button,
-                .stepper input::-webkit-outer-spin-button {
-                    -webkit-appearance: none;
-                }
                 .est-result {
                     display: grid;
                     gap: 6px;
@@ -4566,150 +4483,6 @@
                     }
                 }
 
-                /* ==================================================== DARK THEME */
-                :root[data-theme="dark"] {
-                    color-scheme: dark;
-                    --ink-950: oklch(0.985 0.004 262);
-                    --ink-900: oklch(0.95 0.008 262);
-                    --ink-800: oklch(0.9 0.012 262);
-                    --ink-700: oklch(0.86 0.016 262);
-                    --ink-600: oklch(0.8 0.02 262);
-                    --ink-500: oklch(0.76 0.03 262);
-                    --ink-400: oklch(0.66 0.05 262);
-                    --ink-300: oklch(0.54 0.08 262);
-                    --ink-200: oklch(0.46 0.09 262);
-                    --ink-100: oklch(0.37 0.09 262);
-                    --ink-50: oklch(0.29 0.09 262);
-                    --brand-50: oklch(0.38 0.12 262);
-                    --brand-100: oklch(0.41 0.13 262);
-                    --brand-200: oklch(0.56 0.14 258);
-                    --brand-600: oklch(0.68 0.17 252);
-                    --brand-700: oklch(0.8 0.12 250);
-                    --danger-50: oklch(0.38 0.1 25);
-                    --bg: oklch(0.28 0.09 262);
-                    --surface: oklch(0.33 0.09 262);
-                    --surface-2: oklch(0.37 0.09 262);
-                    --border: oklch(0.46 0.09 262);
-                    --shadow-sm: 0 1px 2px oklch(0.2 0.08 262 / 0.3), 0 4px 12px oklch(0.2 0.08 262 / 0.25);
-                    --shadow-md: 0 2px 4px oklch(0.2 0.08 262 / 0.3), 0 12px 32px oklch(0.2 0.08 262 / 0.35);
-                    --shadow-lg: 0 4px 8px oklch(0.2 0.08 262 / 0.35), 0 24px 60px oklch(0.2 0.08 262 / 0.5);
-                }
-                :root[data-theme="dark"] body {
-                    background:
-                        radial-gradient(1100px 520px at 0% -5%, oklch(0.38 0.14 262), transparent 60%),
-                        radial-gradient(900px 480px at 100% 10%, oklch(0.36 0.1 215), transparent 60%),
-                        var(--bg);
-                    color: var(--text);
-                }
-                :root[data-theme="dark"] .site-header {
-                    background: oklch(0.3 0.09 262 / 0.72);
-                    box-shadow: inset 0 -1px 0 oklch(1 0 0 / 0.06);
-                }
-                :root[data-theme="dark"] .site-header.scrolled {
-                    background: oklch(0.3 0.09 262 / 0.88);
-                    box-shadow: inset 0 -1px 0 oklch(1 0 0 / 0.06), 0 8px 24px oklch(0.2 0.08 262 / 0.35);
-                }
-                :root[data-theme="dark"] .feature-card:not(.is-hero),
-                :root[data-theme="dark"] .product-card,
-                :root[data-theme="dark"] .trust-item,
-                :root[data-theme="dark"] .chip,
-                :root[data-theme="dark"] .btn-light,
-                :root[data-theme="dark"] .step,
-                :root[data-theme="dark"] .faq-item {
-                    background: linear-gradient(180deg, oklch(0.36 0.09 262), oklch(0.33 0.09 262));
-                    border-color: var(--border);
-                    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.05), var(--shadow-sm);
-                }
-                :root[data-theme="dark"] .feature-card:not(.is-hero):hover,
-                :root[data-theme="dark"] .product-card:hover,
-                :root[data-theme="dark"] .trust-item:hover {
-                    border-color: var(--brand-200);
-                    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.06), 0 22px 48px oklch(0.2 0.08 262 / 0.45);
-                }
-                :root[data-theme="dark"] .chip.is-active {
-                    background: var(--gloss-top), var(--grad-brand);
-                    color: #fff;
-                    border-color: transparent;
-                }
-                :root[data-theme="dark"] .product-image-container,
-                :root[data-theme="dark"] .qv-media {
-                    background:
-                        radial-gradient(circle at 50% 60%, oklch(0.44 0.08 255) 0%, transparent 70%),
-                        linear-gradient(160deg, oklch(0.37 0.1 262), oklch(0.34 0.08 230));
-                }
-                :root[data-theme="dark"] .product-badge,
-                :root[data-theme="dark"] .qv-btn {
-                    background: oklch(0.32 0.09 262 / 0.85);
-                    border-color: oklch(1 0 0 / 0.12);
-                    color: var(--ink-900);
-                }
-                :root[data-theme="dark"] .brand-logo,
-                :root[data-theme="dark"] .enquiry-product-preview img {
-                    background: oklch(0.96 0.01 262);
-                }
-                :root[data-theme="dark"] .cart-badge,
-                :root[data-theme="dark"] .brand-status {
-                    border-color: var(--surface);
-                }
-                :root[data-theme="dark"] .mobile-actionbar {
-                    background: oklch(0.3 0.09 262 / 0.88);
-                }
-                :root[data-theme="dark"] .enquiry-trigger-btn {
-                    background: var(--surface-2);
-                    color: var(--ink-800);
-                    box-shadow: none;
-                    border-color: var(--border);
-                }
-                :root[data-theme="dark"] .qty-btn:not(.active) {
-                    background: var(--surface-2);
-                    color: var(--ink-800);
-                    border-color: var(--border);
-                }
-                :root[data-theme="dark"] .added-cart-success {
-                    background: oklch(0.4 0.1 152);
-                }
-                :root[data-theme="dark"] .feature-icon {
-                    --icon-bg: oklch(0.42 0.09 262);
-                }
-                :root[data-theme="dark"] .feature-icon.tone-green { --icon-bg: oklch(0.4 0.08 152); }
-                :root[data-theme="dark"] .feature-icon.tone-violet { --icon-bg: oklch(0.4 0.08 295); }
-                :root[data-theme="dark"] .feature-icon.tone-amber { --icon-bg: oklch(0.42 0.08 85); }
-                :root[data-theme="dark"] .feature-icon.tone-teal { --icon-bg: oklch(0.4 0.07 195); }
-                :root[data-theme="dark"] .feature-icon.tone-red { --icon-bg: oklch(0.4 0.08 25); }
-                :root[data-theme="dark"] .feature-card.is-hero .feature-icon,
-                :root[data-theme="dark"] .contact-item .feature-icon {
-                    --icon-bg: oklch(1 0 0 / 0.14);
-                }
-                /* Tailwind utilities used inside JS-rendered templates */
-                :root[data-theme="dark"] .bg-white { background-color: var(--surface); }
-                :root[data-theme="dark"] .bg-slate-100,
-                :root[data-theme="dark"] .bg-sky-50 { background-color: var(--surface-2); }
-                :root[data-theme="dark"] .text-gray-800 { color: var(--ink-900); }
-                :root[data-theme="dark"] .text-gray-700 { color: var(--ink-800); }
-                :root[data-theme="dark"] .text-gray-600 { color: var(--ink-700); }
-                :root[data-theme="dark"] .text-gray-500,
-                :root[data-theme="dark"] .text-gray-400 { color: var(--ink-500); }
-                :root[data-theme="dark"] .text-blue-600 { color: var(--brand-600); }
-                :root[data-theme="dark"] .border-gray-200,
-                :root[data-theme="dark"] .border-sky-100,
-                :root[data-theme="dark"] .border-sky-200 { border-color: var(--border); }
-                :root[data-theme="dark"] .group:hover .group-hover\:text-blue-600 { color: var(--brand-600); }
-                :root[data-theme="dark"] input,
-                :root[data-theme="dark"] select,
-                :root[data-theme="dark"] textarea {
-                    color: var(--text);
-                }
-                :root[data-theme="dark"] .enquiry-input,
-                :root[data-theme="dark"] .enquiry-textarea,
-                :root[data-theme="dark"] .assistant-input,
-                :root[data-theme="dark"] .search-box input,
-                :root[data-theme="dark"] .search-box {
-                    background-color: var(--surface-2);
-                    border-color: var(--border);
-                }
-                :root[data-theme="dark"] .cart-item-row img {
-                    background: oklch(0.96 0.01 262);
-                }
             }
         </style>
         <script type="application/ld+json">
@@ -4945,16 +4718,6 @@
                     >
                         <i class="fas fa-magnifying-glass" aria-hidden="true"></i><span class="cmdk-label">Search</span
                         ><kbd>⌘K</kbd>
-                    </button>
-                    <button
-                        type="button"
-                        class="icon-btn theme-toggle"
-                        id="themeToggle"
-                        data-action="toggle-theme"
-                        aria-label="Switch to dark theme"
-                        aria-pressed="false"
-                    >
-                        <i class="fas fa-moon" aria-hidden="true"></i><i class="fas fa-sun" aria-hidden="true"></i>
                     </button>
                     <a href="tel:+919352470085" class="header-call" aria-label="Call 9352470085">
                         <i class="fas fa-phone" aria-hidden="true"></i><span>93524 70085</span>
@@ -5263,11 +5026,11 @@
                             <span class="section-eyebrow">Bulk planner</span>
                             <h2 class="section-title" id="estTitle">Estimate your order in seconds</h2>
                             <p class="section-lead">
-                                Pick a product, a pack size and how many packs you need. The estimate uses our list
+                                Pick a product and a pack size. The estimate uses our list
                                 prices — we confirm the final price and delivery with you on WhatsApp.
                             </p>
                             <ul class="est-points">
-                                <li><i class="fas fa-calculator" aria-hidden="true"></i>Live total as you change pack size or count</li>
+                                <li><i class="fas fa-calculator" aria-hidden="true"></i>Live total as you change product or pack size</li>
                                 <li><i class="fas fa-file-invoice" aria-hidden="true"></i>Add to cart to download a proforma PDF</li>
                                 <li><i class="fab fa-whatsapp" aria-hidden="true"></i>Send the exact quote request on WhatsApp in one tap</li>
                             </ul>
@@ -5281,15 +5044,7 @@
                             <fieldset class="pack-grid" id="estPacks">
                                 <legend>Pack size</legend>
                             </fieldset>
-                            <div class="est-field">
-                                <label for="estCount">Number of packs</label>
-                                <div class="stepper">
-                                    <button type="button" data-est-step="-1" aria-label="Fewer packs">−</button>
-                                    <input type="number" id="estCount" min="1" max="999" value="1" inputmode="numeric" />
-                                    <button type="button" data-est-step="1" aria-label="More packs">+</button>
-                                </div>
-                            </div>
-                            <output class="est-result" id="estResult" for="estCount" aria-live="polite">
+                            <output class="est-result" id="estResult" aria-live="polite">
                                 <small>Estimated total (list price)</small>
                                 <span class="est-total" id="estTotal">₹0</span>
                                 <span class="est-breakdown" id="estBreakdown"></span>
@@ -8535,7 +8290,7 @@
 
         <script>
             // =====================================================================
-            // 2027 layer: theme switch, ⌘K command palette, product quick view,
+            // 2027 layer: ⌘K command palette, product quick view,
             // bulk estimator, scroll-spy, share links and app badge.
             // Reuses the catalogue + cart helpers declared in the main script
             // (products, cart, persistCart, updateCartUI, formatCurrency, …).
@@ -8543,7 +8298,6 @@
             (function () {
                 "use strict";
 
-                const THEME_KEY = "sc_theme";
                 const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
                 const canTransition = () => typeof document.startViewTransition === "function" && !reduceMotion();
                 const byId = (id) => document.getElementById(id);
@@ -8570,42 +8324,6 @@
                     updateCartUI();
                     if (typeof openAddedCartModal === "function") openAddedCartModal(key);
                 }
-
-                // ------------------------------------------------------------ theme
-                const themeBtn = byId("themeToggle");
-                const themeMeta = document.querySelector('meta[name="theme-color"]');
-                function applyTheme(theme) {
-                    document.documentElement.dataset.theme = theme;
-                    if (themeMeta) themeMeta.content = theme === "dark" ? "#1b2b5e" : "#1e3a8a";
-                    if (themeBtn) {
-                        themeBtn.setAttribute("aria-pressed", String(theme === "dark"));
-                        themeBtn.setAttribute("aria-label", theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
-                    }
-                }
-                function toggleTheme(originEl) {
-                    const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-                    storage.set(THEME_KEY, next);
-                    const root = document.documentElement;
-                    if (!canTransition()) {
-                        root.classList.add("theme-switching");
-                        applyTheme(next);
-                        requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("theme-switching")));
-                        return;
-                    }
-                    const rect = originEl?.getBoundingClientRect();
-                    root.style.setProperty("--vt-x", rect ? `${rect.left + rect.width / 2}px` : "50%");
-                    root.style.setProperty("--vt-y", rect ? `${rect.top + rect.height / 2}px` : "0px");
-                    root.classList.add("theme-switching");
-                    const vt = document.startViewTransition(() => applyTheme(next));
-                    const done = () => root.classList.remove("theme-switching");
-                    vt.finished.finally(done);
-                    setTimeout(done, 1200); // safety net if the transition is skipped or stalls
-                }
-                applyTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
-                // Follow the OS setting until the visitor picks a theme themselves.
-                window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", (e) => {
-                    if (!storage.get(THEME_KEY, null)) applyTheme(e.matches ? "dark" : "light");
-                });
 
                 // ------------------------------------------------------------ dialogs
                 // Page scroll is locked by CSS (html:has(dialog:modal)), so nothing to undo on close.
@@ -8767,26 +8485,20 @@
                 const est = {
                     products: byId("estProducts"),
                     packs: byId("estPacks"),
-                    count: byId("estCount"),
                     total: byId("estTotal"),
                     breakdown: byId("estBreakdown"),
                     product: products[0],
                 };
-                function estCount() {
-                    const n = Math.floor(Number(est.count?.value));
-                    return Math.max(1, Math.min(999, Number.isFinite(n) ? n : 1));
-                }
                 function updateEstimate() {
                     const p = est.product;
                     if (!p || !est.total) return;
                     const size = checkedPack(est.packs);
-                    const packs = estCount();
-                    const total = packTotal(p, size, packs);
+                    const total = packTotal(p, size);
                     est.total.textContent = formatCurrency(total);
                     const unit = p.hasLtOptions ? (p.qtyLabel || "Lt").trim() : "pc";
                     est.breakdown.textContent = p.hasLtOptions
-                        ? `${packs} × ${size} ${unit} = ${size * packs} ${unit} × ${formatCurrency(p.price)}/${unit === "pcs" ? "pc" : unit}`
-                        : `${packs} × ${formatCurrency(p.price)} per piece`;
+                        ? `${size} ${unit} × ${formatCurrency(p.price)}/${unit === "pcs" ? "pc" : unit}`
+                        : `1 × ${formatCurrency(p.price)} per piece`;
                 }
                 function selectEstProduct(id) {
                     const p = productById(id);
@@ -8811,32 +8523,20 @@
                     });
                     selectEstProduct(products[0].id);
                 }
-                byId("estForm")?.addEventListener("click", (e) => {
-                    const step = e.target.closest("[data-est-step]");
-                    if (!step || !est.count) return;
-                    est.count.value = String(Math.max(1, Math.min(999, estCount() + Number(step.dataset.estStep))));
-                    updateEstimate();
-                });
-                est.count?.addEventListener("input", updateEstimate);
-                est.count?.addEventListener("blur", () => {
-                    est.count.value = String(estCount());
-                    updateEstimate();
-                });
                 byId("estForm")?.addEventListener("submit", (e) => e.preventDefault());
                 byId("estAddBtn")?.addEventListener("click", () => {
-                    if (est.product) addPacksToCart(est.product, checkedPack(est.packs), estCount());
+                    if (est.product) addPacksToCart(est.product, checkedPack(est.packs), 1);
                 });
                 byId("estQuoteBtn")?.addEventListener("click", () => {
                     const p = est.product;
                     if (!p) return;
                     const size = checkedPack(est.packs);
-                    const packs = estCount();
                     const lines = [
                         "Hello Swapnil Chemicals, I'd like a quote:",
                         "",
                         `Product: ${p.name} (${formatCurrency(p.price)}/${p.unit})`,
-                        `Pack: ${packLabel(p, size)} × ${packs}`,
-                        `Estimated total (list price): ${formatCurrency(packTotal(p, size, packs))}`,
+                        `Pack: ${packLabel(p, size)}`,
+                        `Estimated total (list price): ${formatCurrency(packTotal(p, size))}`,
                         "",
                         "Please confirm final price and delivery.",
                     ];
@@ -8874,7 +8574,6 @@
                     { group: "Actions", title: "Chat on WhatsApp", icon: "fa-comment", keywords: "whatsapp message chat", run: () => safeOpenNewTab(`https://wa.me/${APP.WA_NUMBER}`) },
                     { group: "Actions", title: "Call 93524 70085", icon: "fa-phone", keywords: "phone call mobile", run: () => (location.href = "tel:+919352470085") },
                     { group: "Actions", title: "Email us", icon: "fa-at", keywords: "email mail", run: () => (location.href = "mailto:swapnilchemicals10@gmail.com") },
-                    { group: "Actions", title: "Toggle dark / light theme", icon: "fa-circle-half-stroke", keywords: "dark light theme mode night", run: () => toggleTheme(themeBtn) },
                     { group: "Actions", title: "Ask the assistant", icon: "fa-robot", keywords: "ai assistant bot help", run: () => toggleAssistant() },
                 ];
 
@@ -8994,9 +8693,6 @@
                             break;
                         case "open-cmdk":
                             openCmdk();
-                            break;
-                        case "toggle-theme":
-                            toggleTheme(t);
                             break;
                         default:
                             break;
