@@ -29,7 +29,9 @@
             // Apply the theme before first paint (saved choice, else OS preference) to avoid a flash.
             (function () {
                 var t = null;
-                try { t = localStorage.getItem("sc-theme"); } catch (e) {}
+                try {
+                    t = localStorage.getItem("sc-theme");
+                } catch (e) {}
                 if (t !== "light" && t !== "dark") {
                     t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
                 }
@@ -73,7 +75,584 @@
         <!-- Product images are NOT preloaded: #products sits below the 88vh hero, so high-priority
              preloads only competed with the CSS, fonts and logo needed for the first paint. -->
         <!-- Pre-built Tailwind v3 (only the utilities this page uses; unused rules pruned). Regenerate with the Tailwind v3 CLI if markup or JS templates start using new utility classes. -->
-        <style id="tailwind-css">@layer tw{*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:Inter,system-ui,sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width:640px){.container{max-width:640px}}@media (min-width:768px){.container{max-width:768px}}@media (min-width:1024px){.container{max-width:1024px}}@media (min-width:1280px){.container{max-width:1280px}}@media (min-width:1536px){.container{max-width:1536px}}.col-span-full{grid-column:1/-1}.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.ml-1{margin-left:.25rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.block{display:block}.flex{display:flex}.hidden{display:none}.h-10{height:2.5rem}.w-10{width:2.5rem}.min-w-0{min-width:0}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.space-x-2>:not([hidden])~:not([hidden]){--tw-space-x-reverse:0;margin-right:calc(.5rem*var(--tw-space-x-reverse));margin-left:calc(.5rem*(1 - var(--tw-space-x-reverse)))}.overflow-hidden,.truncate{overflow:hidden}.truncate{text-overflow:ellipsis;white-space:nowrap}.rounded-2xl{border-radius:1rem}.rounded-lg{border-radius:.5rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-sky-100{--tw-border-opacity:1;border-color:rgb(224 242 254/var(--tw-border-opacity,1))}.border-sky-200{--tw-border-opacity:1;border-color:rgb(186 230 253/var(--tw-border-opacity,1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235/var(--tw-bg-opacity,1))}.bg-sky-50{--tw-bg-opacity:1;background-color:rgb(240 249 255/var(--tw-bg-opacity,1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.object-contain{-o-object-fit:contain;object-fit:contain}.p-4{padding:1rem}.p-6{padding:1.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.pt-3{padding-top:.75rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-semibold{font-weight:600}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235/var(--tw-text-opacity,1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175/var(--tw-text-opacity,1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128/var(--tw-text-opacity,1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99/var(--tw-text-opacity,1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81/var(--tw-text-opacity,1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55/var(--tw-text-opacity,1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.underline{text-decoration-line:underline}.last\:border-0:last-child{border-width:0}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216/var(--tw-bg-opacity,1))}.group:hover .group-hover\:text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235/var(--tw-text-opacity,1))}}</style>
+        <style id="tailwind-css">
+            @layer tw {
+                *,
+                :after,
+                :before {
+                    --tw-border-spacing-x: 0;
+                    --tw-border-spacing-y: 0;
+                    --tw-translate-x: 0;
+                    --tw-translate-y: 0;
+                    --tw-rotate: 0;
+                    --tw-skew-x: 0;
+                    --tw-skew-y: 0;
+                    --tw-scale-x: 1;
+                    --tw-scale-y: 1;
+                    --tw-pan-x: ;
+                    --tw-pan-y: ;
+                    --tw-pinch-zoom: ;
+                    --tw-scroll-snap-strictness: proximity;
+                    --tw-gradient-from-position: ;
+                    --tw-gradient-via-position: ;
+                    --tw-gradient-to-position: ;
+                    --tw-ordinal: ;
+                    --tw-slashed-zero: ;
+                    --tw-numeric-figure: ;
+                    --tw-numeric-spacing: ;
+                    --tw-numeric-fraction: ;
+                    --tw-ring-inset: ;
+                    --tw-ring-offset-width: 0px;
+                    --tw-ring-offset-color: #fff;
+                    --tw-ring-color: rgba(59, 130, 246, 0.5);
+                    --tw-ring-offset-shadow: 0 0 #0000;
+                    --tw-ring-shadow: 0 0 #0000;
+                    --tw-shadow: 0 0 #0000;
+                    --tw-shadow-colored: 0 0 #0000;
+                    --tw-blur: ;
+                    --tw-brightness: ;
+                    --tw-contrast: ;
+                    --tw-grayscale: ;
+                    --tw-hue-rotate: ;
+                    --tw-invert: ;
+                    --tw-saturate: ;
+                    --tw-sepia: ;
+                    --tw-drop-shadow: ;
+                    --tw-backdrop-blur: ;
+                    --tw-backdrop-brightness: ;
+                    --tw-backdrop-contrast: ;
+                    --tw-backdrop-grayscale: ;
+                    --tw-backdrop-hue-rotate: ;
+                    --tw-backdrop-invert: ;
+                    --tw-backdrop-opacity: ;
+                    --tw-backdrop-saturate: ;
+                    --tw-backdrop-sepia: ;
+                    --tw-contain-size: ;
+                    --tw-contain-layout: ;
+                    --tw-contain-paint: ;
+                    --tw-contain-style: ;
+                }
+                ::backdrop {
+                    --tw-border-spacing-x: 0;
+                    --tw-border-spacing-y: 0;
+                    --tw-translate-x: 0;
+                    --tw-translate-y: 0;
+                    --tw-rotate: 0;
+                    --tw-skew-x: 0;
+                    --tw-skew-y: 0;
+                    --tw-scale-x: 1;
+                    --tw-scale-y: 1;
+                    --tw-pan-x: ;
+                    --tw-pan-y: ;
+                    --tw-pinch-zoom: ;
+                    --tw-scroll-snap-strictness: proximity;
+                    --tw-gradient-from-position: ;
+                    --tw-gradient-via-position: ;
+                    --tw-gradient-to-position: ;
+                    --tw-ordinal: ;
+                    --tw-slashed-zero: ;
+                    --tw-numeric-figure: ;
+                    --tw-numeric-spacing: ;
+                    --tw-numeric-fraction: ;
+                    --tw-ring-inset: ;
+                    --tw-ring-offset-width: 0px;
+                    --tw-ring-offset-color: #fff;
+                    --tw-ring-color: rgba(59, 130, 246, 0.5);
+                    --tw-ring-offset-shadow: 0 0 #0000;
+                    --tw-ring-shadow: 0 0 #0000;
+                    --tw-shadow: 0 0 #0000;
+                    --tw-shadow-colored: 0 0 #0000;
+                    --tw-blur: ;
+                    --tw-brightness: ;
+                    --tw-contrast: ;
+                    --tw-grayscale: ;
+                    --tw-hue-rotate: ;
+                    --tw-invert: ;
+                    --tw-saturate: ;
+                    --tw-sepia: ;
+                    --tw-drop-shadow: ;
+                    --tw-backdrop-blur: ;
+                    --tw-backdrop-brightness: ;
+                    --tw-backdrop-contrast: ;
+                    --tw-backdrop-grayscale: ;
+                    --tw-backdrop-hue-rotate: ;
+                    --tw-backdrop-invert: ;
+                    --tw-backdrop-opacity: ;
+                    --tw-backdrop-saturate: ;
+                    --tw-backdrop-sepia: ;
+                    --tw-contain-size: ;
+                    --tw-contain-layout: ;
+                    --tw-contain-paint: ;
+                    --tw-contain-style: ;
+                } /*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/
+                *,
+                :after,
+                :before {
+                    box-sizing: border-box;
+                    border: 0 solid #e5e7eb;
+                }
+                :after,
+                :before {
+                    --tw-content: "";
+                }
+                :host,
+                html {
+                    line-height: 1.5;
+                    -webkit-text-size-adjust: 100%;
+                    -moz-tab-size: 4;
+                    -o-tab-size: 4;
+                    tab-size: 4;
+                    font-family: Inter, system-ui, sans-serif;
+                    font-feature-settings: normal;
+                    font-variation-settings: normal;
+                    -webkit-tap-highlight-color: transparent;
+                }
+                body {
+                    margin: 0;
+                    line-height: inherit;
+                }
+                hr {
+                    height: 0;
+                    color: inherit;
+                    border-top-width: 1px;
+                }
+                abbr:where([title]) {
+                    -webkit-text-decoration: underline dotted;
+                    text-decoration: underline dotted;
+                }
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                h6 {
+                    font-size: inherit;
+                    font-weight: inherit;
+                }
+                a {
+                    color: inherit;
+                    text-decoration: inherit;
+                }
+                b,
+                strong {
+                    font-weight: bolder;
+                }
+                code,
+                kbd,
+                pre,
+                samp {
+                    font-family:
+                        ui-monospace,
+                        SFMono-Regular,
+                        Menlo,
+                        Monaco,
+                        Consolas,
+                        Liberation Mono,
+                        Courier New,
+                        monospace;
+                    font-feature-settings: normal;
+                    font-variation-settings: normal;
+                    font-size: 1em;
+                }
+                small {
+                    font-size: 80%;
+                }
+                sub,
+                sup {
+                    font-size: 75%;
+                    line-height: 0;
+                    position: relative;
+                    vertical-align: baseline;
+                }
+                sub {
+                    bottom: -0.25em;
+                }
+                sup {
+                    top: -0.5em;
+                }
+                table {
+                    text-indent: 0;
+                    border-color: inherit;
+                    border-collapse: collapse;
+                }
+                button,
+                input,
+                optgroup,
+                select,
+                textarea {
+                    font-family: inherit;
+                    font-feature-settings: inherit;
+                    font-variation-settings: inherit;
+                    font-size: 100%;
+                    font-weight: inherit;
+                    line-height: inherit;
+                    letter-spacing: inherit;
+                    color: inherit;
+                    margin: 0;
+                    padding: 0;
+                }
+                button,
+                select {
+                    text-transform: none;
+                }
+                button,
+                input:where([type="button"]),
+                input:where([type="reset"]),
+                input:where([type="submit"]) {
+                    -webkit-appearance: button;
+                    background-color: transparent;
+                    background-image: none;
+                }
+                :-moz-focusring {
+                    outline: auto;
+                }
+                :-moz-ui-invalid {
+                    box-shadow: none;
+                }
+                progress {
+                    vertical-align: baseline;
+                }
+                ::-webkit-inner-spin-button,
+                ::-webkit-outer-spin-button {
+                    height: auto;
+                }
+                [type="search"] {
+                    -webkit-appearance: textfield;
+                    outline-offset: -2px;
+                }
+                ::-webkit-search-decoration {
+                    -webkit-appearance: none;
+                }
+                ::-webkit-file-upload-button {
+                    -webkit-appearance: button;
+                    font: inherit;
+                }
+                summary {
+                    display: list-item;
+                }
+                blockquote,
+                dd,
+                dl,
+                figure,
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                h6,
+                hr,
+                p,
+                pre {
+                    margin: 0;
+                }
+                fieldset {
+                    margin: 0;
+                }
+                fieldset,
+                legend {
+                    padding: 0;
+                }
+                menu,
+                ol,
+                ul {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                }
+                dialog {
+                    padding: 0;
+                }
+                textarea {
+                    resize: vertical;
+                }
+                input::-moz-placeholder,
+                textarea::-moz-placeholder {
+                    opacity: 1;
+                    color: #9ca3af;
+                }
+                input::placeholder,
+                textarea::placeholder {
+                    opacity: 1;
+                    color: #9ca3af;
+                }
+                [role="button"],
+                button {
+                    cursor: pointer;
+                }
+                :disabled {
+                    cursor: default;
+                }
+                audio,
+                canvas,
+                embed,
+                iframe,
+                img,
+                object,
+                svg,
+                video {
+                    display: block;
+                    vertical-align: middle;
+                }
+                img,
+                video {
+                    max-width: 100%;
+                    height: auto;
+                }
+                [hidden]:where(:not([hidden="until-found"])) {
+                    display: none;
+                }
+                .container {
+                    width: 100%;
+                }
+                @media (min-width: 640px) {
+                    .container {
+                        max-width: 640px;
+                    }
+                }
+                @media (min-width: 768px) {
+                    .container {
+                        max-width: 768px;
+                    }
+                }
+                @media (min-width: 1024px) {
+                    .container {
+                        max-width: 1024px;
+                    }
+                }
+                @media (min-width: 1280px) {
+                    .container {
+                        max-width: 1280px;
+                    }
+                }
+                @media (min-width: 1536px) {
+                    .container {
+                        max-width: 1536px;
+                    }
+                }
+                .col-span-full {
+                    grid-column: 1/-1;
+                }
+                .mb-1 {
+                    margin-bottom: 0.25rem;
+                }
+                .mb-2 {
+                    margin-bottom: 0.5rem;
+                }
+                .mb-3 {
+                    margin-bottom: 0.75rem;
+                }
+                .mb-4 {
+                    margin-bottom: 1rem;
+                }
+                .mb-5 {
+                    margin-bottom: 1.25rem;
+                }
+                .ml-1 {
+                    margin-left: 0.25rem;
+                }
+                .mt-1 {
+                    margin-top: 0.25rem;
+                }
+                .mt-2 {
+                    margin-top: 0.5rem;
+                }
+                .mt-3 {
+                    margin-top: 0.75rem;
+                }
+                .block {
+                    display: block;
+                }
+                .flex {
+                    display: flex;
+                }
+                .hidden {
+                    display: none;
+                }
+                .h-10 {
+                    height: 2.5rem;
+                }
+                .w-10 {
+                    width: 2.5rem;
+                }
+                .min-w-0 {
+                    min-width: 0;
+                }
+                .flex-1 {
+                    flex: 1 1 0%;
+                }
+                .flex-shrink-0 {
+                    flex-shrink: 0;
+                }
+                .flex-wrap {
+                    flex-wrap: wrap;
+                }
+                .items-center {
+                    align-items: center;
+                }
+                .justify-between {
+                    justify-content: space-between;
+                }
+                .gap-2 {
+                    gap: 0.5rem;
+                }
+                .gap-3 {
+                    gap: 0.75rem;
+                }
+                .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+                    --tw-space-x-reverse: 0;
+                    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+                    margin-left: calc(0.5rem * (1 - var(--tw-space-x-reverse)));
+                }
+                .overflow-hidden,
+                .truncate {
+                    overflow: hidden;
+                }
+                .truncate {
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                .rounded-2xl {
+                    border-radius: 1rem;
+                }
+                .rounded-lg {
+                    border-radius: 0.5rem;
+                }
+                .border {
+                    border-width: 1px;
+                }
+                .border-b {
+                    border-bottom-width: 1px;
+                }
+                .border-sky-100 {
+                    --tw-border-opacity: 1;
+                    border-color: rgb(224 242 254 / var(--tw-border-opacity, 1));
+                }
+                .border-sky-200 {
+                    --tw-border-opacity: 1;
+                    border-color: rgb(186 230 253 / var(--tw-border-opacity, 1));
+                }
+                .bg-blue-600 {
+                    --tw-bg-opacity: 1;
+                    background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));
+                }
+                .bg-sky-50 {
+                    --tw-bg-opacity: 1;
+                    background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
+                }
+                .bg-white {
+                    --tw-bg-opacity: 1;
+                    background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+                }
+                .object-contain {
+                    -o-object-fit: contain;
+                    object-fit: contain;
+                }
+                .p-4 {
+                    padding: 1rem;
+                }
+                .p-6 {
+                    padding: 1.5rem;
+                }
+                .px-3 {
+                    padding-left: 0.75rem;
+                    padding-right: 0.75rem;
+                }
+                .py-12 {
+                    padding-top: 3rem;
+                    padding-bottom: 3rem;
+                }
+                .py-2 {
+                    padding-top: 0.5rem;
+                    padding-bottom: 0.5rem;
+                }
+                .pt-3 {
+                    padding-top: 0.75rem;
+                }
+                .text-center {
+                    text-align: center;
+                }
+                .text-2xl {
+                    font-size: 1.5rem;
+                    line-height: 2rem;
+                }
+                .text-3xl {
+                    font-size: 1.875rem;
+                    line-height: 2.25rem;
+                }
+                .text-4xl {
+                    font-size: 2.25rem;
+                    line-height: 2.5rem;
+                }
+                .text-lg {
+                    font-size: 1.125rem;
+                    line-height: 1.75rem;
+                }
+                .text-sm {
+                    font-size: 0.875rem;
+                    line-height: 1.25rem;
+                }
+                .text-xl {
+                    font-size: 1.25rem;
+                    line-height: 1.75rem;
+                }
+                .text-xs {
+                    font-size: 0.75rem;
+                    line-height: 1rem;
+                }
+                .font-bold {
+                    font-weight: 700;
+                }
+                .font-semibold {
+                    font-weight: 600;
+                }
+                .text-blue-600 {
+                    --tw-text-opacity: 1;
+                    color: rgb(37 99 235 / var(--tw-text-opacity, 1));
+                }
+                .text-gray-400 {
+                    --tw-text-opacity: 1;
+                    color: rgb(156 163 175 / var(--tw-text-opacity, 1));
+                }
+                .text-gray-500 {
+                    --tw-text-opacity: 1;
+                    color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+                }
+                .text-gray-600 {
+                    --tw-text-opacity: 1;
+                    color: rgb(75 85 99 / var(--tw-text-opacity, 1));
+                }
+                .text-gray-700 {
+                    --tw-text-opacity: 1;
+                    color: rgb(55 65 81 / var(--tw-text-opacity, 1));
+                }
+                .text-gray-800 {
+                    --tw-text-opacity: 1;
+                    color: rgb(31 41 55 / var(--tw-text-opacity, 1));
+                }
+                .text-red-500 {
+                    --tw-text-opacity: 1;
+                    color: rgb(239 68 68 / var(--tw-text-opacity, 1));
+                }
+                .text-white {
+                    --tw-text-opacity: 1;
+                    color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+                }
+                .underline {
+                    text-decoration-line: underline;
+                }
+                .last\:border-0:last-child {
+                    border-width: 0;
+                }
+                .hover\:bg-blue-700:hover {
+                    --tw-bg-opacity: 1;
+                    background-color: rgb(29 78 216 / var(--tw-bg-opacity, 1));
+                }
+                .group:hover .group-hover\:text-blue-600 {
+                    --tw-text-opacity: 1;
+                    color: rgb(37 99 235 / var(--tw-text-opacity, 1));
+                }
+            }
+        </style>
         <!-- Icon + font stylesheets load without blocking the first paint -->
         <link
             rel="stylesheet"
@@ -178,7 +757,12 @@
                     /* Dark surfaces: rich brand blue instead of near-black */
                     --deep-800: oklch(0.38 0.14 262);
                     --deep-700: oklch(0.45 0.17 260);
-                    --grad-ink: linear-gradient(160deg, oklch(0.38 0.15 262) 0%, oklch(0.5 0.17 250) 60%, oklch(0.58 0.14 225) 100%);
+                    --grad-ink: linear-gradient(
+                        160deg,
+                        oklch(0.38 0.15 262) 0%,
+                        oklch(0.5 0.17 250) 60%,
+                        oklch(0.58 0.14 225) 100%
+                    );
 
                     /* Type */
                     --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -256,7 +840,6 @@
                     color: inherit;
                 }
 
-
                 img {
                     max-width: 100%;
                     height: auto;
@@ -266,7 +849,6 @@
                     color: inherit;
                     text-decoration: none;
                 }
-
 
                 :where(button, a, input, textarea, select, summary, [tabindex]):focus-visible {
                     border-radius: 8px;
@@ -717,7 +1299,9 @@
                     padding: 12px 16px;
                     background: #fef2f2;
                     color: #991b1b;
-                    font: 14px/1.5 system-ui, sans-serif;
+                    font:
+                        14px/1.5 system-ui,
+                        sans-serif;
                     text-align: center;
                 }
                 .noscript-banner a {
@@ -857,8 +1441,7 @@
                     position: absolute;
                     inset: 0;
                     z-index: -1;
-                    background-image:
-                        linear-gradient(oklch(1 0 0 / 0.05) 1px, transparent 1px),
+                    background-image: linear-gradient(oklch(1 0 0 / 0.05) 1px, transparent 1px),
                         linear-gradient(90deg, oklch(1 0 0 / 0.05) 1px, transparent 1px);
                     background-size: 56px 56px;
                     mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
@@ -1449,8 +2032,7 @@
                     aspect-ratio: 4 / 3;
                     margin: 8px 8px 0;
                     border-radius: calc(var(--radius-lg) - 6px);
-                    background:
-                        radial-gradient(circle at 50% 60%, #fff 0%, transparent 70%),
+                    background: radial-gradient(circle at 50% 60%, #fff 0%, transparent 70%),
                         linear-gradient(160deg, var(--brand-50), var(--ink-100));
                     overflow: hidden;
                 }
@@ -3206,7 +3788,12 @@
                ---------------------------------------------------------------------- */
             @layer gloss {
                 :root {
-                    --gloss-top: linear-gradient(180deg, oklch(1 0 0 / 0.32) 0%, oklch(1 0 0 / 0.08) 48%, oklch(1 0 0 / 0) 52%);
+                    --gloss-top: linear-gradient(
+                        180deg,
+                        oklch(1 0 0 / 0.32) 0%,
+                        oklch(1 0 0 / 0.08) 48%,
+                        oklch(1 0 0 / 0) 52%
+                    );
                     --gloss-soft: linear-gradient(180deg, oklch(1 0 0 / 0.14) 0%, oklch(1 0 0 / 0) 45%);
                     --gloss-edge: inset 0 1px 0 oklch(1 0 0 / 0.45), inset 0 -1px 0 oklch(0.2 0.05 262 / 0.12);
                     --glow-brand: 0 14px 34px oklch(0.55 0.2 260 / 0.3);
@@ -3214,10 +3801,8 @@
 
                 /* Soft blue wash behind the whole page instead of flat grey */
                 body {
-                    background:
-                        radial-gradient(1100px 520px at 0% -5%, var(--brand-100), transparent 60%),
-                        radial-gradient(900px 480px at 100% 10%, oklch(0.95 0.04 205), transparent 60%),
-                        var(--bg);
+                    background: radial-gradient(1100px 520px at 0% -5%, var(--brand-100), transparent 60%),
+                        radial-gradient(900px 480px at 100% 10%, oklch(0.95 0.04 205), transparent 60%), var(--bg);
                 }
 
                 /* ---------- Header: frosted glass ---------- */
@@ -3229,7 +3814,9 @@
                 }
                 .site-header.scrolled {
                     background: oklch(1 0 0 / 0.82);
-                    box-shadow: inset 0 -1px 0 oklch(1 0 0 / 0.7), 0 8px 24px oklch(0.4 0.12 262 / 0.08);
+                    box-shadow:
+                        inset 0 -1px 0 oklch(1 0 0 / 0.7),
+                        0 8px 24px oklch(0.4 0.12 262 / 0.08);
                 }
 
                 /* ---------- Glossy buttons ---------- */
@@ -3239,11 +3826,15 @@
                 }
                 .btn-primary:hover {
                     background: var(--gloss-top), linear-gradient(135deg, var(--brand-500) 0%, var(--aqua-300) 100%);
-                    box-shadow: var(--gloss-edge), 0 18px 44px oklch(0.55 0.2 260 / 0.45);
+                    box-shadow:
+                        var(--gloss-edge),
+                        0 18px 44px oklch(0.55 0.2 260 / 0.45);
                 }
                 .btn-whatsapp {
                     background: var(--gloss-top), linear-gradient(135deg, var(--wa-500), var(--wa-600));
-                    box-shadow: var(--gloss-edge), 0 12px 28px oklch(0.6 0.16 152 / 0.3);
+                    box-shadow:
+                        var(--gloss-edge),
+                        0 12px 28px oklch(0.6 0.16 152 / 0.3);
                 }
                 .btn-whatsapp:hover {
                     background: var(--gloss-top), linear-gradient(135deg, oklch(0.76 0.19 150), var(--wa-500));
@@ -3259,12 +3850,16 @@
                 }
                 .btn-light {
                     background: linear-gradient(180deg, #fff 0%, oklch(0.975 0.015 250) 100%);
-                    box-shadow: inset 0 1px 0 #fff, var(--shadow-sm);
+                    box-shadow:
+                        inset 0 1px 0 #fff,
+                        var(--shadow-sm);
                 }
                 .header-call,
                 #scrollToTop {
                     background: var(--gloss-top), linear-gradient(135deg, var(--deep-700), var(--brand-600));
-                    box-shadow: var(--gloss-edge), 0 8px 20px oklch(0.5 0.18 260 / 0.3);
+                    box-shadow:
+                        var(--gloss-edge),
+                        0 8px 20px oklch(0.5 0.18 260 / 0.3);
                 }
                 .header-call:hover,
                 #scrollToTop:hover {
@@ -3291,8 +3886,13 @@
                     pointer-events: none;
                 }
                 @keyframes gloss-sweep {
-                    0%, 35% { translate: -40% 0; }
-                    100% { translate: 40% 0; }
+                    0%,
+                    35% {
+                        translate: -40% 0;
+                    }
+                    100% {
+                        translate: 40% 0;
+                    }
                 }
                 .hero-stats div {
                     background: linear-gradient(180deg, oklch(1 0 0 / 0.2), oklch(1 0 0 / 0.06));
@@ -3306,12 +3906,17 @@
                 .product-card {
                     background: linear-gradient(180deg, var(--surface) 0%, var(--surface-tint) 100%);
                     border-color: oklch(0.92 0.02 255);
-                    box-shadow: inset 0 1px 0 var(--highlight), var(--shadow-sm);
+                    box-shadow:
+                        inset 0 1px 0 var(--highlight),
+                        var(--shadow-sm);
                 }
                 .feature-card:not(.is-hero):hover,
                 .product-card:hover {
                     border-color: var(--brand-200);
-                    box-shadow: inset 0 1px 0 var(--highlight), 0 2px 6px oklch(0.5 0.15 260 / 0.06), 0 22px 48px oklch(0.55 0.2 260 / 0.16);
+                    box-shadow:
+                        inset 0 1px 0 var(--highlight),
+                        0 2px 6px oklch(0.5 0.15 260 / 0.06),
+                        0 22px 48px oklch(0.55 0.2 260 / 0.16);
                 }
 
                 /* ---------- Dark-blue panels: add top reflection + light rim ---------- */
@@ -3324,13 +3929,14 @@
                 }
                 .cta-panel {
                     border: 1px solid oklch(1 0 0 / 0.14);
-                    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.3), 0 30px 70px oklch(0.45 0.17 260 / 0.28);
+                    box-shadow:
+                        inset 0 1px 0 oklch(1 0 0 / 0.3),
+                        0 30px 70px oklch(0.45 0.17 260 / 0.28);
                 }
 
                 /* ---------- Footer: blue gradient instead of flat ---------- */
                 .site-footer {
-                    background:
-                        radial-gradient(800px 300px at 15% 0%, oklch(0.6 0.15 230 / 0.25), transparent 70%),
+                    background: radial-gradient(800px 300px at 15% 0%, oklch(0.6 0.15 230 / 0.25), transparent 70%),
                         linear-gradient(180deg, oklch(0.44 0.15 258), var(--deep-800));
                     box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.15);
                 }
@@ -3441,12 +4047,18 @@
                     border-radius: var(--radius-md);
                     background: linear-gradient(180deg, var(--surface), var(--brand-50));
                     border: 1px solid var(--brand-100);
-                    box-shadow: inset 0 1px 0 var(--highlight), var(--shadow-xs);
-                    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur);
+                    box-shadow:
+                        inset 0 1px 0 var(--highlight),
+                        var(--shadow-xs);
+                    transition:
+                        transform var(--dur) var(--ease-out),
+                        box-shadow var(--dur);
                 }
                 .trust-item:hover {
                     transform: translateY(-2px);
-                    box-shadow: inset 0 1px 0 var(--highlight), 0 12px 28px oklch(0.55 0.2 260 / 0.12);
+                    box-shadow:
+                        inset 0 1px 0 var(--highlight),
+                        0 12px 28px oklch(0.55 0.2 260 / 0.12);
                 }
                 .trust-item b {
                     display: block;
@@ -3469,11 +4081,15 @@
                     color: #fff;
                     font-size: 18px;
                     background: var(--gloss-top), var(--grad-brand);
-                    box-shadow: var(--gloss-edge), 0 6px 14px oklch(0.55 0.2 260 / 0.25);
+                    box-shadow:
+                        var(--gloss-edge),
+                        0 6px 14px oklch(0.55 0.2 260 / 0.25);
                 }
                 .trust-icon.is-wa {
                     background: var(--gloss-top), linear-gradient(135deg, var(--wa-500), var(--wa-600));
-                    box-shadow: var(--gloss-edge), 0 6px 14px oklch(0.6 0.16 152 / 0.25);
+                    box-shadow:
+                        var(--gloss-edge),
+                        0 6px 14px oklch(0.6 0.16 152 / 0.25);
                 }
 
                 /* ---------- Category chips ---------- */
@@ -3496,8 +4112,14 @@
                     font-size: var(--fs-sm);
                     font-weight: 600;
                     cursor: pointer;
-                    box-shadow: inset 0 1px 0 var(--highlight), var(--shadow-xs);
-                    transition: color var(--dur-fast), border-color var(--dur-fast), box-shadow var(--dur), translate var(--dur) var(--ease-out);
+                    box-shadow:
+                        inset 0 1px 0 var(--highlight),
+                        var(--shadow-xs);
+                    transition:
+                        color var(--dur-fast),
+                        border-color var(--dur-fast),
+                        box-shadow var(--dur),
+                        translate var(--dur) var(--ease-out);
                 }
                 .chip:hover {
                     color: var(--accent-text);
@@ -3508,7 +4130,9 @@
                     color: #fff;
                     border-color: transparent;
                     background: var(--gloss-top), var(--grad-brand);
-                    box-shadow: var(--gloss-edge), 0 8px 20px oklch(0.55 0.2 260 / 0.28);
+                    box-shadow:
+                        var(--gloss-edge),
+                        0 8px 20px oklch(0.55 0.2 260 / 0.28);
                 }
 
                 /* ---------- Product cards: badge, price, buttons ---------- */
@@ -3537,10 +4161,14 @@
                 }
                 .add-to-cart-btn {
                     background: var(--gloss-top), var(--grad-brand);
-                    box-shadow: var(--gloss-edge), 0 8px 20px oklch(0.55 0.2 260 / 0.28);
+                    box-shadow:
+                        var(--gloss-edge),
+                        0 8px 20px oklch(0.55 0.2 260 / 0.28);
                 }
                 .enquiry-trigger-btn {
-                    box-shadow: inset 0 1px 0 var(--highlight), var(--shadow-xs);
+                    box-shadow:
+                        inset 0 1px 0 var(--highlight),
+                        var(--shadow-xs);
                 }
 
                 /* ---------- Footer bottom line ---------- */
@@ -3673,10 +4301,16 @@
 
             @layer y2027 {
                 /* ---------------------------------------------------- typography polish */
-                h1, h2, h3, .section-title, .hero-title {
+                h1,
+                h2,
+                h3,
+                .section-title,
+                .hero-title {
                     text-wrap: balance;
                 }
-                p, li, .section-lead {
+                p,
+                li,
+                .section-lead {
                     text-wrap: pretty;
                 }
                 ::selection {
@@ -3731,7 +4365,10 @@
                     font-size: var(--fs-sm);
                     font-weight: 500;
                     cursor: pointer;
-                    transition: border-color var(--dur-fast), color var(--dur-fast), background-color var(--dur-fast);
+                    transition:
+                        border-color var(--dur-fast),
+                        color var(--dur-fast),
+                        background-color var(--dur-fast);
                 }
                 .cmdk-trigger:hover {
                     border-color: var(--brand-200);
@@ -3802,7 +4439,9 @@
                     cursor: pointer;
                     opacity: 0;
                     translate: 0 6px;
-                    transition: opacity var(--dur) var(--ease-out), translate var(--dur) var(--ease-out);
+                    transition:
+                        opacity var(--dur) var(--ease-out),
+                        translate var(--dur) var(--ease-out);
                 }
                 .product-card:hover .qv-btn,
                 .product-card:focus-within .qv-btn,
@@ -3888,8 +4527,7 @@
                     display: grid;
                     place-items: center;
                     padding: 32px;
-                    background:
-                        radial-gradient(circle at 50% 55%, oklch(1 0 0 / 0.9), transparent 70%),
+                    background: radial-gradient(circle at 50% 55%, oklch(1 0 0 / 0.9), transparent 70%),
                         linear-gradient(160deg, var(--brand-50), oklch(0.93 0.05 210));
                     min-height: 320px;
                 }
@@ -3962,7 +4600,10 @@
                     border-radius: var(--radius-md);
                     background: var(--surface);
                     cursor: pointer;
-                    transition: border-color var(--dur-fast), background-color var(--dur-fast), box-shadow var(--dur-fast);
+                    transition:
+                        border-color var(--dur-fast),
+                        background-color var(--dur-fast),
+                        box-shadow var(--dur-fast);
                 }
                 .pack-opt input {
                     position: absolute;
@@ -4148,9 +4789,7 @@
                     padding: clamp(24px, 4vw, 48px);
                     border-radius: var(--radius-xl);
                     border: 1px solid var(--border);
-                    background:
-                        radial-gradient(600px 300px at 0% 0%, var(--brand-50), transparent 70%),
-                        var(--surface);
+                    background: radial-gradient(600px 300px at 0% 0%, var(--brand-50), transparent 70%), var(--surface);
                     box-shadow: var(--shadow-md);
                 }
                 .est-points {
@@ -4222,7 +4861,9 @@
                     border-radius: var(--radius-lg);
                     background: var(--gloss-soft), var(--grad-ink);
                     color: #fff;
-                    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.25), 0 18px 40px oklch(0.45 0.17 260 / 0.25);
+                    box-shadow:
+                        inset 0 1px 0 oklch(1 0 0 / 0.25),
+                        0 18px 40px oklch(0.45 0.17 260 / 0.25);
                 }
                 .est-result small {
                     color: oklch(1 0 0 / 0.75);
@@ -4289,7 +4930,10 @@
                     border: 1px solid var(--border);
                     background: var(--surface);
                     box-shadow: var(--shadow-sm);
-                    transition: translate var(--dur) var(--ease-out), box-shadow var(--dur), border-color var(--dur);
+                    transition:
+                        translate var(--dur) var(--ease-out),
+                        box-shadow var(--dur),
+                        border-color var(--dur);
                 }
                 .routine-step:hover {
                     translate: 0 -4px;
@@ -4373,7 +5017,9 @@
                             height: 8px;
                             border-radius: 99px;
                             background: var(--ink-300);
-                            transition: width var(--dur), background-color var(--dur);
+                            transition:
+                                width var(--dur),
+                                background-color var(--dur);
                         }
                         .routine-step::scroll-marker:target-current {
                             width: 22px;
@@ -4425,7 +5071,11 @@
                     box-shadow: var(--shadow-lg);
                     inset: auto auto 96px 50%;
                     opacity: 0;
-                    transition: opacity 0.25s, translate 0.25s var(--ease-out), display 0.25s allow-discrete, overlay 0.25s allow-discrete;
+                    transition:
+                        opacity 0.25s,
+                        translate 0.25s var(--ease-out),
+                        display 0.25s allow-discrete,
+                        overlay 0.25s allow-discrete;
                 }
                 .y-toast:popover-open {
                     opacity: 1;
@@ -4436,7 +5086,6 @@
                         translate: -50% 10px;
                     }
                 }
-
             }
             /* ------------------------------------------------------------ dark theme
                Set on <html data-theme="dark"> by the head script (saved choice, else the
@@ -4478,8 +5127,18 @@
                     --shadow-md: 0 2px 4px oklch(0 0 0 / 0.3), 0 12px 32px oklch(0 0 0 / 0.35);
                     --shadow-lg: 0 4px 8px oklch(0 0 0 / 0.35), 0 24px 60px oklch(0 0 0 / 0.45);
                 }
-                :root[data-theme="dark"] :is(.hero, .on-dark, .site-footer, .announce-bar, .cta-panel,
-                    .feature-card.is-hero, .est-result, .assistant-panel-header, .enquiry-modal-header) {
+                :root[data-theme="dark"]
+                    :is(
+                        .hero,
+                        .on-dark,
+                        .site-footer,
+                        .announce-bar,
+                        .cta-panel,
+                        .feature-card.is-hero,
+                        .est-result,
+                        .assistant-panel-header,
+                        .enquiry-modal-header
+                    ) {
                     --ink-950: oklch(0.16 0.03 262);
                     --ink-900: oklch(0.21 0.035 262);
                     --ink-800: oklch(0.28 0.035 262);
@@ -4500,24 +5159,52 @@
                     background-color: oklch(0.96 0.005 250);
                 }
                 /* Pre-built Tailwind utilities used by JS-rendered templates */
-                :root[data-theme="dark"] .bg-white { background-color: var(--surface); }
-                :root[data-theme="dark"] .bg-sky-50 { background-color: var(--brand-50); }
-                :root[data-theme="dark"] :is(.border-sky-100, .border-sky-200) { border-color: var(--border); }
-                :root[data-theme="dark"] .text-gray-800 { color: var(--ink-900); }
-                :root[data-theme="dark"] .text-gray-700 { color: var(--ink-800); }
-                :root[data-theme="dark"] .text-gray-600 { color: var(--ink-700); }
-                :root[data-theme="dark"] .text-gray-500 { color: var(--ink-600); }
-                :root[data-theme="dark"] .text-gray-400 { color: var(--ink-500); }
-                :root[data-theme="dark"] .text-blue-600 { color: var(--accent-text); }
+                :root[data-theme="dark"] .bg-white {
+                    background-color: var(--surface);
+                }
+                :root[data-theme="dark"] .bg-sky-50 {
+                    background-color: var(--brand-50);
+                }
+                :root[data-theme="dark"] :is(.border-sky-100, .border-sky-200) {
+                    border-color: var(--border);
+                }
+                :root[data-theme="dark"] .text-gray-800 {
+                    color: var(--ink-900);
+                }
+                :root[data-theme="dark"] .text-gray-700 {
+                    color: var(--ink-800);
+                }
+                :root[data-theme="dark"] .text-gray-600 {
+                    color: var(--ink-700);
+                }
+                :root[data-theme="dark"] .text-gray-500 {
+                    color: var(--ink-600);
+                }
+                :root[data-theme="dark"] .text-gray-400 {
+                    color: var(--ink-500);
+                }
+                :root[data-theme="dark"] .text-blue-600 {
+                    color: var(--accent-text);
+                }
 
                 /* Frosted bars and buttons hard-code translucent white in light mode */
-                :root[data-theme="dark"] .site-header { background: oklch(0.17 0.028 262 / 0.78); }
-                :root[data-theme="dark"] .site-header.scrolled { background: oklch(0.17 0.028 262 / 0.9); }
-                :root[data-theme="dark"] .mobile-actionbar { background: oklch(0.17 0.028 262 / 0.9); }
-                :root[data-theme="dark"] .qv-btn { background: oklch(0.2 0.028 262 / 0.85); }
+                :root[data-theme="dark"] .site-header {
+                    background: oklch(0.17 0.028 262 / 0.78);
+                }
+                :root[data-theme="dark"] .site-header.scrolled {
+                    background: oklch(0.17 0.028 262 / 0.9);
+                }
+                :root[data-theme="dark"] .mobile-actionbar {
+                    background: oklch(0.17 0.028 262 / 0.9);
+                }
+                :root[data-theme="dark"] .qv-btn {
+                    background: oklch(0.2 0.028 262 / 0.85);
+                }
                 /* The gloss layer hard-codes a pale card border; use the theme border instead
                    (hover keeps its brand border). */
-                :root[data-theme="dark"] :is(.feature-card:not(.is-hero), .product-card):not(:hover) { border-color: var(--border); }
+                :root[data-theme="dark"] :is(.feature-card:not(.is-hero), .product-card):not(:hover) {
+                    border-color: var(--border);
+                }
 
                 /* Theme switch: cross-fade via the View Transitions API */
                 ::view-transition-old(root),
@@ -4538,7 +5225,10 @@
                     border: 1px solid var(--border);
                     background: var(--surface);
                     color: var(--text);
-                    transition: color var(--dur-fast), border-color var(--dur-fast), background var(--dur-fast);
+                    transition:
+                        color var(--dur-fast),
+                        border-color var(--dur-fast),
+                        background var(--dur-fast);
                 }
                 .theme-toggle:hover {
                     color: var(--accent-text);
@@ -4549,9 +5239,176 @@
                     outline-offset: 2px;
                 }
                 /* Font Awesome's (unlayered) CSS reads --fa-display, so hide icons through it */
-                .theme-toggle .fa-sun { --fa-display: none; }
-                :root[data-theme="dark"] .theme-toggle .fa-sun { --fa-display: inline-block; }
-                :root[data-theme="dark"] .theme-toggle .fa-moon { --fa-display: none; }
+                .theme-toggle .fa-sun {
+                    --fa-display: none;
+                }
+                :root[data-theme="dark"] .theme-toggle .fa-sun {
+                    --fa-display: inline-block;
+                }
+                :root[data-theme="dark"] .theme-toggle .fa-moon {
+                    --fa-display: none;
+                }
+            }
+            /* custom 27-11-26 */
+
+            /* ===== HERO SECTION: CENTERED PURPLE DESIGN ===== */
+
+            /* .hero {
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background:
+        radial-gradient(circle at 5% 10%, #6525b5 0%, transparent 30%),
+        radial-gradient(circle at 95% 45%, #174da5 0%, transparent 28%),
+        linear-gradient(135deg, #32106c 0%, #260b55 55%, #392080 100%);
+} */
+            .hero {
+                min-height: 88vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                background: linear-gradient(135deg, #0755ad 0%, #0879c9 50%, #16a6d0 100%);
+            }
+
+            .hero-inner {
+                display: grid;
+                grid-template-columns: 1fr;
+                justify-items: center;
+                text-align: center;
+                gap: 0;
+            }
+
+            .hero-copy {
+                width: 100%;
+                max-width: 650px;
+                margin-inline: auto;
+                text-align: center;
+            }
+
+            .hero-chip {
+                margin-inline: auto;
+            }
+
+            .hero-title {
+                text-align: center;
+                font-size: clamp(2.5rem, 4vw, 3.6rem);
+                line-height: 1.12;
+                margin-top: 24px;
+            }
+
+            .hero-lead {
+                max-width: 440px;
+                margin: 22px auto 0;
+                text-align: center;
+                font-size: 15px;
+            }
+
+            .hero-actions {
+                justify-content: center;
+                margin-top: 28px;
+            }
+
+            .hero-stats {
+                display: none;
+            }
+
+            .hero-aurora {
+                opacity: 0.8;
+            }
+
+            .hero-grid {
+                display: none;
+            }
+
+            .hero-scroll-cue {
+                bottom: 22px;
+            }
+
+            /* MOBILE RESPONSIVE */
+            @media (max-width: 768px) {
+                .hero {
+                    min-height: 85vh;
+                    padding-block: 65px 85px;
+                }
+
+                .hero-title {
+                    font-size: clamp(2rem, 8vw, 2.8rem);
+                }
+
+                .hero-lead {
+                    font-size: 14px;
+                    padding-inline: 12px;
+                }
+
+                .hero-actions {
+                    justify-content: center;
+                }
+            }
+
+            /* HERO SIZE INCREASE */
+
+            .hero {
+                min-height: 88vh;
+                padding: 70px 20px 90px;
+            }
+
+            .hero-inner {
+                width: 100%;
+                max-width: 1200px;
+            }
+
+            .hero-copy {
+                max-width: 1000px;
+            }
+
+            /* BIG HEADING */
+            .hero-title {
+                font-size: clamp(3.5rem, 6vw, 5.5rem);
+                line-height: 1.12;
+                margin-top: 28px;
+            }
+
+            /* BIG DESCRIPTION */
+            .hero-lead {
+                max-width: 750px;
+                font-size: 21px;
+                line-height: 1.6;
+                margin: 30px auto 0;
+            }
+
+            /* BIG BUTTONS */
+            .hero-actions {
+                margin-top: 38px;
+                gap: 20px;
+            }
+
+            .hero-actions .btn {
+                padding: 18px 35px;
+                font-size: 18px;
+            }
+
+            /* MOBILE */
+            @media (max-width: 768px) {
+                .hero {
+                    min-height: 85vh;
+                    padding: 55px 15px 80px;
+                }
+
+                .hero-title {
+                    font-size: 2.7rem;
+                }
+
+                .hero-lead {
+                    font-size: 16px;
+                }
+
+                .hero-actions .btn {
+                    padding: 13px 20px;
+                    font-size: 15px;
+                }
             }
         </style>
         <script type="application/ld+json">
@@ -4721,8 +5578,7 @@
         <noscript>
             <p class="noscript-banner">
                 This site needs JavaScript to show products, pricing and the enquiry form. Please enable it, or call us
-                directly at <a href="tel:+919352470085">9352470085</a> /
-                <a href="tel:+919024598298">9024598298</a>.
+                directly at <a href="tel:+919352470085">9352470085</a> / <a href="tel:+919024598298">9024598298</a>.
             </p>
         </noscript>
 
@@ -4750,14 +5606,7 @@
             <div class="container header-inner">
                 <a href="#hero" class="brand" aria-label="Swapnil Chemicals — back to top">
                     <span class="brand-logo">
-                        <img
-                            src="SC Logo.webp"
-                            alt=""
-                            width="46"
-                            height="46"
-                            fetchpriority="high"
-                            decoding="async"
-                        />
+                        <img src="SC Logo.webp" alt="" width="46" height="46" fetchpriority="high" decoding="async" />
                         <span class="brand-status" aria-hidden="true"></span>
                     </span>
                     <span class="brand-text">
@@ -4805,12 +5654,7 @@
                         <i class="fas fa-bag-shopping" aria-hidden="true"></i>
                         <span class="cart-badge" id="cartBadge" hidden aria-live="polite">0</span>
                     </button>
-                    <button
-                        type="button"
-                        class="icon-btn menu-btn"
-                        popovertarget="mobileNav"
-                        aria-label="Open menu"
-                    >
+                    <button type="button" class="icon-btn menu-btn" popovertarget="mobileNav" aria-label="Open menu">
                         <i class="fas fa-bars" aria-hidden="true"></i>
                     </button>
                 </div>
@@ -4819,21 +5663,33 @@
 
         <nav id="mobileNav" class="mobile-nav" popover aria-label="Mobile">
             <ul>
-                <li><a href="#products"><i class="fas fa-boxes-stacked" aria-hidden="true"></i>Products</a></li>
-                <li><a href="#estimator"><i class="fas fa-calculator" aria-hidden="true"></i>Bulk estimator</a></li>
-                <li><a href="#routine"><i class="fas fa-list-ol" aria-hidden="true"></i>Care guide</a></li>
-                <li><a href="#business-details"><i class="fas fa-building" aria-hidden="true"></i>Company</a></li>
-                <li><a href="#how-to-order"><i class="fas fa-list-check" aria-hidden="true"></i>How to order</a></li>
-                <li><a href="#faq"><i class="fas fa-circle-question" aria-hidden="true"></i>FAQ</a></li>
-                <li><a href="#contact"><i class="fas fa-envelope" aria-hidden="true"></i>Contact</a></li>
+                <li>
+                    <a href="#products"><i class="fas fa-boxes-stacked" aria-hidden="true"></i>Products</a>
+                </li>
+                <li>
+                    <a href="#estimator"><i class="fas fa-calculator" aria-hidden="true"></i>Bulk estimator</a>
+                </li>
+                <li>
+                    <a href="#routine"><i class="fas fa-list-ol" aria-hidden="true"></i>Care guide</a>
+                </li>
+                <li>
+                    <a href="#business-details"><i class="fas fa-building" aria-hidden="true"></i>Company</a>
+                </li>
+                <li>
+                    <a href="#how-to-order"><i class="fas fa-list-check" aria-hidden="true"></i>How to order</a>
+                </li>
+                <li>
+                    <a href="#faq"><i class="fas fa-circle-question" aria-hidden="true"></i>FAQ</a>
+                </li>
+                <li>
+                    <a href="#contact"><i class="fas fa-envelope" aria-hidden="true"></i>Contact</a>
+                </li>
             </ul>
             <div class="mobile-nav-cta">
-                <a href="tel:+919352470085" class="btn btn-light"><i class="fas fa-phone" aria-hidden="true"></i>Call</a>
-                <a
-                    href="https://wa.me/919352470085"
-                    class="btn btn-whatsapp"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <a href="tel:+919352470085" class="btn btn-light"
+                    ><i class="fas fa-phone" aria-hidden="true"></i>Call</a
+                >
+                <a href="https://wa.me/919352470085" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer"
                     ><i class="fab fa-whatsapp" aria-hidden="true"></i>WhatsApp</a
                 >
             </div>
@@ -4856,12 +5712,19 @@
                             Jaipur-based manufacturer &middot; Since 2020
                         </span>
                         <h1 class="hero-title" id="heroTitle">
-                            Premium automobile <span class="hero-shine-text">cleaning solutions</span>
+                            Premium Automobile <span class="hero-shine-text">Cleaning Solutions</span>
                         </h1>
-                        <p class="hero-lead">
+                        <!-- <p class="hero-lead">
                             Dashboard polish, tyre polish, car foaming wash, glass cleaner and more — from a GST
                             registered, MSME &amp; Udyam certified manufacturer supplying bulk and retail orders
                             across India.
+                        </p> -->
+                        <p class="hero-lead">
+                            Swapnil Chemicals is a Jaipur-based manufacturer of Premium Automobile Cleaning Products,
+                            trusted by bulk and retail customers since 2020. We produce our own Dashboard Polish, Tyre
+                            Polish, Car Foaming Wash, Glass Cleaner and more, ensuring consistent quality. As a GST
+                            registered, MSME and Udyam certified business, we supply orders across India. Call us at
+                            9352470085 or 9024598298 for bulk orders or pricing.
                         </p>
                         <div class="hero-actions">
                             <a href="#products" class="btn btn-lg btn-primary btn-shine"
@@ -4892,7 +5755,7 @@
                     </div>
 
                     <!-- Trade price list: rows are rendered from the products catalogue (renderTradeList). -->
-                    <aside class="hero-visual trade-card" aria-labelledby="tradeTitle">
+                    <!-- <aside class="hero-visual trade-card" aria-labelledby="tradeTitle">
                         <div class="trade-head">
                             <div>
                                 <p class="trade-eyebrow">Trade price list</p>
@@ -4918,7 +5781,7 @@
                                 ><i class="fab fa-whatsapp" aria-hidden="true"></i>Bulk rates</a
                             >
                         </div>
-                    </aside>
+                    </aside> -->
                 </div>
 
                 <a href="#business-details" class="hero-scroll-cue" aria-label="Scroll to company details">
@@ -4964,7 +5827,9 @@
                     <div class="bento">
                         <article class="feature-card is-hero">
                             <div>
-                                <span class="feature-icon tone-glass"><i class="fas fa-user-tie" aria-hidden="true"></i></span>
+                                <span class="feature-icon tone-glass"
+                                    ><i class="fas fa-user-tie" aria-hidden="true"></i
+                                ></span>
                                 <p class="owner-name">Gajendra Jain</p>
                                 <p class="owner-role">Founder, Swapnil Chemicals</p>
                             </div>
@@ -4987,11 +5852,15 @@
                         </article>
 
                         <article class="feature-card">
-                            <span class="feature-icon tone-red"><i class="fas fa-envelope" aria-hidden="true"></i></span>
+                            <span class="feature-icon tone-red"
+                                ><i class="fas fa-envelope" aria-hidden="true"></i
+                            ></span>
                             <div>
                                 <h3 class="feature-label">Email</h3>
                                 <p class="feature-value">
-                                    <a href="mailto:swapnilchemicals10@gmail.com">swapnilchemicals10<wbr />@gmail.com</a>
+                                    <a href="mailto:swapnilchemicals10@gmail.com"
+                                        >swapnilchemicals10<wbr />@gmail.com</a
+                                    >
                                 </p>
                             </div>
                         </article>
@@ -5033,7 +5902,9 @@
                         </article>
 
                         <article class="feature-card is-wide">
-                            <span class="feature-icon tone-teal"><i class="fas fa-building" aria-hidden="true"></i></span>
+                            <span class="feature-icon tone-teal"
+                                ><i class="fas fa-building" aria-hidden="true"></i
+                            ></span>
                             <div>
                                 <h3 class="feature-label">Business Registration Number (BRN)</h3>
                                 <p class="feature-value mono">8005220072000968</p>
@@ -5091,7 +5962,6 @@
                 </div>
             </section>
 
-
             <!-- ============================== Bulk estimator (2027) ============================== -->
             <section id="estimator" class="section" aria-labelledby="estTitle">
                 <div class="container">
@@ -5100,20 +5970,34 @@
                             <span class="section-eyebrow">Bulk planner</span>
                             <h2 class="section-title" id="estTitle">Estimate your order in seconds</h2>
                             <p class="section-lead">
-                                Pick a product and a pack size. The estimate uses our list
-                                prices — we confirm the final price and delivery with you on WhatsApp.
+                                Pick a product and a pack size. The estimate uses our list prices — we confirm the final
+                                price and delivery with you on WhatsApp.
                             </p>
                             <ul class="est-points">
-                                <li><i class="fas fa-calculator" aria-hidden="true"></i>Live total as you change product or pack size</li>
-                                <li><i class="fas fa-file-invoice" aria-hidden="true"></i>Add to cart to download a proforma PDF</li>
-                                <li><i class="fab fa-whatsapp" aria-hidden="true"></i>Send the exact quote request on WhatsApp in one tap</li>
+                                <li>
+                                    <i class="fas fa-calculator" aria-hidden="true"></i>Live total as you change product
+                                    or pack size
+                                </li>
+                                <li>
+                                    <i class="fas fa-file-invoice" aria-hidden="true"></i>Add to cart to download a
+                                    proforma PDF
+                                </li>
+                                <li>
+                                    <i class="fab fa-whatsapp" aria-hidden="true"></i>Send the exact quote request on
+                                    WhatsApp in one tap
+                                </li>
                             </ul>
                         </div>
 
                         <form class="est-form" id="estForm" novalidate>
                             <div class="est-field">
                                 <span id="estProductLabel">Product</span>
-                                <div class="est-products" id="estProducts" role="group" aria-labelledby="estProductLabel"></div>
+                                <div
+                                    class="est-products"
+                                    id="estProducts"
+                                    role="group"
+                                    aria-labelledby="estProductLabel"
+                                ></div>
                             </div>
                             <fieldset class="pack-grid" id="estPacks">
                                 <legend>Pack size</legend>
@@ -5153,24 +6037,36 @@
                             <h3>Foam wash</h3>
                             <p>Cover the body in foam to loosen dust and road grime, then rinse off.</p>
                             <div class="routine-links">
-                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="3">Car Foaming Wash</button>
-                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="6">Foaming Gun</button>
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="3">
+                                    Car Foaming Wash
+                                </button>
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="6">
+                                    Foaming Gun
+                                </button>
                             </div>
                         </li>
                         <li class="routine-step">
-                            <span class="feature-icon tone-teal"><i class="fas fa-hand-sparkles" aria-hidden="true"></i></span>
+                            <span class="feature-icon tone-teal"
+                                ><i class="fas fa-hand-sparkles" aria-hidden="true"></i
+                            ></span>
                             <h3>Dry gently</h3>
                             <p>Wipe the car dry with a soft cloth before water can settle and leave marks.</p>
                             <div class="routine-links">
-                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="7">Micro Towel</button>
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="7">
+                                    Micro Towel
+                                </button>
                             </div>
                         </li>
                         <li class="routine-step">
-                            <span class="feature-icon tone-violet"><i class="fas fa-car-side" aria-hidden="true"></i></span>
+                            <span class="feature-icon tone-violet"
+                                ><i class="fas fa-car-side" aria-hidden="true"></i
+                            ></span>
                             <h3>Clear the glass</h3>
                             <p>Clean windscreen, windows and mirrors for clear visibility.</p>
                             <div class="routine-links">
-                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="5">Glass Cleaner</button>
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="5">
+                                    Glass Cleaner
+                                </button>
                             </div>
                         </li>
                         <li class="routine-step">
@@ -5178,23 +6074,33 @@
                             <h3>Refresh the interior</h3>
                             <p>Clean seats, door panels and other interior surfaces.</p>
                             <div class="routine-links">
-                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="4">Interior Cleaner</button>
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="4">
+                                    Interior Cleaner
+                                </button>
                             </div>
                         </li>
                         <li class="routine-step">
-                            <span class="feature-icon tone-amber"><i class="fas fa-gauge-high" aria-hidden="true"></i></span>
+                            <span class="feature-icon tone-amber"
+                                ><i class="fas fa-gauge-high" aria-hidden="true"></i
+                            ></span>
                             <h3>Shine the dashboard</h3>
                             <p>Finish the dashboard and trim with a polish for a clean, shiny look.</p>
                             <div class="routine-links">
-                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="1">Dashboard Polish</button>
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="1">
+                                    Dashboard Polish
+                                </button>
                             </div>
                         </li>
                         <li class="routine-step">
-                            <span class="feature-icon tone-red"><i class="fas fa-circle-notch" aria-hidden="true"></i></span>
+                            <span class="feature-icon tone-red"
+                                ><i class="fas fa-circle-notch" aria-hidden="true"></i
+                            ></span>
                             <h3>Dress the tyres</h3>
                             <p>The final touch — a glossy finish on the tyres before handing the car back.</p>
                             <div class="routine-links">
-                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="2">Tyre Polish</button>
+                                <button type="button" class="routine-link" data-action="quick-view" data-product-id="2">
+                                    Tyre Polish
+                                </button>
                             </div>
                         </li>
                     </ol>
@@ -5226,7 +6132,9 @@
                                 ><i class="fab fa-whatsapp" aria-hidden="true"></i
                             ></span>
                             <h3>Send on WhatsApp</h3>
-                            <p>Your request goes straight to us on WhatsApp. We confirm pricing and delivery with you.</p>
+                            <p>
+                                Your request goes straight to us on WhatsApp. We confirm pricing and delivery with you.
+                            </p>
                         </li>
                     </ol>
                 </div>
@@ -5240,7 +6148,10 @@
                         <h2 class="section-title" id="faqTitle">Frequently asked questions</h2>
                         <p class="section-lead">Quick answers about ordering, payment and our products.</p>
                         <div class="faq-help">
-                            <p><strong>Still have a question?</strong>Talk to us directly — we usually reply the same day.</p>
+                            <p>
+                                <strong>Still have a question?</strong>Talk to us directly — we usually reply the same
+                                day.
+                            </p>
                             <a
                                 href="https://wa.me/919352470085"
                                 class="btn btn-whatsapp"
@@ -5253,20 +6164,31 @@
 
                     <div class="faq-list">
                         <details name="faq" class="faq-item">
-                            <summary>Do you supply bulk or only retail orders?<span class="faq-icon" aria-hidden="true"></span></summary>
+                            <summary>
+                                Do you supply bulk or only retail orders?<span
+                                    class="faq-icon"
+                                    aria-hidden="true"
+                                ></span>
+                            </summary>
                             <p>
                                 Yes — we supply both bulk and retail quantities. For wholesale pricing, call
                                 <a href="tel:+919352470085">9352470085</a> or
-                                <a href="tel:+919024598298">9024598298</a>, or use the “Enquiry” button on any
-                                product.
+                                <a href="tel:+919024598298">9024598298</a>, or use the “Enquiry” button on any product.
                             </p>
                         </details>
                         <details name="faq" class="faq-item">
-                            <summary>What payment methods do you accept?<span class="faq-icon" aria-hidden="true"></span></summary>
+                            <summary>
+                                What payment methods do you accept?<span class="faq-icon" aria-hidden="true"></span>
+                            </summary>
                             <p>Please call us on 9352470085 or 9024598298 to discuss payment options for your order.</p>
                         </details>
                         <details name="faq" class="faq-item">
-                            <summary>Is Swapnil Chemicals a registered business?<span class="faq-icon" aria-hidden="true"></span></summary>
+                            <summary>
+                                Is Swapnil Chemicals a registered business?<span
+                                    class="faq-icon"
+                                    aria-hidden="true"
+                                ></span>
+                            </summary>
                             <p>
                                 Yes. We are GST registered (08CIJPS1734A1ZE), MSME certified (MSME/2020/6194), Udyam
                                 registered (UDYAM-RJ-17-0022468), and hold other applicable business registrations and
@@ -5281,11 +6203,18 @@
                             </p>
                         </details>
                         <details name="faq" class="faq-item">
-                            <summary>Where is Swapnil Chemicals based?<span class="faq-icon" aria-hidden="true"></span></summary>
+                            <summary>
+                                Where is Swapnil Chemicals based?<span class="faq-icon" aria-hidden="true"></span>
+                            </summary>
                             <p>We are based in Jaipur, Rajasthan, and support both bulk and retail customers.</p>
                         </details>
                         <details name="faq" class="faq-item">
-                            <summary>Do you offer custom quantities or packaging?<span class="faq-icon" aria-hidden="true"></span></summary>
+                            <summary>
+                                Do you offer custom quantities or packaging?<span
+                                    class="faq-icon"
+                                    aria-hidden="true"
+                                ></span>
+                            </summary>
                             <p>
                                 For requirements outside the listed options, contact us directly by phone or WhatsApp
                                 and we'll get back to you.
@@ -5333,7 +6262,9 @@
                                 <span class="feature-icon"><i class="fas fa-envelope" aria-hidden="true"></i></span>
                                 <div>
                                     <small>Email</small>
-                                    <a href="mailto:swapnilchemicals10@gmail.com">swapnilchemicals10<wbr />@gmail.com</a>
+                                    <a href="mailto:swapnilchemicals10@gmail.com"
+                                        >swapnilchemicals10<wbr />@gmail.com</a
+                                    >
                                 </div>
                             </li>
                             <li class="contact-item">
@@ -5398,7 +6329,9 @@
                         <ul class="footer-links">
                             <li><a href="tel:+919352470085">9352470085</a></li>
                             <li><a href="tel:+919024598298">9024598298</a></li>
-                            <li><a href="mailto:swapnilchemicals10@gmail.com">swapnilchemicals10<wbr />@gmail.com</a></li>
+                            <li>
+                                <a href="mailto:swapnilchemicals10@gmail.com">swapnilchemicals10<wbr />@gmail.com</a>
+                            </li>
                         </ul>
                     </div>
 
@@ -5437,7 +6370,14 @@
         </button>
 
         <!-- ============================== Cart panel ============================== -->
-        <div class="cart-panel hidden" id="cartPanel" role="dialog" aria-modal="true" aria-labelledby="cartPanelTitle" aria-describedby="cartHeaderCount">
+        <div
+            class="cart-panel hidden"
+            id="cartPanel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cartPanelTitle"
+            aria-describedby="cartHeaderCount"
+        >
             <div class="cart-panel-header">
                 <div>
                     <p class="panel-title" id="cartPanelTitle">
@@ -5555,7 +6495,9 @@
                         </div>
                     </div>
                     <div class="enquiry-field-wrap mb-4">
-                        <span class="block text-sm font-semibold text-gray-700 mb-2" id="enquiry-qty-label">Quantity</span>
+                        <span class="block text-sm font-semibold text-gray-700 mb-2" id="enquiry-qty-label"
+                            >Quantity</span
+                        >
                         <div
                             id="enquiry-qty-buttons"
                             class="enquiry-qty-buttons"
@@ -5724,7 +6666,9 @@
                             <i class="fas fa-share-nodes" aria-hidden="true"></i>Share
                         </button>
                     </div>
-                    <p class="qv-note">Prices shown are list prices. Final pricing and delivery are confirmed on WhatsApp.</p>
+                    <p class="qv-note">
+                        Prices shown are list prices. Final pricing and delivery are confirmed on WhatsApp.
+                    </p>
                 </div>
             </div>
         </dialog>
@@ -5902,7 +6846,6 @@
                     if (btn) btn.title = "Copy failed — please select the text manually";
                 }
             }
-
 
             const products = [
                 {
@@ -6135,9 +7078,11 @@
                 if (!key) return;
                 const k = CSS.escape(key);
                 const sameBtn = list.querySelector(
-                    `[data-action="${active.dataset.action}"][data-key="${k}"]` + (active.dataset.delta ? `[data-delta="${active.dataset.delta}"]` : "")
+                    `[data-action="${active.dataset.action}"][data-key="${k}"]` +
+                        (active.dataset.delta ? `[data-delta="${active.dataset.delta}"]` : "")
                 );
-                const target = sameBtn && !sameBtn.disabled ? sameBtn : list.querySelector(`[data-key="${k}"][data-delta="1"]`);
+                const target =
+                    sameBtn && !sameBtn.disabled ? sameBtn : list.querySelector(`[data-key="${k}"][data-delta="1"]`);
                 target?.focus({ preventScroll: true });
             }
 
@@ -6158,7 +7103,9 @@
                 const itemsLabel = pluralItems(totalItems);
                 // aria-label overrides button content, so the count must be part of the label to be heard.
                 const cartLabel = totalItems ? `Open cart, ${itemsLabel}` : "Open cart";
-                document.querySelectorAll('button[data-action="toggle-cart"]').forEach((b) => b.setAttribute("aria-label", cartLabel));
+                document
+                    .querySelectorAll('button[data-action="toggle-cart"]')
+                    .forEach((b) => b.setAttribute("aria-label", cartLabel));
                 const headerCount = document.getElementById("cartHeaderCount");
                 if (headerCount) headerCount.textContent = itemsLabel;
                 const summaryItems = document.getElementById("cartSummaryItems");
@@ -6564,7 +7511,6 @@
                 return `INR ${toWords(rupees)}${paise ? ` and ${twoDigits(paise)} Paise` : ""} Only`;
             }
 
-
             async function downloadCartPdf(btn) {
                 const keys = Object.keys(cart);
                 if (!keys.length) return;
@@ -6670,7 +7616,9 @@
                         ["normal", 8, `E-Mail : ${INVOICE_SELLER.email}`],
                     ];
                     font("normal", 8);
-                    const addressLines = customer.address ? doc.splitTextToSize(customer.address, blockW).slice(0, 3) : [];
+                    const addressLines = customer.address
+                        ? doc.splitTextToSize(customer.address, blockW).slice(0, 3)
+                        : [];
                     const partyLines = (title) => [
                         ["normal", 7.5, title],
                         ["bold", 9, (customer.workshop || "Customer").toUpperCase()],
@@ -6693,26 +7641,26 @@
                             ["Invoice No.", invoiceNo],
                             ["Dated", invoiceDate],
                         ],
+                        // [
+                        //     ["Delivery Note", ""],
+                        //     ["Mode/Terms of Payment", ""],
+                        // ],
                         [
-                            ["Delivery Note", ""],
-                            ["Mode/Terms of Payment", ""],
-                        ],
-                        [
-                            ["Reference No. & Date", ""],
+                            // ["Reference No. & Date", ""],
                             ["Other References", "Online Cart Enquiry"],
                         ],
-                        [
-                            ["Buyer's Order No.", ""],
-                            ["Dated", ""],
-                        ],
+                        // [
+                        //     ["Buyer's Order No.", ""],
+                        //     ["Dated", ""],
+                        // ],
                         [
                             ["Preferred Delivery Date", customer.date ? formatDisplayDate(customer.date) : ""],
                             ["Time Slot", customer.slot],
                         ],
-                        [
-                            ["Dispatched through", ""],
-                            ["Destination", ""],
-                        ],
+                        // [
+                        //     ["Dispatched through", ""],
+                        //     ["Destination", ""],
+                        // ],
                     ];
                     const cellH = 9;
                     const gridH = gridRows.length * cellH;
@@ -6744,7 +7692,10 @@
                     font("bold", 8.5);
                     doc.text(
                         doc
-                            .splitTextToSize(`Subject to confirmation by ${INVOICE_SELLER.name} on WhatsApp`, R - midX - pad * 2)
+                            .splitTextToSize(
+                                `Subject to confirmation by ${INVOICE_SELLER.name} on WhatsApp`,
+                                R - midX - pad * 2
+                            )
                             .slice(0, 2),
                         midX + pad,
                         boxTop + gridH + 7.3
@@ -6757,7 +7708,14 @@
                     const cols = [10, 104, 24, 20, 10, 22]; // adds up to W
                     const cx = cols.reduce((acc, w, i) => [...acc, acc[i] + w], [L]);
                     const colMid = (i) => (cx[i] + cx[i + 1]) / 2;
-                    const heads = [["Sl", "No."], ["Description of Goods"], ["Quantity"], ["Rate"], ["per"], ["Amount"]];
+                    const heads = [
+                        ["Sl", "No."],
+                        ["Description of Goods"],
+                        ["Quantity"],
+                        ["Rate"],
+                        ["per"],
+                        ["Amount"],
+                    ];
                     let tableTop = y;
                     const drawTableHeader = () => {
                         tableTop = y;
@@ -6788,9 +7746,14 @@
                         font("bold", 9);
                         doc.text(INVOICE_SELLER.name.toUpperCase(), L + pad, boxTop + 5.8);
                         font("normal", 8);
-                        doc.text(`Invoice No. ${invoiceNo}    Dated ${invoiceDate}    (continued)`, R - pad, boxTop + 5.8, {
-                            align: "right",
-                        });
+                        doc.text(
+                            `Invoice No. ${invoiceNo}    Dated ${invoiceDate}    (continued)`,
+                            R - pad,
+                            boxTop + 5.8,
+                            {
+                                align: "right",
+                            }
+                        );
                         y = boxTop + 9;
                         hLine(L, R, y);
                         drawTableHeader();
@@ -6881,10 +7844,17 @@
                     for (let p = 1; p <= pageCount; p++) {
                         doc.setPage(p);
                         font("normal", 8);
-                        doc.text(`SUBJECT TO ${INVOICE_SELLER.jurisdiction.toUpperCase()} JURISDICTION`, pageW / 2, boxBottom + 4.5, {
+                        doc.text(
+                            `SUBJECT TO ${INVOICE_SELLER.jurisdiction.toUpperCase()} JURISDICTION`,
+                            pageW / 2,
+                            boxBottom + 4.5,
+                            {
+                                align: "center",
+                            }
+                        );
+                        doc.text(`This is a Computer Generated ${INVOICE_TITLE}`, pageW / 2, boxBottom + 8.5, {
                             align: "center",
                         });
-                        doc.text(`This is a Computer Generated ${INVOICE_TITLE}`, pageW / 2, boxBottom + 8.5, { align: "center" });
                         if (pageCount > 1) {
                             font("normal", 7.5);
                             doc.text(`Page ${p} of ${pageCount}`, R, boxBottom + 8.5, { align: "right" });
@@ -6969,9 +7939,11 @@
                 return `<article class="product-card rounded-2xl overflow-hidden group" data-product-id="${product.id}">
                     <span class="product-spotlight" aria-hidden="true"></span>
                     <div class="product-image-container">
-                        ${product.hasLtOptions
-                            ? `<span class="product-badge"><i class="fas fa-box" aria-hidden="true"></i>${escapeHtml(String(Math.min(...qtyOpts)))}&ndash;${escapeHtml(String(Math.max(...qtyOpts)))}${qtyLabel.trim() === "Lt" ? " Lt" : qtyLabel} packs</span>`
-                            : `<span class="product-badge"><i class="fas fa-tag" aria-hidden="true"></i>Per piece</span>`}
+                        ${
+                            product.hasLtOptions
+                                ? `<span class="product-badge"><i class="fas fa-box" aria-hidden="true"></i>${escapeHtml(String(Math.min(...qtyOpts)))}&ndash;${escapeHtml(String(Math.max(...qtyOpts)))}${qtyLabel.trim() === "Lt" ? " Lt" : qtyLabel} packs</span>`
+                                : `<span class="product-badge"><i class="fas fa-tag" aria-hidden="true"></i>Per piece</span>`
+                        }
                         <img src="${escapeHtml(product.image)}" alt="${name}" class="product-image" ${imgLoading} decoding="async" width="400" height="250">
                         <div class="product-image-fallback"><i class="fas fa-image text-4xl mb-2" aria-hidden="true"></i><p>Image not available</p></div>
                     </div>
@@ -7083,7 +8055,9 @@
                     : `<p class="col-span-full text-center text-gray-500 py-12">No products match "${escapeHtml(query.trim())}". Try a different search or <a href="#contact" class="text-blue-600 underline">contact us</a> for custom requirements.</p>`;
                 if (status) {
                     const n = ranked.length;
-                    status.textContent = n ? `${n} product${n === 1 ? "" : "s"} found` : `No products match "${query.trim()}"`;
+                    status.textContent = n
+                        ? `${n} product${n === 1 ? "" : "s"} found`
+                        : `No products match "${query.trim()}"`;
                 }
             }
 
@@ -8448,7 +9422,8 @@
                     img.alt = product.name;
                     byId("qvTitle").textContent = product.name;
                     byId("qvDesc").textContent = product.description;
-                    byId("qvPrice").innerHTML = `${formatCurrency(product.price)} <small>/ ${escapeHtml(product.unit)}</small>`;
+                    byId("qvPrice").innerHTML =
+                        `${formatCurrency(product.price)} <small>/ ${escapeHtml(product.unit)}</small>`;
                     renderPackOptions(byId("qvPacks"), product, "qvPack");
                 }
 
@@ -8579,16 +9554,19 @@
                     const p = productById(id);
                     if (!p) return;
                     est.product = p;
-                    est.products?.querySelectorAll(".est-prod").forEach((b) =>
-                        b.setAttribute("aria-pressed", String(Number(b.dataset.id) === p.id))
-                    );
+                    est.products
+                        ?.querySelectorAll(".est-prod")
+                        .forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.id) === p.id)));
                     renderPackOptions(est.packs, p, "estPack", updateEstimate);
                     updateEstimate();
                 }
                 if (est.products) {
                     est.products.innerHTML = products
                         .map((p) => {
-                            const variant = products.filter((x) => x.name === p.name).length > 1 ? ` · ${formatCurrency(p.price)}` : "";
+                            const variant =
+                                products.filter((x) => x.name === p.name).length > 1
+                                    ? ` · ${formatCurrency(p.price)}`
+                                    : "";
                             return `<button type="button" class="est-prod" data-id="${p.id}" aria-pressed="false"><img src="${escapeHtml(p.image)}" alt="" loading="lazy" decoding="async">${escapeHtml(p.name)}${variant}</button>`;
                         })
                         .join("");
@@ -8639,17 +9617,83 @@
                         keywords: `${p.name} ${p.description} product`,
                         run: () => openQuickView(p.id),
                     })),
-                    { group: "Go to", title: "All products", icon: "fa-boxes-stacked", keywords: "shop catalogue range", run: go("#products") },
-                    { group: "Go to", title: "Bulk estimator", icon: "fa-calculator", keywords: "price calculator quote wholesale bulk", run: go("#estimator") },
-                    { group: "Go to", title: "Car-care routine", icon: "fa-list-ol", keywords: "guide steps how use", run: go("#routine") },
-                    { group: "Go to", title: "Company & registrations", icon: "fa-building", keywords: "gst msme udyam brn owner about", run: go("#business-details") },
-                    { group: "Go to", title: "FAQ", icon: "fa-circle-question", keywords: "questions help payment", run: go("#faq") },
-                    { group: "Go to", title: "Contact", icon: "fa-envelope", keywords: "address location jaipur", run: go("#contact") },
-                    { group: "Actions", title: "Open cart", icon: "fa-bag-shopping", keywords: "cart basket checkout invoice pdf", run: () => isCartOpen() || toggleCart() },
-                    { group: "Actions", title: "Chat on WhatsApp", icon: "fa-comment", keywords: "whatsapp message chat", run: () => safeOpenNewTab(`https://wa.me/${APP.WA_NUMBER}`) },
-                    { group: "Actions", title: "Call 93524 70085", icon: "fa-phone", keywords: "phone call mobile", run: () => (location.href = "tel:+919352470085") },
-                    { group: "Actions", title: "Email us", icon: "fa-at", keywords: "email mail", run: () => (location.href = "mailto:swapnilchemicals10@gmail.com") },
-                    { group: "Actions", title: "Ask the assistant", icon: "fa-robot", keywords: "ai assistant bot help", run: () => byId("assistantPanel")?.classList.contains("hidden") && toggleAssistant() },
+                    {
+                        group: "Go to",
+                        title: "All products",
+                        icon: "fa-boxes-stacked",
+                        keywords: "shop catalogue range",
+                        run: go("#products"),
+                    },
+                    {
+                        group: "Go to",
+                        title: "Bulk estimator",
+                        icon: "fa-calculator",
+                        keywords: "price calculator quote wholesale bulk",
+                        run: go("#estimator"),
+                    },
+                    {
+                        group: "Go to",
+                        title: "Car-care routine",
+                        icon: "fa-list-ol",
+                        keywords: "guide steps how use",
+                        run: go("#routine"),
+                    },
+                    {
+                        group: "Go to",
+                        title: "Company & registrations",
+                        icon: "fa-building",
+                        keywords: "gst msme udyam brn owner about",
+                        run: go("#business-details"),
+                    },
+                    {
+                        group: "Go to",
+                        title: "FAQ",
+                        icon: "fa-circle-question",
+                        keywords: "questions help payment",
+                        run: go("#faq"),
+                    },
+                    {
+                        group: "Go to",
+                        title: "Contact",
+                        icon: "fa-envelope",
+                        keywords: "address location jaipur",
+                        run: go("#contact"),
+                    },
+                    {
+                        group: "Actions",
+                        title: "Open cart",
+                        icon: "fa-bag-shopping",
+                        keywords: "cart basket checkout invoice pdf",
+                        run: () => isCartOpen() || toggleCart(),
+                    },
+                    {
+                        group: "Actions",
+                        title: "Chat on WhatsApp",
+                        icon: "fa-comment",
+                        keywords: "whatsapp message chat",
+                        run: () => safeOpenNewTab(`https://wa.me/${APP.WA_NUMBER}`),
+                    },
+                    {
+                        group: "Actions",
+                        title: "Call 93524 70085",
+                        icon: "fa-phone",
+                        keywords: "phone call mobile",
+                        run: () => (location.href = "tel:+919352470085"),
+                    },
+                    {
+                        group: "Actions",
+                        title: "Email us",
+                        icon: "fa-at",
+                        keywords: "email mail",
+                        run: () => (location.href = "mailto:swapnilchemicals10@gmail.com"),
+                    },
+                    {
+                        group: "Actions",
+                        title: "Ask the assistant",
+                        icon: "fa-robot",
+                        keywords: "ai assistant bot help",
+                        run: () => byId("assistantPanel")?.classList.contains("hidden") && toggleAssistant(),
+                    },
                 ];
 
                 function rankCommands(q) {
@@ -8683,7 +9727,10 @@
                     let lastGroup = "";
                     cmdkList.innerHTML = cmdkItems
                         .map((c, i) => {
-                            const header = !q && c.group !== lastGroup ? `<li class="cmdk-group" role="presentation">${c.group}</li>` : "";
+                            const header =
+                                !q && c.group !== lastGroup
+                                    ? `<li class="cmdk-group" role="presentation">${c.group}</li>`
+                                    : "";
                             lastGroup = c.group;
                             const ico = c.img
                                 ? `<img src="${escapeHtml(c.img)}" alt="" loading="lazy" decoding="async" data-fallback-icon="${escapeHtml(c.icon)}">`
@@ -8787,7 +9834,8 @@
                             entries.forEach((en) => visible.set(en.target.id, en.isIntersecting));
                             const current = spyTargets.find((s) => visible.get(s.id));
                             navLinks.forEach((a) => {
-                                if (current && a.getAttribute("href") === `#${current.id}`) a.setAttribute("aria-current", "true");
+                                if (current && a.getAttribute("href") === `#${current.id}`)
+                                    a.setAttribute("aria-current", "true");
                                 else a.removeAttribute("aria-current");
                             });
                         },
